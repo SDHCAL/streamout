@@ -12,13 +12,18 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 0 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/include)
+include_directories(core/include)
 
 set (core_sources
-  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/DIFSlowControl.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/DIFUnpacker.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/SDHCAL_buffer.cc
+  core/src/DIFSlowControl.cc
+  core/src/DIFUnpacker.cc
+  core/src/SDHCAL_buffer.cc
   )
 
-add_library( ${PROJECT_NAME} ${core_sources})
+add_subdirectory(interface)
+
+message ("RECEIVES " ${interface_include})
+include_directories(${interface_include})
+
+add_library( ${PROJECT_NAME} ${core_sources} ${interface_sources})
 install (TARGETS ${PROJECT_NAME} DESTINATION lib)
