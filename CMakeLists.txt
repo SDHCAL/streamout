@@ -1,0 +1,24 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1 FATAL_ERROR)
+
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+
+# project name
+PROJECT(streamout)
+
+# project version
+SET( ${PROJECT_NAME}_VERSION_MAJOR 0 )
+SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
+SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/include)
+
+set (core_sources
+  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/DIFSlowControl.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/DIFUnpacker.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/core/src/SDHCAL_buffer.cc
+  )
+
+add_library( ${PROJECT_NAME} ${core_sources})
+install (TARGETS ${PROJECT_NAME} DESTINATION lib)
