@@ -15,6 +15,7 @@ void textDump::processDIF(DIFPtr* d)
   _out << "  GTC value is " << d->getGTC()  << std::endl;
   _out << "  DIF BCID is " << d->getBCID()  << std::endl;
   _out << "  Absolute BCID is " << d->getAbsoluteBCID() << std::endl;
+  _out << "  The number of frame is " << d->getNumberOfFrames() << std::endl;
 }
 
 void textDump::processFrame(DIFPtr* d,uint32_t frameIndex)
