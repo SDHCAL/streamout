@@ -47,7 +47,7 @@ class SDHCAL_RawBuffer_Navigator
 
 
  private:
-  void setSCBuffer(); ////////
+  void setSCBuffer();
   SDHCAL_buffer _buffer,_SCbuffer;
   uint32_t _DIFstartIndex;
   DIFPtr* _theDIFPtr;
