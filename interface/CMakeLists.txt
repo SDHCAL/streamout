@@ -21,3 +21,10 @@ set ( interface_include ${local_include} ${root_include} PARENT_SCOPE)
 add_executable (test_exe standard/src/main_test_exe.cc)
 target_include_directories(test_exe PUBLIC ${local_include})
 target_link_libraries (test_exe ${PROJECT_NAME})
+
+if (BUILD_ROOT_INTERFACE)
+  add_executable (test_root_exe root/src/main_test_root_exe.cc)
+  target_include_directories(test_root_exe PUBLIC ${local_include} ${root_include})
+  target_link_libraries (test_root_exe ${PROJECT_NAME} ${ROOT_LIBRARIES})
+endif()
+
