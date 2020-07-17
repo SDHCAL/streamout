@@ -12,6 +12,19 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 0 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
+
+option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
+
+
+if (BUILD_ROOT_INTERFACE)
+  message ("build with ROOT")
+  list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+  find_package(ROOT REQUIRED COMPONENTS Tree)
+  include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+  add_definitions(${ROOT_CXX_FLAGS})
+endif()
+  
+
 include_directories(core/include)
 
 set (core_sources

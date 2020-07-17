@@ -8,9 +8,15 @@ set (local_sources
   )
 
 
+if (BUILD_ROOT_INTERFACE)
+  set (root_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/root/src/ROOTtreeDest.cc
+    )
+  set (root_include ${CMAKE_CURRENT_SOURCE_DIR}/root/include)
+endif()
 
-set ( interface_sources ${local_sources} PARENT_SCOPE)
-set ( interface_include ${local_include} PARENT_SCOPE)
+set ( interface_sources ${local_sources} ${root_sources} PARENT_SCOPE)
+set ( interface_include ${local_include} ${root_include} PARENT_SCOPE)
 
 add_executable (test_exe standard/src/main_test_exe.cc)
 target_include_directories(test_exe PUBLIC ${local_include})
