@@ -8,9 +8,10 @@ class DIFdataExample
  public:
   DIFdataExample();
   bool next();
-  SDHCAL_buffer getSDHCALBuffer() {return SDHCAL_buffer(_RAWbuffer, 60);}
+  SDHCAL_buffer getSDHCALBuffer() {return SDHCAL_buffer(_RAWbuffer, BUFFER_SIZE);}
  private:
-  unsigned char _RAWbuffer[60];
+  enum {BUFFER_SIZE=143};  //94+49=143
+  unsigned char _RAWbuffer[BUFFER_SIZE]; 
   bool _first;
 };
 

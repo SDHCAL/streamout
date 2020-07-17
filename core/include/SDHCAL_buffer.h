@@ -117,9 +117,10 @@ template <typename SOURCE, typename DESTINATION>
 	  for (uint32_t j=0;j<64;j++) dest.processPadInFrame(d,i,j);
 	}
 
-      if (bufferNavigator.hasSlowControlData()) c.hasSlowControl++;
-      if (bufferNavigator.badSCData()) {c.hasBadSlowControl++;}
-      else {dest.processSlowControl(bufferNavigator.getSCBuffer());}
+      bool processSC=false;
+      if (bufferNavigator.hasSlowControlData()) {c.hasSlowControl++;processSC=true;}
+      if (bufferNavigator.badSCData()) {c.hasBadSlowControl++;processSC=false;}
+      if (processSC) {dest.processSlowControl(bufferNavigator.getSCBuffer());}
 
       SDHCAL_buffer eod=bufferNavigator.getEndOfAllData();
       c.SizeAfterAllData[eod.getsize()]++;
@@ -134,8 +135,8 @@ template <typename SOURCE, typename DESTINATION>
       c.NonZeroValusAtEndOfData[nonzeroCount]++;
     } //end of while loop
 
-  c.printAllCounters(out);
   dest.end();
+  c.printAllCounters(out);
 }
 
 

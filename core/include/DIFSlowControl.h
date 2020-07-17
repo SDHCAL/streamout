@@ -132,7 +132,7 @@ public:
   //Addition by GG
   inline uint32_t getDIFid() {return getID()&0xFF;}
   inline uint32_t getASICid(uint32_t i) {return getFrameAsicHeader(i)&0xFF;}
-  inline uint32_t getThresholdStatus(uint32_t i,uint32_t ipad) { return  (((uint32_t) getFrameLevel(i,ipad,1))<<1) & ((uint32_t) getFrameLevel(i,ipad,0));}
+  inline uint32_t getThresholdStatus(uint32_t i,uint32_t ipad) { return  (((uint32_t) getFrameLevel(i,ipad,1))<<1) | ((uint32_t) getFrameLevel(i,ipad,0));}
 
  private:
   uint32_t theSize_;
