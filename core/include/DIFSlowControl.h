@@ -5,7 +5,7 @@
 #include <bitset>
 #include <iostream>
 #include <stdio.h>
-
+#include "DIFPtr.h"
 /**
 \class DIFSlowControl
   \author  L.Mirabito
