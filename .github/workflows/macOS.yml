@@ -8,7 +8,6 @@ on:
 
 env:
   BUILD_TYPE: Release
-  ROOT_VERSION: 6-22-00
 
 jobs:
   job:
@@ -27,4 +26,4 @@ jobs:
       - name: Build
         run: cmake --build build
       - name: Install
-        run: cmake --install .
+        run: cmake --install build

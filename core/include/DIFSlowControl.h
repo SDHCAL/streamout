@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include <bitset>
-
+#include <iostream>
 /**
 \class DIFSlowControl
 \author  L.Mirabito

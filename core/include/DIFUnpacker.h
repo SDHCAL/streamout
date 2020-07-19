@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <cstdint>
-
+#include <iostream>
 class DIFUnpacker 
 {
 public:

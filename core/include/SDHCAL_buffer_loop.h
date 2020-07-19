@@ -5,6 +5,7 @@
 #include "SDHCAL_RawBuffer_Navigator.h"
 #include <cassert>
 #include <ostream>
+#include <iostream>
 //function to loop on buffers
 //
 // template class should implement
