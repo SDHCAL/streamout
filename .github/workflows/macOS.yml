@@ -23,7 +23,7 @@ jobs:
           submodules: true
         
       - name: Configure
-        run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF ..
+        run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=../bin ..
       - name: Build
         run: cmake --build build
       - name: Install
