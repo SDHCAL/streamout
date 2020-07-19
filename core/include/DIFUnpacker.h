@@ -33,7 +33,6 @@ public:
   static unsigned long swap_bytes(const unsigned int& n,const unsigned char* buf); //Stolen from DCBufferReader
   
 private:
-  static constexpr int DU_DATA_FORMAT_VERSION{13};
   static constexpr int DU_START_OF_DIF{0xB0};
   static constexpr int DU_START_OF_DIF_TEMP{0xBB};
   static constexpr int DU_END_OF_DIF{0xA0};

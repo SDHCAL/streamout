@@ -130,13 +130,14 @@ std::uint32_t DIFUnpacker::getAnalogPtr(std::vector<unsigned char*> &vLines,unsi
 
 std::uint32_t DIFUnpacker::getFramePtr(std::vector<unsigned char*> &vFrame,std::vector<unsigned char*> &vLines,const std::uint32_t& max_size,unsigned char* cb,const std::uint32_t& idx)
 {
-#if DU_DATA_FORMAT_VERSION>=13
-  std::uint32_t fshift{idx+DU_LINES_SHIFT+1};
-  if (DIFUnpacker::hasTemperature(cb,idx)) fshift{idx+DU_TDIF_SHIFT+1}; // jenlev 1
-  if (DIFUnpacker::hasAnalogReadout(cb,idx)) fshift{DIFUnpacker::getAnalogPtr(vLines,cb,fshift)}; // to be implemented
-#else
-  std::uint32_t fshift{idx+DU_BCID_SHIFT+3};
-#endif
+  std::uint32_t fshift{0};
+  if(DATA_FORMAT_VERSION>=13)
+  {
+    fshift=idx+DU_LINES_SHIFT+1;
+    if (DIFUnpacker::hasTemperature(cb,idx)) fshift=idx+DU_TDIF_SHIFT+1; // jenlev 1
+    if (DIFUnpacker::hasAnalogReadout(cb,idx)) fshift=DIFUnpacker::getAnalogPtr(vLines,cb,fshift); // to be implemented
+  }
+  else std::uint32_t fshift=idx+DU_BCID_SHIFT+3;
   if (cb[fshift]!=DU_START_OF_FRAME)
   {
     std::cout<<"This is not a start of frame "<<cb[fshift]<<"\n";
