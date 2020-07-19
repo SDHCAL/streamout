@@ -6,7 +6,6 @@
 #include <iostream>
 #include <stdio.h>
 #include "DIFUnpacker.h"
-using namespace std;
 
 /**
 \class DIFSlowControl
@@ -37,21 +36,21 @@ public:
   /**
      @return a map of < Asic Id, map of <string (parameter name),int (parameter value) >
    */
-  map < int,map <string,int> > getChipsMap(){ return _mapSC;}
+  std::map < int,std::map <std::string,int> > getChipsMap(){ return _mapSC;}
 
   //! Get one chip map
   /**
      @param asicid ASIC ID
      @return a map of <string (parameter name),int (parameter value) >
    */
-  map<string,int> getChipSlowControl(int asicid){ return _mapSC[asicid];}
+  std::map<std::string,int> getChipSlowControl(int asicid){ return _mapSC[asicid];}
 
   //! Get one Chip value
   /**
      @param asicid ASic ID
      @param param Parameter name
    */
-  int getChipSlowControl(int asicid,string param) { return getChipSlowControl(asicid)[param];}
+  int getChipSlowControl(int asicid,std::string param) { return getChipSlowControl(asicid)[param];}
 
   //! print out full map
   void Dump();
@@ -61,17 +60,17 @@ private:
   //! Fill hardRoc 2 map
   void FillHR2(int header_shift,unsigned char *cbuf);
   //! read Asic HR1 type
-  void FillAsicHR1(bitset<72*8> &bs);
+  void FillAsicHR1(std::bitset<72*8> &bs);
 
   //! read Asic HR2 Type
-  void FillAsicHR2(bitset<109*8> &bs);
+  void FillAsicHR2(std::bitset<109*8> &bs);
 
 
   unsigned short			_DIFId; //! DIF Id
   unsigned int _version; //! version
   unsigned int _asicType;// asicType_
   unsigned int _nAsic; //! Number of Asic
-  map< int,map < string,int > >        _mapSC; //! Storage map (asic,name,value)
+  std::map< int,std::map < std::string,int > >        _mapSC; //! Storage map (asic,name,value)
 };
 
 class DIFPtr
