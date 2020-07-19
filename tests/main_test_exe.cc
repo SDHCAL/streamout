@@ -7,6 +7,7 @@ int main()
 {
   DIFdataExample source;
   textDump destination;
-  SDHCAL_buffer_loop(source,destination,false,std::cout,true);
+  SDHCAL_buffer_loop<DIFdataExample,textDump> toto(source,destination,true,std::cout,true);
+  toto.loop(2);
   return 0;
 }
