@@ -3,6 +3,7 @@
 #include "SDHCAL_buffer.h"
 #include "SDHCAL_buffer_LoopCounter.h"
 #include "SDHCAL_RawBuffer_Navigator.h"
+#include <cassert>
 //function to loop on buffers
 //
 // template class should implement
