@@ -1,6 +1,7 @@
 #include "SDHCAL_buffer_loop.h"
 #include "textDump.h"
 #include "DIFdataExample.h"
+#include <iostream>
 
 int main()
 {
