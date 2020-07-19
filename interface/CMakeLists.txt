@@ -1,6 +1,5 @@
 # standard
 add_library(standard
-            standard/src/DIFdataExample.cc
             standard/src/textDump.cc
            )
 target_include_directories(standard PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/standard/include")
