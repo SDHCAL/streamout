@@ -3,7 +3,6 @@
 
 DIFPtr::DIFPtr(unsigned char* p,const uint32_t& max_size,const std::uint32_t& idx) : theDIF_(p),theSize_(max_size)
 {
-  theFrames_.clear();theLines_.clear();
   try
   {
     #if DU_DATA_FORMAT_VERSION>=13
