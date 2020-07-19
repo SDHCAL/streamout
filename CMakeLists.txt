@@ -10,6 +10,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_TEST "Build the test" ON)
 
+## Version of the data
+set(DATA_FORMAT_VERSION "13")
+
 if (BUILD_ROOT_INTERFACE)
   message(STATUS "Build with ROOT")
   list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
