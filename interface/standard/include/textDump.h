@@ -4,6 +4,7 @@
 #include "SDHCAL_buffer.h"
 #include "DIFPtr.h"
 #include <iostream>
+#include <ostream>
 
 class textDump
 {
