@@ -119,5 +119,4 @@ private:
   std::vector<unsigned char*> theFrames_;
   std::vector<unsigned char*> theLines_;
   static unsigned long long GrayToBin(const unsigned long long& n);
-  static unsigned long swap_bytes(const unsigned int& n,const unsigned char* buf); //Stolen from DCBufferReader
 };
