@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "DIFUnpacker.h"
-
+#include <iostream>
 class DIFPtr
 {
 public:
