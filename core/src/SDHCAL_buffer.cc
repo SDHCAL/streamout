@@ -1,5 +1,6 @@
 #include "SDHCAL_buffer.h"
 
+#include <vector>
 #include "DIFUnpacker.h"
 
 void SDHCAL_buffer::printBuffer(unsigned int start, unsigned int stop,std::ostream& flux)
