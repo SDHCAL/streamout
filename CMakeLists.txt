@@ -1,42 +1,35 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1 FATAL_ERROR)
-
-SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_EXTENSIONS OFF)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 # project name
-PROJECT(streamout)
+project(streamout VERSION "0.1.0" LANGUAGES CXX)
 
-# project version
-SET( ${PROJECT_NAME}_VERSION_MAJOR 0 )
-SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
-SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
-
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
-
+option(BUILD_TEST "Build the test" ON)
 
 if (BUILD_ROOT_INTERFACE)
-  message ("build with ROOT")
+  message(STATUS "Build with ROOT")
   list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
   find_package(ROOT REQUIRED COMPONENTS Tree)
-  include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
-  add_definitions(${ROOT_CXX_FLAGS})
+  ## Is mainly the most important PROPERTY
+  get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
+    if(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_14") 
+      set( CMAKE_CXX_STANDARD 17 )
+    elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_17") 
+      set( CMAKE_CXX_STANDARD 17 )
+    elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_20")  
+      set( CMAKE_CXX_STANDARD 20 )
+  endif()
 endif()
-  
 
-include_directories(core/include)
-
-set (core_sources
-  core/src/DIFSlowControl.cc
-  core/src/DIFUnpacker.cc
-  core/src/SDHCAL_buffer.cc
-  )
+add_subdirectory(core)
 
 add_subdirectory(interface)
 
-message ("RECEIVES " ${interface_include})
-include_directories(${interface_include})
-
-add_library( ${PROJECT_NAME} ${core_sources} ${interface_sources})
-install (TARGETS ${PROJECT_NAME} DESTINATION lib)
+if(BUILD_TEST)
+  include(CTest)
+  add_subdirectory(tests)
+endif()
