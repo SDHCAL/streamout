@@ -6,6 +6,7 @@
 #include <bitset>
 #include <cstring>
 
+
 unsigned long long DIFUnpacker::GrayToBin(unsigned long long n)
 {
 unsigned long long ish, ans, idiv, ishmax;
