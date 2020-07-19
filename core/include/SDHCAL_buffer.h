@@ -12,6 +12,7 @@
 #include <iostream>
 #include <assert.h>
 #include "DIFSlowControl.h"
+#include "DIFPtr.h"
 
 
 class SDHCAL_buffer : public std::pair<unsigned char*, uint32_t>
