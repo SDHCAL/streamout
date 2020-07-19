@@ -2,6 +2,7 @@
 #define textDump_h
 
 #include "SDHCAL_buffer.h"
+#include "DIFPtr.h"
 
 class textDump
 {
