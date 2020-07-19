@@ -10,7 +10,10 @@ int main()
   DIFdataExample source;
   ROOTtreeDest destination;
   SDHCAL_buffer_loop<DIFdataExample,ROOTtreeDest> toto(source,destination,true,std::cout,true);
-  toto.loop(2);
+  toto.loop();
+  std::cout<<"******************************"<<std::endl;
+  toto.printAllCounters();
+  std::cout<<"******************************"<<std::endl;
   hfile.Write();
   hfile.Close();
   return 0;

@@ -27,9 +27,7 @@ public:
   void loop(const std::int32_t& m_NbrEventsToProcess=0)
   {
     m_Destination.start();
-    SDHCAL_buffer_LoopCounter c;
-  
-    while( m_Source.next() && m_NbrEventsToProcess>=m_NbrEvents)
+    while( m_Source.next() && (m_NbrEventsToProcess==0||m_NbrEventsToProcess>=m_NbrEvents))
     {
       SDHCAL_buffer buffer=m_Source.getSDHCALBuffer();
       unsigned char* debug_variable_1=buffer.endOfBuffer();
@@ -76,9 +74,14 @@ public:
     } //end of while loop
   
     m_Destination.end();
+    
+  }
+  void printAllCounters()
+  {
     c.printAllCounters(m_DebugOut);
   }
 private:
+  SDHCAL_buffer_LoopCounter c;
   SOURCE& m_Source;
   DESTINATION& m_Destination;
   bool m_Debug{false};

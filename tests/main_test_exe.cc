@@ -9,5 +9,8 @@ int main()
   textDump destination;
   SDHCAL_buffer_loop<DIFdataExample,textDump> toto(source,destination,true,std::cout,true);
   toto.loop(2);
+  std::cout<<"******************************"<<std::endl;
+  toto.printAllCounters();
+  std::cout<<"******************************"<<std::endl;
   return 0;
 }
