@@ -39,11 +39,6 @@ DIFPtr::DIFPtr(unsigned char* p,const uint32_t& max_size,const std::uint32_t& id
       }
       if (theDIF_[fshift]==DU_END_OF_FRAME) fshift++;
     } while(true);
-    
-    
-    
-
-    //theGetFramePtrReturn_=DIFUnpacker::getFramePtr(theFrames_,theLines_,theSize_,theDIF_);
   }
   catch(const std::string& e)
   {
@@ -80,12 +75,4 @@ unsigned long long DIFPtr::GrayToBin(const unsigned long long& n)
     if (idiv <= 1 || ish == ishmax) return ans;
     ish <<= 1;
   }
-}
-
-unsigned long DIFPtr::swap_bytes(const unsigned int& n,const unsigned char* buf)
-{
-  unsigned char Swapped[4];
-  for (unsigned int i=0;i<n;i++) Swapped[i] = buf[n-1-i];
-  unsigned long *temp=(unsigned long*) &Swapped;
-  return (*temp);
 }
