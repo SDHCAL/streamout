@@ -1,8 +1,17 @@
 #include "SDHCAL_RawBuffer_Navigator.h"
+#include "Constants.h"
 
 SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b) : m_Buffer(b),m_SCbuffer(0,0)
 {
-  m_DIFstartIndex=DIFUnpacker::getStartOfDIF(m_Buffer.buffer(),m_Buffer.getsize(),92);
+  std::uint32_t id0{0};
+  for(std::uint32_t i=92;i<m_Buffer.getsize();i++)
+  {
+    if (m_Buffer.buffer()[i]!=DU_START_OF_DIF && m_Buffer.buffer()[i]!=DU_START_OF_DIF_TEMP) continue;
+    id0=i;
+    //if (cbuf[id0+DU_ID_SHIFT]>0xFF) continue;
+    break;
+  }
+  m_DIFstartIndex=id0;
 }
 
 SDHCAL_RawBuffer_Navigator::~SDHCAL_RawBuffer_Navigator()
