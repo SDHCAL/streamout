@@ -27,8 +27,9 @@ public:
   void loop(const std::int32_t& m_NbrEventsToProcess=0)
   {
     m_Destination.start();
+    while (m_Source.nextEvent() && (m_NbrEventsToProcess==0||m_NbrEventsToProcess>=m_NbrEvents) )
     {
-      while( m_Source.next() && (m_NbrEventsToProcess==0||m_NbrEventsToProcess>=m_NbrEvents))
+      while( m_Source.nextDIFbuffer() )
       {
 	SDHCAL_buffer buffer=m_Source.getSDHCALBuffer();
 	unsigned char* debug_variable_1=buffer.endOfBuffer();
@@ -71,9 +72,9 @@ public:
 	for (unsigned char* it=eod.buffer(); it != eod.endOfBuffer(); it++)
 	  if (int(*it) !=0) nonzeroCount++;
 	c.NonZeroValusAtEndOfData[nonzeroCount]++;
-	m_NbrEvents++;
-      } //end of while loop
-    }
+      } //end of DIF while loop
+      m_NbrEvents++;
+    } // end of event while loop
     m_Destination.end();
     
   }
