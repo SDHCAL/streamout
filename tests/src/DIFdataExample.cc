@@ -23,9 +23,9 @@ DIFdataExample::DIFdataExample() : _first(true)
   // 2 extra bytes for CRC value not implemented : total DIF buffer size is 49 bytes
 }
 
-bool DIFdataExample::next()
+bool DIFdataExample::nextEvent()
 {
-  while(_stop!=100)
+  while(_stop!=10)
   {
     std::cout<<"Event "<<_stop<<std::endl;
     _stop++;
@@ -34,3 +34,14 @@ bool DIFdataExample::next()
   return false;
 }
 
+bool DIFdataExample::nextDIFbuffer()
+{
+  while(_stopDIF!=5)
+  {
+    _RAWbuffer[95]=133+_stopDIF; // DIF ID 1 byte
+    ++_stopDIF;
+    return true;
+  }
+  _stopDIF=0;
+  return false;
+}
