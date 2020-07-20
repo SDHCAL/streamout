@@ -13,6 +13,7 @@ class DIFdataExample
   enum {BUFFER_SIZE=143};  //94+49=143
   unsigned char _RAWbuffer[BUFFER_SIZE]; 
   bool _first;
+  int _stop{0};
 };
 
 #endif

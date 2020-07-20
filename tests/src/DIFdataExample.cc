@@ -25,7 +25,12 @@ DIFdataExample::DIFdataExample() : _first(true)
 
 bool DIFdataExample::next()
 {
-  if (_first) {_first=false; return true;}
+  while(_stop!=100)
+  {
+    std::cout<<"Event "<<_stop<<std::endl;
+    _stop++;
+    return true;
+  }
   return false;
 }
 

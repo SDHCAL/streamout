@@ -3,6 +3,7 @@
 
 #include "SDHCAL_buffer.h"
 #include "TTree.h"
+#include "DIFPtr.h"
 
 class ROOTtreeDest
 {
