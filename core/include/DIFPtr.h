@@ -1,22 +1,12 @@
 #pragma once
 #include <vector>
 #include "DIFUnpacker.h"
+#include "Words.h"
 #include <iostream>
 class DIFPtr
 {
 public:
-  DIFPtr(unsigned char* p,uint32_t max_size) : theDIF_(p),theSize_(max_size)
-  {
-    theFrames_.clear();theLines_.clear();
-    try
-    {
-      theGetFramePtrReturn_=DIFUnpacker::getFramePtr(theFrames_,theLines_,theSize_,theDIF_);
-    }
-    catch (std::string e)
-    {
-      std::cout<<"DIF "<<getID()<<" T ? "<<hasTemperature()<<" " <<e<<std::endl;
-    }
-  }
+  DIFPtr(unsigned char* p,uint32_t max_size);
   inline unsigned char* getPtr(){return theDIF_;}
   inline uint32_t getGetFramePtrReturn() {return theGetFramePtrReturn_;}
   inline std::vector<unsigned char*>& getFramesVector(){return theFrames_;}
