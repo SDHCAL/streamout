@@ -10,7 +10,13 @@ void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)
 SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b,const int& start) : m_Buffer(b)
 {
   StartAt(start);
-  m_DIFstartIndex=DIFUnpacker::getStartOfDIF(m_Buffer.buffer(),m_Buffer.getsize(),m_Start);
+  for(std::uint32_t i=m_Start;i<m_Buffer.getsize();i++)
+  {
+    if (m_Buffer.buffer()[i]!=DU::START_OF_DIF && m_Buffer.buffer()[i]!=DU::START_OF_DIF_TEMP) continue;
+    m_DIFstartIndex=i;
+    //if (cbuf[id0+DU::ID_SHIFT]>0xFF) continue;
+    break;
+  }
 }
 
 SDHCAL_RawBuffer_Navigator::~SDHCAL_RawBuffer_Navigator()

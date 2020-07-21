@@ -1,6 +1,5 @@
 add_library(core 
             src/DIFSlowControl.cc 
-            src/DIFUnpacker.cc
             src/SDHCAL_buffer.cc
             src/SDHCAL_buffer_LoopCounter.cc
             src/SDHCAL_RawBuffer_Navigator.cc
