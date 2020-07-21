@@ -15,9 +15,7 @@ std::uint32_t DIFPtr::getAnalogPtr()
   return fshift++;
 }
 
-
-
-DIFPtr::DIFPtr(unsigned char* p,const std::uint32_t& maxSize,const std::uint32_t shift) : m_DIF(p),m_MaxSize(maxSize),m_Shift(shift)
+DIFPtr::DIFPtr(unsigned char* p,const std::uint32_t& maxSize,const std::uint32_t& shift) : m_DIF(p),m_MaxSize(maxSize),m_Shift(shift)
 {
   try
   {
@@ -64,9 +62,6 @@ DIFPtr::DIFPtr(unsigned char* p,const std::uint32_t& maxSize,const std::uint32_t
       }
       if (m_DIF[fshift]==DU::END_OF_FRAME) fshift++;
     } while(true);
-    
-    
-    
   }
   catch(const std::string& e)
   {
