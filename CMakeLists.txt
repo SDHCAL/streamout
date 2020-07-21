@@ -3,10 +3,15 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 # project name
 project(streamout VERSION "0.1.0" LANGUAGES CXX)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(Doxygen)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" ON)
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_TEST "Build the test" ON)
 
@@ -29,9 +34,9 @@ if (BUILD_ROOT_INTERFACE)
   endif()
 endif()
 
-add_subdirectory(core)
+add_subdirectory(source/core)
 
-add_subdirectory(interface)
+add_subdirectory(source/interface)
 
 if(BUILD_TEST)
   include(CTest)
