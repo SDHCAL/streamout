@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CXX: clang-9
+  CXX: clang++-9
 
 jobs:
   job:
@@ -23,7 +23,7 @@ jobs:
           submodules: true
      
       - name: Configure
-        run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=../bin ..
+        run: mkdir build && cd build && cmake -DBUILD_DOCUMENTATION=OFF -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=../bin ..
       - name: Build
         run: cmake --build build
       - name: Install
