@@ -35,4 +35,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           force_orphan: true
-          PUBLISH_DIR: /home/runner/work/streamout/streamout/bin/docs/html
+          PUBLISH_DIR: bin/docs/html
