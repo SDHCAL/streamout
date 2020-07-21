@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 # project name
-project(streamout VERSION "0.1.0" LANGUAGES CXX)
+project(streamout VERSION "0.1.0" LANGUAGES CXX C)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
