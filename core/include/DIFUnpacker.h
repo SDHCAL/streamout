@@ -31,29 +31,4 @@ public:
   static std::uint32_t getFramePtr(std::vector<unsigned char*>& vFrame,std::vector<unsigned char*>& vLines,const std::uint32_t& max_size,unsigned char* cb,const std::uint32_t& idx=0);
   static void dumpFrameOld(const unsigned char* buf);
   static unsigned long swap_bytes(const unsigned int& n,const unsigned char* buf); //Stolen from DCBufferReader
-  
-private:
-  static constexpr int DU_START_OF_DIF{0xB0};
-  static constexpr int DU_START_OF_DIF_TEMP{0xBB};
-  static constexpr int DU_END_OF_DIF{0xA0};
-  static constexpr int DU_START_OF_LINES{0xC4};
-  static constexpr int DU_END_OF_LINES{0xD4};
-  
-  static constexpr int DU_START_OF_FRAME{0xB4};
-  static constexpr int DU_END_OF_FRAME{0xA3};
-  
-  static constexpr int DU_ID_SHIFT{1};
-  static constexpr int DU_DTC_SHIFT{2};
-  static constexpr int DU_GTC_SHIFT{10};
-  static constexpr int DU_ABCID_SHIFT{14};
-  static constexpr int DU_BCID_SHIFT{20};
-  static constexpr int DU_LINES_SHIFT{23};
-  static constexpr int DU_TASU1_SHIFT{24};
-  static constexpr int DU_TASU2_SHIFT{28};
-  static constexpr int DU_TDIF_SHIFT{32};
-  
-  static constexpr int DU_FRAME_ASIC_HEADER_SHIFT{0};
-  static constexpr int DU_FRAME_BCID_SHIFT{1};
-  static constexpr int DU_FRAME_DATA_SHIFT{4};
-  static constexpr int DU_FRAME_SIZE{20};
 };
