@@ -4,7 +4,7 @@
 ![Linux Clang](https://github.com/flagarde/streamout/workflows/Linux%20Clang/badge.svg)
 ![Windows](https://github.com/flagarde/streamout/workflows/Windows/badge.svg)
 
-![Documentation](https://flagarde.github.io/streamout/index.html)
+[Documentation](https://flagarde.github.io/streamout/index.html)
 
 TO DO : add loop on readout to the SOURCE 
 
