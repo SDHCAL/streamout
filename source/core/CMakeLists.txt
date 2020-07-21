@@ -1,9 +1,9 @@
 add_library(core 
-            src/DIFSlowControl.cc 
-            src/SDHCAL_buffer.cc
-            src/SDHCAL_buffer_LoopCounter.cc
-            src/SDHCAL_RawBuffer_Navigator.cc
-            src/DIFPtr.cc
+            src/DIFSlowControl.cpp 
+            src/SDHCAL_buffer.cpp
+            src/SDHCAL_buffer_LoopCounter.cpp
+            src/SDHCAL_RawBuffer_Navigator.cpp
+            src/DIFPtr.cpp
            )
 target_include_directories(core PUBLIC include)
 target_compile_definitions(core PRIVATE "-DDATA_FORMAT_VERSION=${DATA_FORMAT_VERSION}")
