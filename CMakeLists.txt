@@ -5,6 +5,12 @@ project(streamout VERSION "0.1.0" LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# Download CMakeCM
+file(DOWNLOAD "https://raw.githubusercontent.com/flagarde/CMakeCM/master/DownloadCMakeCM.cmake" 
+              "${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake" INACTIVITY_TIMEOUT 5 
+              TIMEOUT 1 EXPECTED_HASH SHA256=f30eca2c1bc5ff6bc4b314b0abd9b1ea5999ed874e2a710fb0f5ccd5db7b3963)
+include(${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake)
+
 include(Doxygen)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -34,9 +40,7 @@ if (BUILD_ROOT_INTERFACE)
   endif()
 endif()
 
-add_subdirectory(source/core)
-
-add_subdirectory(source/interface)
+add_subdirectory(source)
 
 if(BUILD_TEST)
   include(CTest)
