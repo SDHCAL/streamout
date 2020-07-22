@@ -11,8 +11,6 @@ file(DOWNLOAD "https://raw.githubusercontent.com/flagarde/CMakeCM/master/Downloa
               TIMEOUT 1 EXPECTED_HASH SHA256=f30eca2c1bc5ff6bc4b314b0abd9b1ea5999ed874e2a710fb0f5ccd5db7b3963)
 include(${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake)
 
-include(Doxygen)
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -45,4 +43,8 @@ add_subdirectory(source)
 if(BUILD_TEST)
   include(CTest)
   add_subdirectory(tests)
+endif()
+
+if(BUILD_DOCUMENTATION)
+  add_subdirectory(docs)
 endif()

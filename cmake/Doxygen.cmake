@@ -5,7 +5,7 @@ if(BUILD_DOCUMENTATION)
     return()
   endif()
 
-  set( doxyfile_in          ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
+  set( doxyfile_in          ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
   SET( doxyfile             ${PROJECT_BINARY_DIR}/Doxyfile)
   SET( doxy_html_index_file ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
   SET( doxy_output_root     ${CMAKE_CURRENT_BINARY_DIR}) # Pasted into Doxyfile.in
