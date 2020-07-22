@@ -29,5 +29,5 @@ if(BUILD_DOCUMENTATION)
 
   add_custom_target( doc ALL DEPENDS ${doxy_html_index_file} )
 
-  install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html" DESTINATION "${CMAKE_INSTALL_PREFIX}/docs" )
+  install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html" DESTINATION "${CMAKE_INSTALL_PREFIX}/docs" MESSAGE_NEVER)
 endif()
