@@ -23,8 +23,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_INSTALL_PREFIX}/lib/cmake"
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_LCIO_INTERFACE "Flag to toggle building ROOT output" ON)
-option(BUILD_TEST "Build the test" ON)
+option(BUILD_TESTS "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
+option(BUILD_DOCS "Build the docs" ON)
+
 
 ## Version of the data
 set(DATA_FORMAT_VERSION "13" CACHE STRING "Version of the data format")
@@ -51,7 +53,11 @@ if(BUILD_APPS)
   add_subdirectory(apps)
 endif()
 
-if(BUILD_TEST)
+if(BUILD_DOCS)
+  add_subdirectory(docs)
+endif()
+
+if(BUILD_TESTS)
   include(CTest)
   add_subdirectory(tests)
 endif()

@@ -5,6 +5,5 @@
 ![Windows](https://github.com/RPClab/streamout/workflows/Windows/badge.svg)
 
 Standalone SDHCAL raw data processor
-
+ 
 [Documentation](https://RPClab.github.io/streamout/index.html)
-
