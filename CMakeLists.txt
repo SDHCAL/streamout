@@ -21,6 +21,7 @@ cxx_11()
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_TEST "Build the test" ON)
+option(BUILD_APPS "Build the apps" ON)
 
 ## Version of the data
 set(DATA_FORMAT_VERSION "13" CACHE STRING "Version of the data format")
@@ -41,9 +42,11 @@ if (BUILD_ROOT_INTERFACE)
   endif()
 endif()
 
-add_subdirectory(core)
+add_subdirectory(libs)
 
-add_subdirectory(interface)
+if(BUILD_APPS)
+  add_subdirectory(apps)
+endif()
 
 if(BUILD_TEST)
   include(CTest)
