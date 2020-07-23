@@ -8,8 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CXX: gcc-9
-  CC: gcc-9
+  CXX: g++-9
   
 jobs:
   job:
