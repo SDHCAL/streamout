@@ -14,3 +14,7 @@ if(BUILD_ROOT_INTERFACE)
   target_link_libraries(root PUBLIC core PUBLIC ${ROOT_LIBRARIES} )
   install(TARGETS root RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 endif()
+
+if(BUILD_LCIO_INTERFACE)
+  add_subdirectory(LCIO)
+endif()
