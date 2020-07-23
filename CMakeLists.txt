@@ -17,10 +17,7 @@ include(${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake)
 include(Common)
 
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+cxx_11()
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_TEST "Build the test" ON)
@@ -36,7 +33,7 @@ if (BUILD_ROOT_INTERFACE)
   ## Is mainly the most important PROPERTY
   get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
     if(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_14") 
-      set( CMAKE_CXX_STANDARD 17 )
+      set( CMAKE_CXX_STANDARD 14 )
     elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_17") 
       set( CMAKE_CXX_STANDARD 17 )
     elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_20")  
