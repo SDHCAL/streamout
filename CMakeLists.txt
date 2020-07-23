@@ -22,7 +22,7 @@ cxx_14()
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_INSTALL_PREFIX}/lib/cmake")
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
-option(BUILD_LCIO_INTERFACE "Flag to toggle building ROOT output" ON)
+option(BUILD_LCIO_INTERFACE "Flag to toggle building LCIO output" ON)
 option(BUILD_TESTS "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
 option(BUILD_DOCS "Build the docs" ON)
