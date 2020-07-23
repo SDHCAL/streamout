@@ -77,7 +77,7 @@ endif()
   if(DOXYGEN_GENERATE_LATEX)
     add_custom_command(
     OUTPUT ${doxy_latex_index_file}
-    COMMAND ${PDFLATEX_COMPILER} -interaction=batchmode ${DOXYGEN_OUPUTS_LATEX}
+    COMMAND ${PDFLATEX_COMPILER} -interaction=batchmode -draftmode ${DOXYGEN_OUPUTS_LATEX}
     COMMAND ${PDFLATEX_COMPILER} -interaction=batchmode ${DOXYGEN_OUPUTS_LATEX} 
     BYPRODUCTS ${DOXYGEN_OUPUTS_LATEX}
     MAIN_DEPENDENCY ${DOXYGEN_OUPUTS_LATEX}
