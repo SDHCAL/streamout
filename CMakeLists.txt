@@ -19,6 +19,8 @@ include(Common)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
 cxx_11()
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_INSTALL_PREFIX}/lib/cmake")
+
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_TEST "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
