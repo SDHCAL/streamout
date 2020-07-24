@@ -1,4 +1,5 @@
 #include "DIFUnpacker.h"
+#include "Words.h"
 
 #include <iostream>
 #include <bitset>
@@ -23,9 +24,9 @@ std::uint32_t DIFUnpacker::getStartOfDIF(const unsigned char* cbuf,const std::ui
   std::uint32_t id0{0};
   for(std::uint32_t i=start;i<size_buf;i++)
   {
-    if (cbuf[i]!=DU_START_OF_DIF && cbuf[i]!=DU_START_OF_DIF_TEMP) continue;
+    if (cbuf[i]!=DU::START_OF_DIF && cbuf[i]!=DU::START_OF_DIF_TEMP) continue;
     id0=i;
-    //if (cbuf[id0+DU_ID_SHIFT]>0xFF) continue;
+    //if (cbuf[id0+DU::ID_SHIFT]>0xFF) continue;
     break;
   }
   return id0;
@@ -33,58 +34,58 @@ std::uint32_t DIFUnpacker::getStartOfDIF(const unsigned char* cbuf,const std::ui
 
 std::uint32_t DIFUnpacker::getID(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return cb[idx+DU_ID_SHIFT];
+  return cb[idx+DU::ID_SHIFT];
 }
 
 std::uint32_t DIFUnpacker::getDTC(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_DTC_SHIFT]<<24)+(cb[idx+DU_DTC_SHIFT+1]<<16)+(cb[idx+DU_DTC_SHIFT+2]<<8)+cb[idx+DU_DTC_SHIFT+3];
+  return (cb[idx+DU::DTC_SHIFT]<<24)+(cb[idx+DU::DTC_SHIFT+1]<<16)+(cb[idx+DU::DTC_SHIFT+2]<<8)+cb[idx+DU::DTC_SHIFT+3];
 }
 
 std::uint32_t DIFUnpacker::getGTC(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_GTC_SHIFT]<<24)+(cb[idx+DU_GTC_SHIFT+1]<<16)+(cb[idx+DU_GTC_SHIFT+2]<<8)+cb[idx+DU_GTC_SHIFT+3];
+  return (cb[idx+DU::GTC_SHIFT]<<24)+(cb[idx+DU::GTC_SHIFT+1]<<16)+(cb[idx+DU::GTC_SHIFT+2]<<8)+cb[idx+DU::GTC_SHIFT+3];
 }
 
 unsigned long long DIFUnpacker::getAbsoluteBCID(const unsigned char* cb,const std::uint32_t& idx)
 {
   unsigned long long Shift{16777216ULL};//to shift the value from the 24 first bits
-  unsigned long long LBC= ( (cb[idx+DU_ABCID_SHIFT]<<16) | (cb[idx+DU_ABCID_SHIFT+1]<<8) | (cb[idx+DU_ABCID_SHIFT+2]))*Shift+( (cb[idx+DU_ABCID_SHIFT+3]<<16) | (cb[idx+DU_ABCID_SHIFT+4]<<8) | (cb[idx+DU_ABCID_SHIFT+5]));
+  unsigned long long LBC= ( (cb[idx+DU::ABCID_SHIFT]<<16) | (cb[idx+DU::ABCID_SHIFT+1]<<8) | (cb[idx+DU::ABCID_SHIFT+2]))*Shift+( (cb[idx+DU::ABCID_SHIFT+3]<<16) | (cb[idx+DU::ABCID_SHIFT+4]<<8) | (cb[idx+DU::ABCID_SHIFT+5]));
   return LBC;
 }
 
 std::uint32_t DIFUnpacker::getBCID(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_BCID_SHIFT]<<16)+(cb[idx+DU_BCID_SHIFT+1]<<8)+cb[idx+DU_BCID_SHIFT+2];
+  return (cb[idx+DU::BCID_SHIFT]<<16)+(cb[idx+DU::BCID_SHIFT+1]<<8)+cb[idx+DU::BCID_SHIFT+2];
 }
 std::uint32_t DIFUnpacker::getLines(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_LINES_SHIFT]>>4)& 0x5;
+  return (cb[idx+DU::LINES_SHIFT]>>4)& 0x5;
 }
 
 bool DIFUnpacker::hasLine(const std::uint32_t& line,const unsigned char* cb,const std::uint32_t& idx)
 {
-  return ((cb[idx+DU_LINES_SHIFT]>>line) & 0x1);
+  return ((cb[idx+DU::LINES_SHIFT]>>line) & 0x1);
 }
 
 std::uint32_t DIFUnpacker::getTASU1(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_TASU1_SHIFT]<<24)+(cb[idx+DU_TASU1_SHIFT+1]<<16)+(cb[idx+DU_TASU1_SHIFT+2]<<8)+cb[idx+DU_TASU1_SHIFT+3];
+  return (cb[idx+DU::TASU1_SHIFT]<<24)+(cb[idx+DU::TASU1_SHIFT+1]<<16)+(cb[idx+DU::TASU1_SHIFT+2]<<8)+cb[idx+DU::TASU1_SHIFT+3];
 }
 
 std::uint32_t DIFUnpacker::getTASU2(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_TASU2_SHIFT]<<24)+(cb[idx+DU_TASU2_SHIFT+1]<<16)+(cb[idx+DU_TASU2_SHIFT+2]<<8)+cb[idx+DU_TASU2_SHIFT+3];
+  return (cb[idx+DU::TASU2_SHIFT]<<24)+(cb[idx+DU::TASU2_SHIFT+1]<<16)+(cb[idx+DU::TASU2_SHIFT+2]<<8)+cb[idx+DU::TASU2_SHIFT+3];
 }
 
 std::uint32_t DIFUnpacker::getTDIF(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx+DU_TDIF_SHIFT]);
+  return (cb[idx+DU::TDIF_SHIFT]);
 }
 
 bool DIFUnpacker::hasTemperature(const unsigned char* cb,const std::uint32_t& idx)
 {
-  return (cb[idx]==DU_START_OF_DIF_TEMP);
+  return (cb[idx]==DU::START_OF_DIF_TEMP);
 }
 
 bool DIFUnpacker::hasAnalogReadout(const unsigned char* cb,const std::uint32_t& idx)
@@ -94,32 +95,32 @@ bool DIFUnpacker::hasAnalogReadout(const unsigned char* cb,const std::uint32_t& 
 
 std::uint32_t DIFUnpacker::getFrameAsicHeader(const unsigned char* framePtr)
 {
-  return (framePtr[DU_FRAME_ASIC_HEADER_SHIFT]);
+  return (framePtr[DU::FRAME_ASIC_HEADER_SHIFT]);
 }
 
 std::uint32_t DIFUnpacker::getFrameBCID(const unsigned char* framePtr)
 {
-  unsigned long long igray=(framePtr[DU_FRAME_BCID_SHIFT]<<16)+(framePtr[DU_FRAME_BCID_SHIFT+1]<<8)+framePtr[DU_FRAME_BCID_SHIFT+2];
+  unsigned long long igray=(framePtr[DU::FRAME_BCID_SHIFT]<<16)+(framePtr[DU::FRAME_BCID_SHIFT+1]<<8)+framePtr[DU::FRAME_BCID_SHIFT+2];
   return DIFUnpacker::GrayToBin(igray);
 }
 
 bool DIFUnpacker::getFramePAD(const unsigned char* framePtr,const std::uint32_t& ip)
 {
-  std::uint32_t* iframe{(std::uint32_t*) &framePtr[DU_FRAME_DATA_SHIFT]};
+  std::uint32_t* iframe{(std::uint32_t*) &framePtr[DU::FRAME_DATA_SHIFT]};
   return ((iframe[3-ip/32]>>(ip%32)) & 0x1);
 }
 
 bool DIFUnpacker::getFrameLevel(const unsigned char* framePtr,const std::uint32_t& ip,const std::uint32_t& level)
 {
-  return ((framePtr[DU_FRAME_DATA_SHIFT+((3-ip/16)*4+(ip%16)/4)]>>(7-(((ip%16)%4)*2+level))) & 0x1);
+  return ((framePtr[DU::FRAME_DATA_SHIFT+((3-ip/16)*4+(ip%16)/4)]>>(7-(((ip%16)%4)*2+level))) & 0x1);
 }
 
 std::uint32_t DIFUnpacker::getAnalogPtr(std::vector<unsigned char*> &vLines,unsigned char* cb,const std::uint32_t& idx)
 {
   std::uint32_t fshift{idx};
-  if (cb[fshift]!=DU_START_OF_LINES) return fshift;
+  if (cb[fshift]!=DU::START_OF_LINES) return fshift;
   fshift++;
-  while (cb[fshift]!=DU_END_OF_LINES)
+  while (cb[fshift]!=DU::END_OF_LINES)
   {
     vLines.push_back(&cb[fshift]);
     std::uint32_t nchip{cb[fshift]};
@@ -133,12 +134,12 @@ std::uint32_t DIFUnpacker::getFramePtr(std::vector<unsigned char*> &vFrame,std::
   std::uint32_t fshift{0};
   if(DATA_FORMAT_VERSION>=13)
   {
-    fshift=idx+DU_LINES_SHIFT+1;
-    if (DIFUnpacker::hasTemperature(cb,idx)) fshift=idx+DU_TDIF_SHIFT+1; // jenlev 1
+    fshift=idx+DU::LINES_SHIFT+1;
+    if (DIFUnpacker::hasTemperature(cb,idx)) fshift=idx+DU::TDIF_SHIFT+1; // jenlev 1
     if (DIFUnpacker::hasAnalogReadout(cb,idx)) fshift=DIFUnpacker::getAnalogPtr(vLines,cb,fshift); // to be implemented
   }
-  else std::uint32_t fshift=idx+DU_BCID_SHIFT+3;
-  if (cb[fshift]!=DU_START_OF_FRAME)
+  else std::uint32_t fshift=idx+DU::BCID_SHIFT+3;
+  if (cb[fshift]!=DU::START_OF_FRAME)
   {
     std::cout<<"This is not a start of frame "<<cb[fshift]<<"\n";
     return fshift;
@@ -146,23 +147,23 @@ std::uint32_t DIFUnpacker::getFramePtr(std::vector<unsigned char*> &vFrame,std::
   do
   {
     // printf("fshift %d and %d \n",fshift,max_size);
-    if (cb[fshift]==DU_END_OF_DIF) return fshift;
-    if (cb[fshift]==DU_START_OF_FRAME) fshift++;
-    if (cb[fshift]==DU_END_OF_FRAME) {fshift++;continue;}
+    if (cb[fshift]==DU::END_OF_DIF) return fshift;
+    if (cb[fshift]==DU::START_OF_FRAME) fshift++;
+    if (cb[fshift]==DU::END_OF_FRAME) {fshift++;continue;}
     std::uint32_t header =DIFUnpacker::getFrameAsicHeader(&cb[fshift]);
-    if (header == DU_END_OF_FRAME) return (fshift+2);
+    if (header == DU::END_OF_FRAME) return (fshift+2);
     //std::cout<<header<<" "<<fshift<<std::endl;
     if (header<1 || header>48)
     {
       throw  header+" Header problem "+fshift;
     }
-    vFrame.push_back(&cb[fshift]);fshift+=DU_FRAME_SIZE;
+    vFrame.push_back(&cb[fshift]);fshift+=DU::FRAME_SIZE;
     if (fshift>max_size)
     {
       std::cout<<"fshift "<<fshift<<" exceed "<<max_size<<"\n";
       return fshift;
     }
-    if (cb[fshift]==DU_END_OF_FRAME) fshift++;
+    if (cb[fshift]==DU::END_OF_FRAME) fshift++;
   } while(true);
 }
 
@@ -193,7 +194,7 @@ void DIFUnpacker::dumpFrameOld(const unsigned char* buf)
   }
   std::bitset<64> bs0(0);
   std::bitset<64> bs1(0);
-  for(std::uint32_t ip=0;ip<64;ip++) 
+  for(std::uint32_t ip=0;ip<64;ip++)
   {
     bs0.set(ip,l0[ip]);
     bs1.set(ip,l1[ip]);
