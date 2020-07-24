@@ -24,14 +24,15 @@ int main(int argc, char** argv)
   app.add_flag("-v,--verbose",verbose,"Set verbosity");
   bool debug{false};
   app.add_flag("-d,--debug",verbose,"Set debug");
-  try 
+  try
   {
     app.parse(argc, argv);
-  } 
-  catch (const CLI::ParseError &e) 
+  }
+  catch (const CLI::ParseError &e)
   {
     return app.exit(e);
   }
+  SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
   TFile hfile(outputFileName.c_str(),writeOption.c_str(),title.c_str());
   DIFdataExample source;
   ROOTtreeDest destination;

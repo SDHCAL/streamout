@@ -15,15 +15,15 @@ int main(int argc, char** argv)
   app.add_flag("-v,--verbose",verbose,"Set verbosity");
   bool debug{false};
   app.add_flag("-d,--debug",verbose,"Set debug");
-  try 
+  try
   {
     app.parse(argc, argv);
-  } 
-  catch (const CLI::ParseError &e) 
+  }
+  catch (const CLI::ParseError &e)
   {
     return app.exit(e);
   }
-  
+  SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
   DIFdataExample source;
   textDump destination;
   SDHCAL_buffer_loop<DIFdataExample,textDump> toto(source,destination,debug,std::cout,verbose);

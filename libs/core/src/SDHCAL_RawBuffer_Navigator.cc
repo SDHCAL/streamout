@@ -1,8 +1,16 @@
 #include "SDHCAL_RawBuffer_Navigator.h"
 
-SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b) : m_Buffer(b),m_SCbuffer(0,0)
+int SDHCAL_RawBuffer_Navigator::m_Start=92;
+
+void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)
 {
-  m_DIFstartIndex=DIFUnpacker::getStartOfDIF(m_Buffer.buffer(),m_Buffer.getsize(),92);
+  if(start>=0) m_Start=start;
+}
+
+SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b,const int& start) : m_Buffer(b),m_SCbuffer(0,0)
+{
+  StartAt(start);
+  m_DIFstartIndex=DIFUnpacker::getStartOfDIF(m_Buffer.buffer(),m_Buffer.getsize(),m_Start);
 }
 
 SDHCAL_RawBuffer_Navigator::~SDHCAL_RawBuffer_Navigator()
@@ -11,11 +19,11 @@ SDHCAL_RawBuffer_Navigator::~SDHCAL_RawBuffer_Navigator()
 }
 
 bool SDHCAL_RawBuffer_Navigator::validBuffer()
-{ 
+{
   return m_DIFstartIndex != 0;
 }
 
-std::uint32_t SDHCAL_RawBuffer_Navigator::getStartOfDIF() 
+std::uint32_t SDHCAL_RawBuffer_Navigator::getStartOfDIF()
 {
   return m_DIFstartIndex;
 }
@@ -30,8 +38,8 @@ std::uint32_t SDHCAL_RawBuffer_Navigator::getDIFBufferSize()
   return m_Buffer.getsize()-m_DIFstartIndex;
 }
 
-SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getDIFBuffer() 
-{ 
+SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getDIFBuffer()
+{
   return SDHCAL_buffer(getDIFBufferStart(),getDIFBufferSize());
 }
 
@@ -42,12 +50,12 @@ DIFPtr* SDHCAL_RawBuffer_Navigator::getDIFPtr()
 }
 
 std::uint32_t SDHCAL_RawBuffer_Navigator::getEndOfDIFData()
-{ 
+{
   return getDIFPtr()->getGetFramePtrReturn()+3;
-} 
+}
 
-std::uint32_t SDHCAL_RawBuffer_Navigator::getSizeAfterDIFPtr() 
-{ 
+std::uint32_t SDHCAL_RawBuffer_Navigator::getSizeAfterDIFPtr()
+{
   return getDIFBufferSize()-getDIFPtr()->getGetFramePtrReturn();
 }
 
@@ -61,12 +69,12 @@ uint32_t SDHCAL_RawBuffer_Navigator::getDIF_CRC()
 }
 
 bool SDHCAL_RawBuffer_Navigator::hasSlowControlData()
-{ 
+{
   return getDIFBufferStart()[getEndOfDIFData()]==0xb1;
 }
 
 SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getSCBuffer()
-{ 
+{
   setSCBuffer();
   return m_SCbuffer;
 }
