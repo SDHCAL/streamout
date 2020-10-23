@@ -5,17 +5,16 @@ set(PROJECT_NAME "streamout")
 
 project(${PROJECT_NAME} VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/${GITHUB_ORGANIZATION}/${PROJECT_NAME}" LANGUAGES CXX)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/README.md" @ONLY)
 
 # Download CMakeCM
-set(DOWNLOAD_CMAKECM_URL "https://raw.githubusercontent.com/flagarde/CMakeCM/master/DownloadCMakeCM.cmake" CACHE STRING "URL of the CMakeCM package")
-set(DOWNLOAD_CMAKECM_SHA256 "f30eca2c1bc5ff6bc4b314b0abd9b1ea5999ed874e2a710fb0f5ccd5db7b3963" CACHE STRING "SHA256 of DownloadCMakeCM.cmake")
-file(DOWNLOAD "${DOWNLOAD_CMAKECM_URL}"
-              "${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake"
-              INACTIVITY_TIMEOUT 5
-              TIMEOUT 1
-              EXPECTED_HASH SHA256=${DOWNLOAD_CMAKECM_SHA256})
-include(${CMAKE_BINARY_DIR}/cmake/CMakeCM/DownloadCMakeCM.cmake)
+include(GetCMakeMM)
+
+cmmm(VERSION "1.0" URL "https://raw.githubusercontent.com/flagarde/CMakeMM" VERBOSE DESTINATION "CMakeMM" ALWAYS_DOWNLOAD)
+
+cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMCM" DESTINATION "Modules")
 
 # Install Common utilities from CMakeCM
 include(Common)
@@ -29,7 +28,7 @@ option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" OFF)
 option(BUILD_LCIO_INTERFACE "Flag to toggle building LCIO output" ON)
 option(BUILD_TESTS "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
-option(BUILD_DOCS "Build the docs" ON)
+option(BUILD_DOCS "Build the docs" OFF)
 
 
 ## Version of the data
