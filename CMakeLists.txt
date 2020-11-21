@@ -14,7 +14,7 @@ include(GetCMakeMM)
 
 cmmm(VERSION "1.1" URL "https://raw.githubusercontent.com/flagarde/CMakeMM" VERBOSE DESTINATION "CMakeMM" ALWAYS_DOWNLOAD)
 
-cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMCM" DESTINATION "Modules")
+cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMakeCM2" DESTINATION "Modules")
 
 # Install Common utilities from CMakeCM
 include(Common)
