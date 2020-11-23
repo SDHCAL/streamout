@@ -13,7 +13,7 @@ macro(set_colors CMMM_NO_COLOR)
 endmacro()
 
 function(cmmm)
-  cmake_parse_arguments(CMMM "ALWAYS_DOWNLOAD;NO_COLOR" "URL;VERSION;DESTINATION;TIMEOUT;INACTIVITY_TIMEOUT;VERBOSITY" "" ${ARGN})
+  cmake_parse_arguments(CMMM "ALWAYS_DOWNLOAD;NO_COLOR" "GIT_REPOSITORY;VERSION;DESTINATION;TIMEOUT;INACTIVITY_TIMEOUT;VERBOSITY" "" ${ARGN})
 
   set_colors(${CMMM_NO_COLOR})
   set_property(GLOBAL PROPERTY CMMM_NO_COLOR ${CMMM_NO_COLOR})
@@ -30,8 +30,8 @@ function(cmmm)
 
   # Parse arguments
   if(NOT DEFINED CMMM_VERSION)
-    set(CMMM_VERSION "master")
-    list(APPEND ARGN VERSION ${CMMM_VERSION})
+    message("${BoldRed}!! [CMakeMM] VERSION unknown. Please provide a version !!${Reset}")
+    message(FATAL_ERROR)
   endif()
 
   if(NOT DEFINED CMMM_TIMEOUT)
@@ -44,21 +44,14 @@ function(cmmm)
   endif()
   set_property(GLOBAL PROPERTY CMMM_INACTIVITY_TIMEOUT ${CMMM_INACTIVITY_TIMEOUT})
 
-  if(NOT DEFINED CMMM_URL)
-    set(CMMM_URL "https://raw.githubusercontent.com/flagarde/CMakeMM")
-    list(APPEND ARGN URL ${CMMM_URL})
-  else()
-    string(FIND ${CMMM_URL} "/" HAS_FLASH REVERSE)
-    string(LENGTH ${CMMM_URL} CMMM_URL_LENGTH)
-    math(EXPR HAS_FLASH_PLUS_ONE ${HAS_FLASH}+1)
-    if(${HAS_FLASH_PLUS_ONE} STREQUAL ${CMMM_URL_LENGTH})
-      string(SUBSTRING ${CMMM_URL} 0 ${HAS_FLASH} CMMM_URL_CHANGED)
-      list(REMOVE_ITEM ARGN URL ${CMMM_URL})
-      list(APPEND ARGN URL ${CMMM_URL_CHANGED})
-      set(CMMM_URL ${CMMM_URL_CHANGED})
-    endif()
+  if(NOT DEFINED CMMM_GIT_REPOSITORY)
+    set(CMMM_GIT_REPOSITORY "flagarde/CMakeMM")
+    list(APPEND ARGN URL ${CMMM_GIT_REPOSITORY})
   endif()
-  set_property(GLOBAL PROPERTY CMMM_URL ${CMMM_URL})
+  set_property(GLOBAL PROPERTY CMMM_GIT_REPOSITORY ${CMMM_GIT_REPOSITORY})
+
+  set(CMMM_GIT_URL_RELEASE "https://github.com/${CMMM_GIT_REPOSITORY}/releases/download/v${CMMM_VERSION}")
+  set_property(GLOBAL PROPERTY CMMM_GIT_URL_RELEASE ${CMMM_GIT_URL_RELEASE})
 
   if(NOT DEFINED CMMM_DESTINATION)
     set(CMMM_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/CMakeMM")
@@ -74,7 +67,7 @@ function(cmmm)
   list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)
   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
 
-  # Guard against multiple processes trying to use the PMM dir simultaneously
+  # Guard against multiple processes trying to use the CMakeMM dir simultaneously
   file(LOCK "${CMMM_DESTINATION}" DIRECTORY GUARD PROCESS TIMEOUT 0 RESULT_VARIABLE CMMM_LOCK)
   if(NOT ${CMMM_LOCK} STREQUAL "0")
     if(${CMMM_VERBOSITY} STREQUAL VERBOSE)
@@ -91,17 +84,17 @@ function(cmmm)
 
   # Downloading entry.cmake
   if(NOT EXISTS "${CMMM_ENTRY_FILE}" OR ${CMMM_ALWAYS_DOWNLOAD})
-    message("${BoldMagenta}-- [CMakeMM] Downloading CMakeMM version ${CMMM_VERSION}\n             From : ${CMMM_URL}/${CMMM_VERSION}\n             To : ${CMMM_ENTRY_FILE} --${Reset}")
-    file(DOWNLOAD "${CMMM_URL}/${CMMM_VERSION}/Entry.cmake" "${CMMM_ENTRY_FILE}.tmp" STATUS CMMM_STATUS TIMEOUT ${CMMM_TIMEOUT} INACTIVITY_TIMEOUT ${CMMM_INACTIVITY_TIMEOUT})
+    message("${BoldMagenta}-- [CMakeMM] Downloading CMakeMM version ${CMMM_VERSION}\n             From : ${CMMM_GIT_URL_RELEASE}\n             To : ${CMMM_ENTRY_FILE} --${Reset}")
+    file(DOWNLOAD "${CMMM_GIT_URL_RELEASE}/Entry.cmake" "${CMMM_ENTRY_FILE}.tmp" STATUS CMMM_STATUS TIMEOUT ${CMMM_TIMEOUT} INACTIVITY_TIMEOUT ${CMMM_INACTIVITY_TIMEOUT})
     list(GET CMMM_STATUS 0 CMMM_RC)
     list(GET CMMM_STATUS 1 CMMM_MSG)
     if(${CMMM_RC})
       if(NOT EXISTS ${CMMM_ENTRY_FILE})
-        message("${BoldRed}!! Failed to download PMM Entry.cmake file: ${CMMM_MSG} !!${Reset}")
+        message("${BoldRed}!! [CMakeMM] Failed to download Entry.cmake file: ${CMMM_MSG} !!${Reset}")
         message(FATAL_ERROR)
       else()
-        message("${BoldYellow}## Failed to download PMM Entry.cmake file: ${CMMM_MSG} ##${Reset}")
-        message("${BoldYellow}## Using last downloaded version ##${Reset}")
+        message("${BoldYellow}## [CMakeMM] Failed to download Entry.cmake file: ${CMMM_MSG} ##${Reset}")
+        message("${BoldYellow}## [CMakeMM] Using last downloaded version ##${Reset}")
       endif()
     else()
       file(RENAME "${CMMM_ENTRY_FILE}.tmp" "${CMMM_ENTRY_FILE}")
@@ -110,7 +103,7 @@ function(cmmm)
 
   # This will trigger a warning if GetCMakeMM.cmake is not up-to-date
   # ^^^ DO NOT CHANGE THIS LINE vvv
-  set(CMMM_BOOTSTRAP_VERSION 2)
+  set(CMMM_BOOTSTRAP_VERSION GET_CMAKEMM_VERSION)
   # ^^^ DO NOT CHANGE THIS LINE ^^^
 
   # Include Entry.cmake
