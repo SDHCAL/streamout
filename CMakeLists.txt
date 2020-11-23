@@ -11,8 +11,11 @@ configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/READ
 
 # Download CMakeCM
 include(GetCMakeMM)
-
-cmmm(VERSION "1.1" URL "https://raw.githubusercontent.com/flagarde/CMakeMM" VERBOSE DESTINATION "CMakeMM" ALWAYS_DOWNLOAD)
+cmmm(VERSION "1.0" 
+      GIT_REPOSITORY "flagarde/CMakeMM"
+      VERBOSITY VERBOSE
+      DESTINATION "CMakeMM" 
+    )
 
 cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMakeCM2" BRANCH master FOLDER modules DESTINATION "Modules")
 
