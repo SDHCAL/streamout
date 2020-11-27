@@ -1,1 +1,1 @@
-include(CLI11_project)
+include(CLI11)

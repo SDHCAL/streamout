@@ -1,1 +1,1 @@
-include(LCIO_project)
+include(LCIO)

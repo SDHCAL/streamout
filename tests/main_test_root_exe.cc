@@ -1,4 +1,4 @@
-#include "CLI.hpp"
+#include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
 #include "ROOTtreeDest.h"
 #include "SDHCAL_buffer_loop.h"

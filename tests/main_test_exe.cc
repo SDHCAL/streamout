@@ -1,4 +1,4 @@
-#include "CLI.hpp"
+#include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
 #include "SDHCAL_buffer_loop.h"
 #include "textDump.h"
