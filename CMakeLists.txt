@@ -73,5 +73,6 @@ endif()
 
 if(BUILD_TESTS)
   include(CTest)
+  include(Doctest)
   add_subdirectory(tests)
 endif()
