@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 set(GITHUB_ORGANIZATION "SDHCAL")
 set(PROJECT_NAME "streamout")
@@ -9,20 +9,28 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
 
 configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/README.md" @ONLY)
 
+#set(CMAKE_MACOSX_RPATH TRUE)
+#set(CMAKE_SKIP_BUILD_RPATH FALSE)
+#set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+#link_directories("${CMAKE_INSTALL_PREFIX}/lib")
+
+
 # Download CMakeCM
 include(GetCMakeMM)
-cmmm(VERSION "1.0" 
+cmmm(VERSION "1.0"
       GIT_REPOSITORY "flagarde/CMakeMM"
       VERBOSITY VERBOSE
-      DESTINATION "CMakeMM" 
+      DESTINATION "CMakeMM"
     )
 
-cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMakeCM2" BRANCH master FOLDER modules DESTINATION "Modules")
+cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMakeCM" BRANCH master DESTINATION "Modules")
 
-# Install Common utilities from CMakeCM
-include(Common)
-
+include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
+
+include(Standards)
 cxx_14()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_INSTALL_PREFIX}/lib/cmake")
