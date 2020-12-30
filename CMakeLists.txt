@@ -19,13 +19,13 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 
 # Download CMakeCM
 include(GetCMakeMM)
-cmmm(VERSION "1.0"
+cmmm(VERSION "1.3"
       GIT_REPOSITORY "flagarde/CMakeMM"
       VERBOSITY VERBOSE
       DESTINATION "CMakeMM"
     )
 
-cmmm_modules_list(URL "https://raw.githubusercontent.com/flagarde/CMakeCM" BRANCH master DESTINATION "Modules")
+cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCM" BRANCH master DESTINATION "Modules")
 
 include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
