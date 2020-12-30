@@ -25,7 +25,7 @@ cmmm(VERSION "1.3"
       DESTINATION "CMakeMM"
     )
 
-cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCM" BRANCH master DESTINATION "Modules")
+cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCMTests" BRANCH master DESTINATION "Modules")
 
 include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
