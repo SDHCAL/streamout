@@ -1,5 +1,15 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
+# Download CMakeCM and include it as soon as possible
+include(GetCMakeMM)
+cmmm(VERSION "1.0"
+      REPOSITORY "flagarde/CMakeMM"
+      VERBOSITY VERBOSE
+      DESTINATION "CMakeMM"
+    )
+
+cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCMTests" BRANCH master DESTINATION "Modules")
+
 set(GITHUB_ORGANIZATION "SDHCAL")
 set(PROJECT_NAME "streamout")
 
@@ -17,15 +27,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
 
 
-# Download CMakeCM
-include(GetCMakeMM)
-cmmm(VERSION "1.3"
-      REPOSITORY "flagarde/CMakeMM"
-      VERBOSITY VERBOSE
-      DESTINATION "CMakeMM"
-    )
 
-cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCMTests" BRANCH master DESTINATION "Modules")
 
 include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
