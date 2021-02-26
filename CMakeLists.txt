@@ -20,7 +20,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 # Download CMakeCM
 include(GetCMakeMM)
 cmmm(VERSION "1.3"
-      GIT_REPOSITORY "flagarde/CMakeMM"
+      REPOSITORY "flagarde/CMakeMM"
       VERBOSITY VERBOSE
       DESTINATION "CMakeMM"
     )
