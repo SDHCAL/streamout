@@ -18,7 +18,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
 
 include(DefaultInstallPrefix)
-default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
+default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
 
 include(Standards)
 cxx_14()
