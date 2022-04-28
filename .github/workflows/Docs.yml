@@ -37,7 +37,7 @@ jobs:
       - name: '🐍 Install Conda environment'
         uses: mamba-org/provision-with-micromamba@v11
         with:
-          environment-file: .github/micromamba/docs.yml
+          environment-file: .github/workflows/micromamba/docs.yml
 
       - name: '🟨 Install miktex'
         run: |
