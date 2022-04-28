@@ -1,14 +1,18 @@
+/** \file SDHCAL_RawBuffer_Navigator.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #pragma once
 
 #include "DIFPtr.h"
 #include "SDHCAL_buffer.h"
 
 #include <iostream>
-//class to navigate in the raw data buffer
+// class to navigate in the raw data buffer
 class SDHCAL_RawBuffer_Navigator
 {
 public:
-  SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b, const int& start = -1);
+  explicit SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b, const int& start = -1);
   ~SDHCAL_RawBuffer_Navigator();
   bool           validBuffer();
   std::uint32_t  getStartOfDIF();
@@ -23,7 +27,7 @@ public:
   SDHCAL_buffer  getSCBuffer();
   bool           badSCData();
   SDHCAL_buffer  getEndOfAllData();
-  void static StartAt(const int& start);
+  static void    StartAt(const int& start);
 
 private:
   void          setSCBuffer();

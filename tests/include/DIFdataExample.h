@@ -1,5 +1,9 @@
-#ifndef DIFdataExample_h
-#define DIFdataExample_h
+/** \file DIFdataExample.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
+#ifndef DIFDATAEXAMPLE_H_
+#define DIFDATAEXAMPLE_H_
 
 #include "SDHCAL_buffer.h"
 
@@ -15,11 +19,11 @@ private:
   enum
   {
     BUFFER_SIZE = 143
-  };  //94+49=143
+  };  // 94+49=143
   unsigned char _RAWbuffer[BUFFER_SIZE];
   bool          _first;
   int           _stop{0};
   int           _stopDIF{0};
 };
 
-#endif
+#endif  // DIFDATAEXAMPLE_H_

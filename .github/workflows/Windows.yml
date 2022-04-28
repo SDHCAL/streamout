@@ -1,10 +1,10 @@
+---
 name: Windows
 
 on:
   push:
-    branches: [ master ]
+    branches: [main]
   pull_request:
-    branches: [ master ]
 
 jobs:
   job:
@@ -14,14 +14,11 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-        
-      - name: Configure
-        run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=./bin ..
-      - name: Build
-        run: cmake --build build
-     # - name: Install
-     #   run: cmake --install build
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
 
+    - name: Configure
+      run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=../bin ..
+    - name: Build
+      run: cmake --build build

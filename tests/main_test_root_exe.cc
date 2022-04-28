@@ -1,3 +1,7 @@
+/** \file main_test_root_exe.cc
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
 #include "ROOTtreeDest.h"
@@ -16,7 +20,7 @@ int main(int argc, char** argv)
   std::string outputFileName{"output.root"};
   app.add_option("-o,--output", outputFileName, "Output file name")->expected(1);
   std::string writeOption{"RECREATE"};
-  //To do ask CLI11 to check only the relevant strings
+  // To do ask CLI11 to check only the relevant strings
   app.add_option("-w,--writeOption", writeOption, "Root writing option")->expected(1);
   std::string title{"Test for SDHCAL raw data file"};
   app.add_option("-t,--title", title, "Root writing option")->expected(1);
