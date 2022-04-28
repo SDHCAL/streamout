@@ -10,16 +10,16 @@ int main(int argc, char** argv)
 {
   CLI::App      app{"SDHCAL buffer loop with ROOT file destination"};
   std::uint32_t eventNbr{0};
-  app.add_option("-e,--events", eventNbr, "Event number to process", 0)->expected(1)->check(CLI::PositiveNumber);
-  std::uint32_t bitsToSkip{0};
-  app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer", 92)->expected(1)->check(CLI::PositiveNumber);
+  app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
+  std::uint32_t bitsToSkip{92};
+  app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1)->check(CLI::PositiveNumber);
   std::string outputFileName{"output.root"};
-  app.add_option("-o,--output", outputFileName, "Output file name", "output.root")->expected(1);
+  app.add_option("-o,--output", outputFileName, "Output file name")->expected(1);
   std::string writeOption{"RECREATE"};
   //To do ask CLI11 to check only the relevant strings
-  app.add_option("-w,--writeOption", writeOption, "Root writing option", "RECREATE")->expected(1);
+  app.add_option("-w,--writeOption", writeOption, "Root writing option")->expected(1);
   std::string title{"Test for SDHCAL raw data file"};
-  app.add_option("-t,--title", title, "Root writing option", "RECREATE")->expected(1);
+  app.add_option("-t,--title", title, "Root writing option")->expected(1);
   bool verbose{false};
   app.add_flag("-v,--verbose", verbose, "Set verbosity");
   bool debug{false};

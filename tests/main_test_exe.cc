@@ -9,9 +9,9 @@ int main(int argc, char** argv)
 {
   CLI::App      app{"SDHCAL buffer loop with textDump destination"};
   std::uint32_t eventNbr{0};
-  app.add_option("-e,--events", eventNbr, "Event number to process", 0)->expected(1)->check(CLI::PositiveNumber);
-  std::uint32_t bitsToSkip{0};
-  app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer", 92)->expected(1)->check(CLI::PositiveNumber);
+  app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
+  std::uint32_t bitsToSkip{92};
+  app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1)->check(CLI::PositiveNumber);
   bool verbose{false};
   app.add_flag("-v,--verbose", verbose, "Set verbosity");
   bool debug{false};
