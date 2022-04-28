@@ -1,3 +1,7 @@
+/** \file SDHCAL_buffer_loop.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #pragma once
 
 #include "SDHCAL_RawBuffer_Navigator.h"
@@ -7,7 +11,7 @@
 #include <cassert>
 #include <iostream>
 #include <ostream>
-//function to loop on buffers
+// function to loop on buffers
 //
 // template class should implement
 // bool SOURCE::next();
@@ -24,8 +28,8 @@
 template<typename SOURCE, typename DESTINATION> class SDHCAL_buffer_loop
 {
 public:
-  SDHCAL_buffer_loop(SOURCE& source, DESTINATION& dest, bool debug = false, std::ostream& out = std::cout, bool verbose = false, std::ostream& verbose_out = std::cout)
-      : m_Source(source), m_Destination(dest), m_Debug(debug), m_DebugOut(out), m_Verbose(verbose), m_VerboseOut(verbose_out)
+  SDHCAL_buffer_loop(SOURCE& source, DESTINATION& dest, bool debug = false, std::ostream& out = std::cout, bool verbose = false, std::ostream& verbose_out = std::cout) :
+    m_Source(source), m_Destination(dest), m_Debug(debug), m_DebugOut(out), m_Verbose(verbose), m_VerboseOut(verbose_out)
   {
   }
   void loop(const std::int32_t& m_NbrEventsToProcess = 0)
@@ -86,9 +90,9 @@ public:
 
         int nonzeroCount = 0;
         for(unsigned char* it = eod.buffer(); it != eod.endOfBuffer(); it++)
-          if(int(*it) != 0) nonzeroCount++;
+          if(static_cast<int>(*it) != 0) nonzeroCount++;
         c.NonZeroValusAtEndOfData[nonzeroCount]++;
-      }  //end of DIF while loop
+      }  // end of DIF while loop
       m_NbrEvents++;
     }  // end of event while loop
     m_Destination.end();

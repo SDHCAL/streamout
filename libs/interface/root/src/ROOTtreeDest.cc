@@ -15,10 +15,7 @@ void ROOTtreeDest::dataReset()
   _data.AbsoluteBCID                                                          = 0;
 }
 
-void ROOTtreeDest::start()
-{
-  dataReset();
-}
+void ROOTtreeDest::start() { dataReset(); }
 
 void ROOTtreeDest::processDIF(DIFPtr* d)
 {

@@ -1,3 +1,7 @@
+/** \file SDHCAL_buffer_LoopCounter.cc
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #include "SDHCAL_buffer_LoopCounter.h"
 
 void SDHCAL_buffer_LoopCounter::printAllCounters(std::ostream& out)

@@ -1,3 +1,7 @@
+/** \file Words.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #pragma once
 
 class DU

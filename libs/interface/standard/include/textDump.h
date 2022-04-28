@@ -1,3 +1,7 @@
+/** \file textDump.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #ifndef textDump_h
 #define textDump_h
 
@@ -10,7 +14,7 @@
 class textDump
 {
 public:
-  textDump(std::ostream& out = std::cout): _out(out) { ; }
+  explicit textDump(std::ostream& out = std::cout) : _out(out) { ; }
   void start();
   void processDIF(DIFPtr*);
   void processFrame(DIFPtr*, uint32_t frameIndex);
