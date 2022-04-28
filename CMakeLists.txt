@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
 include(GetCMakeMM)
 cmmm(VERSION "2.3" REPOSITORY "flagarde/CMakeMM" VERBOSITY VERBOSE)
 
-cmmm_modules_list(PROVIDER github REPOSITORY "SDHCAL/SDHCALCMakeModules" BRANCH main DESTINATION "Modules")
+cmmm_modules_list(PROVIDER github REPOSITORY "SDHCAL/CMakeModules" BRANCH main DESTINATION "Modules")
 
 project(SDHCAL VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/SDHCAL/streamout" LANGUAGES CXX)
 
@@ -18,7 +18,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
 
 include(DefaultInstallPrefix)
-default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
+default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
 
 include(Standards)
 cxx_14()
