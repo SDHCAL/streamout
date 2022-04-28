@@ -4,20 +4,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
 
 # Download CMakeCM and include it as soon as possible
 include(GetCMakeMM)
-cmmm(VERSION "1.0"
-      REPOSITORY "flagarde/CMakeMM"
-      VERBOSITY VERBOSE
-      DESTINATION "CMakeMM"
-    )
+cmmm(VERSION "2.3" REPOSITORY "flagarde/CMakeMM" VERBOSITY VERBOSE)
 
-cmmm_modules_list(GIT_REPOSITORY "flagarde/CMakeCMTests" BRANCH master DESTINATION "Modules")
+cmmm_modules_list(PROVIDER github REPOSITORY "SDHCAL/SDHCALCMakeModules" BRANCH main DESTINATION "Modules")
 
-set(GITHUB_ORGANIZATION "SDHCAL")
-set(PROJECT_NAME "streamout")
-
-project(${PROJECT_NAME} VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/${GITHUB_ORGANIZATION}/${PROJECT_NAME}" LANGUAGES CXX)
-
-
+project(SDHCAL VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/SDHCAL/streamout" LANGUAGES CXX)
 
 configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/README.md" @ONLY)
 
@@ -27,9 +18,6 @@ configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/READ
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
-
-
-
 
 include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/bin")
