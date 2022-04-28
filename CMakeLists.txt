@@ -10,8 +10,6 @@ cmmm_modules_list(PROVIDER github REPOSITORY "SDHCAL/SDHCALCMakeModules" BRANCH 
 
 project(SDHCAL VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/SDHCAL/streamout" LANGUAGES CXX)
 
-configure_file("${CMAKE_SOURCE_DIR}/docs/README.md.in" "${CMAKE_SOURCE_DIR}/README.md" @ONLY)
-
 #set(CMAKE_MACOSX_RPATH TRUE)
 #set(CMAKE_SKIP_BUILD_RPATH FALSE)
 #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
