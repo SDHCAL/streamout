@@ -1,8 +1,13 @@
+/** \file DIFSlowControl.cc
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #include "DIFSlowControl.h"
 
+#include <cstdint>
 #include <iostream>
 
-DIFSlowControl::DIFSlowControl(const unsigned int& version, const unsigned short& DIfId, unsigned char* cbuf): m_Version(version), m_DIFId(DIfId), m_AsicType(2)
+DIFSlowControl::DIFSlowControl(const std::uint8_t& version, const std::uint8_t& DIfId, unsigned char* cbuf) : m_Version(version), m_DIFId(DIfId), m_AsicType(2)
 {
   if(cbuf[0] != 0xb1) return;
   int header_shift{6};
@@ -29,25 +34,13 @@ DIFSlowControl::DIFSlowControl(const unsigned int& version, const unsigned short
     return;
 }
 
-inline unsigned short DIFSlowControl::getDIFId()
-{
-  return m_DIFId;
-}
+inline std::uint8_t DIFSlowControl::getDIFId() { return m_DIFId; }
 
-inline std::map<int, std::map<std::string, int>> DIFSlowControl::getChipsMap()
-{
-  return m_MapSC;
-}
+inline std::map<int, std::map<std::string, int>> DIFSlowControl::getChipsMap() { return m_MapSC; }
 
-inline std::map<std::string, int> DIFSlowControl::getChipSlowControl(const int& asicid)
-{
-  return m_MapSC[asicid];
-}
+inline std::map<std::string, int> DIFSlowControl::getChipSlowControl(const int& asicid) { return m_MapSC[asicid]; }
 
-inline int DIFSlowControl::getChipSlowControl(const int& asicid, const std::string& param)
-{
-  return getChipSlowControl(asicid)[param];
-}
+inline int DIFSlowControl::getChipSlowControl(const std::int8_t& asicid, const std::string& param) { return getChipSlowControl(asicid)[param]; }
 
 void DIFSlowControl::Dump()
 {
@@ -65,7 +58,7 @@ void DIFSlowControl::FillHR1(const int& header_shift, unsigned char* cbuf)
   for(int k = 0; k < nasic; k++)
   {
     std::bitset<72 * 8> bs;
-    //printf("%x %x \n",cbuf[idx+k*72+69],cbuf[idx+k*72+70]);
+    // printf("%x %x \n",cbuf[idx+k*72+69],cbuf[idx+k*72+70]);
     for(int l = 71; l >= 0; l--)
     {
       //  printf("%d %x : %d -->",l,cbuf[idx+k*72+l],(71-l)*8);
@@ -74,9 +67,9 @@ void DIFSlowControl::FillHR1(const int& header_shift, unsigned char* cbuf)
         if(((1 << m) & cbuf[idx + k * 72 + l]) != 0) bs.set((71 - l) * 8 + m, 1);
         else
           bs.set((71 - l) * 8 + m, 0);
-        //printf("%d",(int) bs[(71-l)*8+m]);
+        // printf("%d",(int) bs[(71-l)*8+m]);
       }
-      //printf("\n");
+      // printf("\n");
     }
     FillAsicHR1(bs);
   }
@@ -87,11 +80,11 @@ void DIFSlowControl::FillHR2(const int& header_shift, unsigned char* cbuf)
   // int scsize1=cbuf[header_shift-1]*109+(header_shift-1)+2;
   int nasic{cbuf[header_shift - 1]};
   int idx{header_shift};
-  //std::cout<<" DIFSlowControl::FillHR nasic "<<nasic<<std::endl;
+  // std::cout<<" DIFSlowControl::FillHR nasic "<<nasic<<std::endl;
   for(int k = 0; k < nasic; k++)
   {
     std::bitset<109 * 8> bs;
-    //printf("%x %x \n",cbuf[idx+k*109+69],cbuf[idx+k*109+70]);
+    // printf("%x %x \n",cbuf[idx+k*109+69],cbuf[idx+k*109+70]);
     for(int l = 108; l >= 0; l--)
     {
       //  printf("%d %x : %d -->",l,cbuf[idx+k*109+l],(71-l)*8);
@@ -100,9 +93,9 @@ void DIFSlowControl::FillHR2(const int& header_shift, unsigned char* cbuf)
         if(((1 << m) & cbuf[idx + k * 109 + l]) != 0) bs.set((108 - l) * 8 + m, 1);
         else
           bs.set((108 - l) * 8 + m, 0);
-        //printf("%d",(int) bs[(71-l)*8+m]);
+        // printf("%d",(int) bs[(71-l)*8+m]);
       }
-      //printf("\n");
+      // printf("\n");
     }
     FillAsicHR2(bs);
   }
@@ -261,7 +254,7 @@ void DIFSlowControl::FillAsicHR2(const std::bitset<109 * 8>& bs)
   mAsic["ScOn"]         = static_cast<int>(bs[8 * 107 + 3]);
   mAsic["CLKMux"]       = static_cast<int>(bs[8 * 107 + 4]);
 
-  // EnOCDout1b 	EnOCDout2b 	EnOCTransmitOn1b 	EnOCTransmitOn2b 	EnOCChipsatb 	SelStartReadout 	SelEndReadout
+  // EnOCDout1b   EnOCDout2b   EnOCTransmitOn1b   EnOCTransmitOn2b   EnOCChipsatb   SelStartReadout   SelEndReadout
   mAsic["SelEndReadout"]    = static_cast<int>(bs[8 * 108 + 1]);
   mAsic["SelStartReadout"]  = static_cast<int>(bs[8 * 108 + 2]);
   mAsic["EnOCChipsatb"]     = static_cast<int>(bs[8 * 108 + 3]);

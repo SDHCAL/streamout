@@ -1,6 +1,10 @@
+/** \file DIFPtr.CC
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #include "DIFPtr.h"
 
-DIFPtr::DIFPtr(unsigned char* p, const std::uint32_t& max_size): theDIF_(p), theSize_(max_size)
+DIFPtr::DIFPtr(unsigned char* p, const std::uint32_t& max_size) : theDIF_(p), theSize_(max_size)
 {
   theFrames_.clear();
   theLines_.clear();

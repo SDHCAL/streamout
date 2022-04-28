@@ -31,23 +31,21 @@ option(BUILD_TESTS "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
 option(BUILD_DOCS "Build the docs" OFF)
 
-
 ## Version of the data
 set(DATA_FORMAT_VERSION "13" CACHE STRING "Version of the data format")
 
-
-if (BUILD_ROOT_INTERFACE)
+if(BUILD_ROOT_INTERFACE)
   message(STATUS "Build with ROOT")
   list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
   find_package(ROOT REQUIRED COMPONENTS Tree)
   ## Is mainly the most important PROPERTY
   get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
-    if(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_14")
-      set( CMAKE_CXX_STANDARD 14 )
-    elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_17")
-      set( CMAKE_CXX_STANDARD 17 )
-    elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_20")
-      set( CMAKE_CXX_STANDARD 20 )
+  if(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_14")
+    set( CMAKE_CXX_STANDARD 14 )
+  elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_17")
+    set( CMAKE_CXX_STANDARD 17 )
+  elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_20")
+    set( CMAKE_CXX_STANDARD 20 )
   endif()
 endif()
 

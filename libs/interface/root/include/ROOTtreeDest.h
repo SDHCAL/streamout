@@ -1,3 +1,7 @@
+/** \file ROOTtreeDest.h
+ *  \copyright 2022 G.Grenier F.Lagarde
+ */
+
 #ifndef ROOTtreeDest_h
 #define ROOTtreeDest_h
 
