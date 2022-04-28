@@ -1,0 +1,73 @@
+
+name: 'docs'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+env:
+  CMAKE_VERSION: '3.16.x'
+  CMAKE_BUILD_TYPE: 'Release'
+  CMAKE_BUILD_PREFIX: './build'
+  CMAKE_INSTALL_PREFIX: './install'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: '📚 Docs'
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: '🟨 Install packages'
+        run: sudo apt-get install dia mscgen inkscape
+
+      - name: '🐍 Install Conda environment'
+        uses: mamba-org/provision-with-micromamba@v11
+        with:
+          environment-file: .github/micromamba/docs.yml
+
+      - name: '🟨 Install miktex'
+        run: |
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D6BC243565B2087BC3F897C9277A7293F59E4889
+          echo "deb http://miktex.org/download/ubuntu focal universe" | sudo tee /etc/apt/sources.list.d/miktex.list
+          sudo apt-get update
+          sudo apt-get install miktex
+          sudo miktexsetup --shared=yes finish
+          sudo initexmf --admin --set-config-value [MPM]AutoInstall=1
+      - name: '🟨 Setup CMake'
+        uses: jwlawson/actions-setup-cmake@v1.12
+        with:
+          cmake-version: '${{env.CMAKE_VERSION}}'
+          github-api-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: '🔧 Configure'
+        run: cmake -S . -B ${{ env.CMAKE_BUILD_PREFIX }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DBUILD_DOCS=ON -DCMAKE_PREFIX_PATH="~/micromamba"
+
+      - name: '⚙️ Build'
+        run: cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2 --target all docs
+
+      - name: '📥 Install'
+        run: cmake --install ${{ env.CMAKE_BUILD_PREFIX }} --prefix ${{ env.CMAKE_INSTALL_PREFIX }} --strip
+          && mv ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/pdf/streamout_Manual.pdf ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/streamout_Manual.pdf
+
+      - name: '🎉 Deploy'
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.INTER_REPOS }}
+          REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
+          BRANCH: main
+          FOLDER: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
+          TARGET_FOLDER: docs/streamout
