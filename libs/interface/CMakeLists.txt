@@ -1,3 +1,6 @@
+# The SDHCAL RawFormat
+add_subdirectory(RawFormat)
+
 # standard
 add_library(standard standard/src/textDump.cc)
 target_include_directories(standard PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/standard/include")
@@ -11,6 +14,6 @@ if(BUILD_ROOT_INTERFACE)
   install(TARGETS root RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 endif()
 
-if(BUILD_LCIO_INTERFACE)
+if(BUILD_LCIO_INTERFACE AND NOT MSVC)
   add_subdirectory(LCIO)
 endif()
