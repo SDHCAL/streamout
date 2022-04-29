@@ -7,4 +7,4 @@
 
 ## Standalone SDHCAL raw data processor ##
 
-[Documentation](https://github.com/SDHCAL/streamout)
+[Documentation](https://sdhcal.github.io/docs/streamout)
