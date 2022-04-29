@@ -1,6 +1,3 @@
-# The SDHCAL RawFormat
-add_subdirectory(RawFormat)
-
 # standard
 add_library(standard standard/src/textDump.cc)
 target_include_directories(standard PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/standard/include")
