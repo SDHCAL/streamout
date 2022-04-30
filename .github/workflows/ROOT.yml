@@ -1,0 +1,45 @@
+---
+name: ROOT
+
+on:
+  push:
+    branches: ['main']
+    pull_request:
+    
+env:
+  BUILD_TYPE: Release
+  CXX: g++-9
+  
+jobs:
+  test ROOT codes:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false    
+
+    container: ghcr.io/flagarde/ci_bak-archlinux-gcc-default-x86_64:main
+
+    steps:
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Install ROOT
+        run: pacman -S --noconfirm root
+        
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v1.12
+        with:
+          cmake-version: 3.23.x
+          github-api-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+        
+      - name: '🔧 Configure'
+        run: cmake -G Ninja -S ./tests -B ./build -D CMAKE_BUILD_TYPE=Release
+
+      - name: '⚙️ Build'
+        run: cmake --build ./build --config Release --parallel 2
+
+        
