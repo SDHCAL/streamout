@@ -4,14 +4,14 @@ name: ROOT
 on:
   push:
     branches: ['main']
-    pull_request:
+  pull_request:
     
 env:
   BUILD_TYPE: Release
   CXX: g++-9
   
 jobs:
-  test ROOT codes:
+  Root:
 
     runs-on: ubuntu-latest
     strategy:
