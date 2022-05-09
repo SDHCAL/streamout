@@ -40,9 +40,9 @@ public:
       while(m_Source.nextDIFbuffer())
       {
         SDHCAL_buffer              buffer           = m_Source.getSDHCALBuffer();
-        unsigned char*             debug_variable_1 = buffer.endOfBuffer();
+        unsigned char*             debug_variable_1 = buffer.end();
         SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
-        unsigned char*             debug_variable_2 = bufferNavigator.getDIFBuffer().endOfBuffer();
+        unsigned char*             debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         if(m_Verbose) m_VerboseOut << "DIF BUFFER END " << (unsigned int*)debug_variable_1 << " " << (unsigned int*)debug_variable_2 << std::endl;
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
         uint32_t idstart = bufferNavigator.getStartOfDIF();
@@ -78,8 +78,8 @@ public:
         if(processSC) { m_Destination.processSlowControl(bufferNavigator.getSCBuffer()); }
 
         SDHCAL_buffer eod = bufferNavigator.getEndOfAllData();
-        c.SizeAfterAllData[eod.getsize()]++;
-        unsigned char* debug_variable_3 = eod.endOfBuffer();
+        c.SizeAfterAllData[eod.size()]++;
+        unsigned char* debug_variable_3 = eod.end();
         if(m_Verbose) m_VerboseOut << "END DATA BUFFER END " << (unsigned int*)debug_variable_1 << " " << (unsigned int*)debug_variable_3 << std::endl;
         if(m_Debug) assert(debug_variable_1 == debug_variable_3);
         if(m_Verbose)
@@ -89,7 +89,7 @@ public:
         }
 
         int nonzeroCount = 0;
-        for(unsigned char* it = eod.buffer(); it != eod.endOfBuffer(); it++)
+        for(unsigned char* it = eod.begin(); it != eod.end(); it++)
           if(static_cast<int>(*it) != 0) nonzeroCount++;
         c.NonZeroValusAtEndOfData[nonzeroCount]++;
       }  // end of DIF while loop

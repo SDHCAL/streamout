@@ -1,4 +1,6 @@
 add_library(Core
+						src/Bits.cc
+						src/Buffer.cc
             src/DIFSlowControl.cc
             src/DIFUnpacker.cc
             src/SDHCAL_buffer.cc
