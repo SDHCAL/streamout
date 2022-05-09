@@ -19,6 +19,7 @@ public:
   void setSize(const std::size_t& size) { m_Size = size;}
   void           printBuffer(uint32_t start, uint32_t stop, std::ostream& flux = std::cout);
   void           printBuffer(uint32_t start = 0, std::ostream& flux = std::cout) { printBuffer(start, size()); }
+  virtual ~SDHCAL_buffer();
 private:
   unsigned char* m_Buffer{nullptr};
   std::size_t m_Size{0};
