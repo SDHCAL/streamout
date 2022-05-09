@@ -7,7 +7,4 @@ void SDHCAL_buffer::printBuffer(unsigned int start, unsigned int stop, std::ostr
   flux << std::dec << std::endl;
 }
 
-SDHCAL_buffer::~SDHCAL_buffer()
-{
-  std::cout<<"SDHCAL_buffer destructor called"<<std::endl;
-}
+SDHCAL_buffer::~SDHCAL_buffer() { std::cout << "SDHCAL_buffer destructor called" << std::endl; }

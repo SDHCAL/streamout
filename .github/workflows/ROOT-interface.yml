@@ -3,42 +3,42 @@ name: ROOT interface
 
 on:
   push:
-    branches: ['main']
+    branches: [main]
   pull_request:
-    
+
 env:
   BUILD_TYPE: Release
-  
+
 jobs:
   Root:
 
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false    
+      fail-fast: false
 
     container: ghcr.io/flagarde/ci_bak-archlinux-gcc-default-x86_64:main
 
     steps:
-      
-      - name: Checkout
-        uses: actions/checkout@v3
-      
-      - name: Install ROOT
-        run: pacman -Syu --noconfirm ; pacman -S --noconfirm git root
-        
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: 3.23.x
-          github-api-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-        
-      - name: '🔧 Configure'
-        run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=ON
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: '⚙️ Build'
-        run: cmake --build ./build --config Release --parallel 2
+    - name: Install ROOT
+      run: pacman -Syu --noconfirm ; pacman -S --noconfirm git root
 
-        
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v1.12
+      with:
+        cmake-version: 3.23.x
+        github-api-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Ninja
+      uses: seanmiddleditch/gha-setup-ninja@master
+
+    - name: 🔧 Configure
+      run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=ON
+
+    - name: ⚙️ Build
+      run: cmake --build ./build --config Release --parallel 2
+
+

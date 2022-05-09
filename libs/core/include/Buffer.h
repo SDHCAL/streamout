@@ -12,4 +12,4 @@ private:
   bool m_Allocate{false};
 };
 
-#endif // BUFFER_H_
+#endif  // BUFFER_H_
