@@ -2,10 +2,10 @@ include(CLI11)
 
 add_library(DIFdataExample src/DIFdataExample.cc)
 target_include_directories(DIFdataExample PUBLIC include)
-target_link_libraries(DIFdataExample PUBLIC core)
+target_link_libraries(DIFdataExample PUBLIC Streamout::Core)
 
 add_executable(test_exe main_test_exe.cc)
-target_link_libraries(test_exe PRIVATE standard DIFdataExample CLI11)
+target_link_libraries(test_exe PRIVATE Streamout::Interface::Dump DIFdataExample CLI11)
 install(TARGETS test_exe RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 add_test(NAME test_exe COMMAND test_exe)
 

@@ -1,10 +1,11 @@
-add_library(core
+add_library(Core
             src/DIFSlowControl.cc
             src/DIFUnpacker.cc
             src/SDHCAL_buffer.cc
             src/SDHCAL_buffer_LoopCounter.cc
             src/SDHCAL_RawBuffer_Navigator.cc
             src/DIFPtr.cc)
-target_include_directories(core PUBLIC include)
-target_compile_definitions(core PRIVATE "-DDATA_FORMAT_VERSION=${DATA_FORMAT_VERSION}")
-install(TARGETS core RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+target_include_directories(Core PUBLIC include)
+target_compile_definitions(Core PRIVATE "-DDATA_FORMAT_VERSION=${DATA_FORMAT_VERSION}")
+add_library(Streamout::Core ALIAS Core)
+install(TARGETS Core RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)

@@ -1,0 +1,7 @@
+missive(WARN "Build with Dump interface")
+add_library(Dump src/textDump.cc)
+target_include_directories(Dump PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(Dump PUBLIC Streamout::Core)
+add_library(Streamout::Interface::Dump ALIAS Dump)
+target_link_libraries(Interfaces INTERFACE Streamout::Interface::Dump)
+install(TARGETS Dump RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
