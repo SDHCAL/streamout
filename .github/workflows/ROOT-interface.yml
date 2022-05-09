@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Install ROOT
-        run: pacman -S --noconfirm git root
+        run: pacman -Syu --noconfirm ; pacman -S --noconfirm git root
         
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v1.12
