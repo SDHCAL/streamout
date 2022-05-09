@@ -1,14 +1,7 @@
-# standard
-add_library(standard standard/src/textDump.cc)
-target_include_directories(standard PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/standard/include")
-target_link_libraries(standard PUBLIC core)
-install(TARGETS standard RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+add_subdirectory(standard)
 
 if(BUILD_ROOT_INTERFACE)
-  add_library(root "${CMAKE_CURRENT_SOURCE_DIR}/root/src/ROOTtreeDest.cc")
-  target_include_directories(root PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/root/include" ${ROOT_INCLUDE_DIRS})
-  target_link_libraries(root PUBLIC core ${ROOT_LIBRARIES} )
-  install(TARGETS root RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+  add_subdirectory(root)
 endif()
 
 if(BUILD_LCIO_INTERFACE AND NOT MSVC)
