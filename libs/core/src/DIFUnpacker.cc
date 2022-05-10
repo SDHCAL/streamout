@@ -147,7 +147,7 @@ void DIFUnpacker::dumpFrameOld(const unsigned char* buf)
   std::uint32_t idx1{4};
   for(int ik = 0; ik < 4; ik++)
   {
-    std::uint32_t PadEtat{swap_bytes(4, &buf[idx1])};
+    std::uint32_t PadEtat{swap_bytes(&buf[idx1])};
     idx1 += 4;
     for(int e = 0; e < 32; e++)
     {
@@ -172,9 +172,9 @@ void DIFUnpacker::dumpFrameOld(const unsigned char* buf)
   std::cout << "\t \t" << bs1 << std::endl;
 }
 
-std::uint32_t DIFUnpacker::swap_bytes(const size_t& n, const unsigned char* buf)
+std::uint32_t DIFUnpacker::swap_bytes(const unsigned char* buf)
 {
-  unsigned char Swapped[n];
-  for(std::size_t i = 0; i < n; i++) Swapped[i] = buf[n - 1 - i];
+  unsigned char Swapped[4];
+  for(std::size_t i = 0; i < 4; i++) Swapped[i] = buf[4 - 1 - i];
   return *reinterpret_cast<std::uint32_t*>(&Swapped[0]);
 }

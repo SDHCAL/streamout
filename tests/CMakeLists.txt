@@ -9,14 +9,14 @@ target_link_libraries(test_exe PRIVATE Streamout::Interface::Dump DIFdataExample
 install(TARGETS test_exe RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 add_test(NAME test_exe COMMAND test_exe)
 
-if (BUILD_ROOT_INTERFACE)
+if(BUILD_ROOT_INTERFACE)
   add_executable(test_root_exe main_test_root_exe.cc)
   target_link_libraries(test_root_exe PRIVATE Streamout::Interface::ROOT DIFdataExample CLI11)
   install(TARGETS test_root_exe RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
   add_test(NAME test_root_exe COMMAND test_root_exe)
 endif()
 
-if (BUILD_LCIO_INTERFACE AND NOT MSVC)
+if(BUILD_LCIO_INTERFACE AND NOT MSVC)
   add_executable(test_lcio_exe main_test_lcio_exe.cc)
   target_link_libraries(test_lcio_exe PRIVATE LCIO::LCIO DIFdataExample CLI11)
   install(TARGETS test_lcio_exe RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
