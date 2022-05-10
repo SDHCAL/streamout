@@ -47,7 +47,8 @@ std::uint32_t DIFUnpacker::getGTC(const unsigned char* cb, const std::uint32_t& 
 std::uint64_t DIFUnpacker::getAbsoluteBCID(const unsigned char* cb, const std::uint32_t& idx)
 {
   std::uint64_t Shift{16777216ULL};  // to shift the value from the 24 first bits
-  std::uint64_t LBC = ((cb[idx + DU::ABCID_SHIFT] << 16) | (cb[idx + DU::ABCID_SHIFT + 1] << 8) | (cb[idx + DU::ABCID_SHIFT + 2])) * Shift + ((cb[idx + DU::ABCID_SHIFT + 3] << 16) | (cb[idx + DU::ABCID_SHIFT + 4] << 8) | (cb[idx + DU::ABCID_SHIFT + 5]));
+  std::uint64_t pos{idx + DU::ABCID_SHIFT};
+  std::uint64_t LBC = ((cb[pos] << 16) | (cb[pos + 1] << 8) | (cb[pos + 2])) * Shift + ((cb[pos + 3] << 16) | (cb[pos + 4] << 8) | (cb[pos + 5]));
   return LBC;
 }
 
@@ -70,7 +71,7 @@ std::uint32_t DIFUnpacker::getFrameAsicHeader(const unsigned char* framePtr) { r
 
 std::uint32_t DIFUnpacker::getFrameBCID(const unsigned char* framePtr)
 {
-  unsigned long long igray = (framePtr[DU::FRAME_BCID_SHIFT] << 16) + (framePtr[DU::FRAME_BCID_SHIFT + 1] << 8) + framePtr[DU::FRAME_BCID_SHIFT + 2];
+  std::uint32_t igray = (framePtr[DU::FRAME_BCID_SHIFT] << 16) + (framePtr[DU::FRAME_BCID_SHIFT + 1] << 8) + framePtr[DU::FRAME_BCID_SHIFT + 2];
   return DIFUnpacker::GrayToBin(igray);
 }
 
@@ -138,15 +139,15 @@ std::uint32_t DIFUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std:
 
 void DIFUnpacker::dumpFrameOld(const unsigned char* buf)
 {
-  bool           PAD[128];
-  bool           l0[64];
-  bool           l1[64];
-  unsigned short un{1};
-  for(int ip = 0; ip < 128; ip++) { PAD[ip] = false; }  // init PADs
+  bool         PAD[128];
+  bool         l0[64];
+  bool         l1[64];
+  std::uint8_t un{1};
+  for(std::size_t ip = 0; ip < 128; ip++) { PAD[ip] = false; }  // init PADs
   std::uint32_t idx1{4};
   for(int ik = 0; ik < 4; ik++)
   {
-    unsigned long PadEtat{swap_bytes(4, &buf[idx1])};
+    std::uint32_t PadEtat{swap_bytes(4, &buf[idx1])};
     idx1 += 4;
     for(int e = 0; e < 32; e++)
     {
@@ -171,10 +172,9 @@ void DIFUnpacker::dumpFrameOld(const unsigned char* buf)
   std::cout << "\t \t" << bs1 << std::endl;
 }
 
-unsigned long DIFUnpacker::swap_bytes(const unsigned int& n, const unsigned char* buf)
+std::uint32_t DIFUnpacker::swap_bytes(const size_t& n, const unsigned char* buf)
 {
-  unsigned char Swapped[4];
-  for(unsigned int i = 0; i < n; i++) Swapped[i] = buf[n - 1 - i];
-  unsigned long* temp = (unsigned long*)&Swapped;
-  return (*temp);
+  unsigned char Swapped[n];
+  for(std::size_t i = 0; i < n; i++) Swapped[i] = buf[n - 1 - i];
+  return *reinterpret_cast<std::uint32_t*>(&Swapped[0]);
 }

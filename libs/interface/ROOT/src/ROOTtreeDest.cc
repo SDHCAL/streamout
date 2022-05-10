@@ -1,3 +1,8 @@
+/**
+*  \file ROOTtreeDest.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "ROOTtreeDest.h"
 
 ROOTtreeDest::ROOTtreeDest()

@@ -2,8 +2,7 @@
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
-#ifndef textDump_h
-#define textDump_h
+#pragma once
 
 #include "DIFPtr.h"
 #include "SDHCAL_buffer.h"
@@ -25,5 +24,3 @@ public:
 private:
   std::ostream& _out;
 };
-
-#endif

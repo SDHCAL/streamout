@@ -1,3 +1,8 @@
+/**
+*  \file SDHCAL_buffer.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "SDHCAL_buffer.h"
 
 void SDHCAL_buffer::printBuffer(unsigned int start, unsigned int stop, std::ostream& flux)

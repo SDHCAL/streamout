@@ -1,3 +1,7 @@
+/** \file SDHCAL_RawBuffer_Navigator.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "SDHCAL_RawBuffer_Navigator.h"
 
 int SDHCAL_RawBuffer_Navigator::m_Start = 92;

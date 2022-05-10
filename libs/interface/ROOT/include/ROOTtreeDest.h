@@ -1,9 +1,9 @@
-/** \file ROOTtreeDest.h
- *  \copyright 2022 G.Grenier F.Lagarde
- */
+/**
+*  \file ROOTtreeDest.h
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
 
-#ifndef ROOTtreeDest_h
-#define ROOTtreeDest_h
+#pragma once
 
 #include "DIFPtr.h"
 #include "SDHCAL_buffer.h"
@@ -34,5 +34,3 @@ private:
   TTree* _tree;
   void   dataReset();
 };
-
-#endif

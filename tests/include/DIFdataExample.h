@@ -2,8 +2,7 @@
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
-#ifndef DIFDATAEXAMPLE_H_
-#define DIFDATAEXAMPLE_H_
+#pragma once
 
 #include "SDHCAL_buffer.h"
 
@@ -25,5 +24,3 @@ private:
   int           _stop{0};
   int           _stopDIF{0};
 };
-
-#endif  // DIFDATAEXAMPLE_H_

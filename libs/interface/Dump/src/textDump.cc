@@ -1,3 +1,7 @@
+/** \file textDump.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "textDump.h"
 
 #include <iostream>

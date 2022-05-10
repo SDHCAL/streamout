@@ -1,3 +1,8 @@
+/**
+*  \file main_test_exe.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
 #include "SDHCAL_buffer_loop.h"

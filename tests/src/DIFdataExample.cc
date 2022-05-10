@@ -1,3 +1,8 @@
+/**
+*  \file DIFdataExample.cc
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+
 #include "DIFdataExample.h"
 
 DIFdataExample::DIFdataExample() : _first(true)

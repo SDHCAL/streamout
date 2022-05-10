@@ -3,13 +3,10 @@
 *  \copyright 2022 G.Grenier F.Lagarde
 */
 
-#ifndef BUFFER_H_
-#define BUFFER_H_
+#pragma once
 
 class Buffer
 {
 private:
   bool m_Allocate{false};
 };
-
-#endif  // BUFFER_H_
