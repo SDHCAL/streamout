@@ -11,5 +11,12 @@
   "language": "en",
   "noConfigSearch": true,
   "words": [],
-  "version": "0.2"
+  "version": "0.2",
+  "dictionaries": [
+    "companies",
+    "softwareTerms",
+    "misc",
+    "latex",
+    "cpp"
+  ]
 }
