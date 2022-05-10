@@ -7,6 +7,9 @@
 [![ROOT interface](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml)
 [![CMake ilcsoft](https://github.com/SDHCAL/streamout/actions/workflows/CMake-ilcsoft.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/CMake-ilcsoft.yml)
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/SDHCAL/streamout/main.svg)](https://results.pre-commit.ci/latest/github/SDHCAL/streamout/main)
+
 ## Standalone SDHCAL raw data processor ##
 
 [Documentation](https://sdhcal.github.io/docs/streamout)
