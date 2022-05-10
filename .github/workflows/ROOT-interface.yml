@@ -33,12 +33,10 @@ jobs:
         github-api-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Ninja
-      uses: seanmiddleditch/gha-setup-ninja@master
+      uses: seanmiddleditch/gha-setup-ninja@v3
 
     - name: 🔧 Configure
       run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=ON
 
     - name: ⚙️ Build
       run: cmake --build ./build --config Release --parallel 2
-
-

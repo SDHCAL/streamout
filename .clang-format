@@ -114,3 +114,6 @@ Standard: c++20
 StatementMacros: []
 TabWidth: 2
 UseTab: Never
+---
+Language: Json
+BasedOnStyle: llvm
