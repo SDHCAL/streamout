@@ -1,0 +1,36 @@
+---
+name: CMake ilcsoft
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  BUILD_TYPE: Release
+  CXX: g++-9
+
+jobs:
+  job:
+    name: Linux GCC
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v1.12
+      with:
+        cmake-version: 3.15.3
+        github-api-token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Configure
+      run: mkdir build && cd build && cmake -DBUILD_ROOT_INTERFACE=OFF -DCMAKE_INSTALL_PREFIX=../bin ..
+    - name: Build
+      run: cmake --build build
+    - name: Install
+      run: cmake --install build
