@@ -26,7 +26,7 @@ public:
   void processDIF(DIFPtr*);
   void processFrame(DIFPtr*, uint32_t frameIndex);
   void processPadInFrame(DIFPtr*, uint32_t frameIndex, uint32_t channelIndex);
-  void processSlowControl(SDHCAL_buffer) { ; }
+  void processSlowControl(const SDHCAL_buffer&) { ; }
   void end() { ; }
 
 private:
