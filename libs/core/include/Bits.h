@@ -12,6 +12,6 @@
 using bit8_t = std::uint8_t; /*<! type to represent 8bits words (1 byte) */
 
 /** Stream operator to print bit8_t aka std::uint8_t and not char or unsigned char */
-std::ostream &operator<<(std::ostream &os, const bit8_t& c);
+std::ostream& operator<<(std::ostream& os, const bit8_t& c);
 
-#endif // BITS_H_
+#endif  // BITS_H_

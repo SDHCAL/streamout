@@ -69,9 +69,9 @@ void SDHCAL_RawBuffer_Navigator::setSCBuffer()
   m_SCbuffer.set(&(getDIFBufferStart()[getEndOfDIFData()]));
   // compute Slow Control size
   std::size_t maxsize{m_Buffer.size() - m_DIFstartIndex - getEndOfDIFData() + 1};  // should I +1 here ?
-  uint32_t k{1};                                                                   // SC Header
-  uint32_t dif_ID{m_SCbuffer[1]};
-  uint32_t chipSize{m_SCbuffer[3]};
+  uint32_t    k{1};                                                                // SC Header
+  uint32_t    dif_ID{m_SCbuffer[1]};
+  uint32_t    chipSize{m_SCbuffer[3]};
   while((dif_ID != 0xa1 && m_SCbuffer[k] != 0xa1 && k < maxsize) || (dif_ID == 0xa1 && m_SCbuffer[k + 2] == chipSize && k < maxsize))
   {
     k += 2;  // DIF ID + ASIC Header
