@@ -29,6 +29,6 @@ void textDump::processPadInFrame(DIFPtr* d, uint32_t frameIndex, uint32_t channe
   _out << "      Threshold status is " << d->getThresholdStatus(frameIndex, channelIndex) << std::endl;
 }
 
-void textDump::processSlowControl(SDHCAL_buffer) { _out << "textDump::processSlowControl not implemented yet." << std::endl; }
+void textDump::processSlowControl(const Buffer&) { _out << "textDump::processSlowControl not implemented yet." << std::endl; }
 
 void textDump::end() { _out << "textDump end of report" << std::endl; }

@@ -28,7 +28,7 @@ std::uint64_t DIFUnpacker::GrayToBin(const std::uint64_t& n)
 std::uint32_t DIFUnpacker::getStartOfDIF(const unsigned char* cbuf, const std::uint32_t& size_buf, const std::uint32_t& start)
 {
   std::uint32_t id0{0};
-  for(std::uint32_t i = start; i < size_buf; i++)
+  for(std::size_t i = start; i < size_buf; i++)
   {
     if(cbuf[i] != DU::START_OF_DIF && cbuf[i] != DU::START_OF_DIF_TEMP) continue;
     id0 = i;

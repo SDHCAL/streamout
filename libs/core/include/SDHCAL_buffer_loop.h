@@ -5,7 +5,8 @@
 #pragma once
 
 #include "SDHCAL_RawBuffer_Navigator.h"
-#include "SDHCAL_buffer.h"
+#include "Buffer.h"
+#include "Formatters.h"
 #include "SDHCAL_buffer_LoopCounter.h"
 
 #include <cassert>
@@ -39,19 +40,19 @@ public:
     {
       while(m_Source.nextDIFbuffer())
       {
-        SDHCAL_buffer              buffer           = m_Source.getSDHCALBuffer();
+        m_Source.getSDHCALBuffer(buffer);
         unsigned char*             debug_variable_1 = buffer.end();
         SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
         unsigned char*             debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         if(m_Verbose) m_VerboseOut << "DIF BUFFER END " << (unsigned int*)debug_variable_1 << " " << (unsigned int*)debug_variable_2 << std::endl;
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
         uint32_t idstart = bufferNavigator.getStartOfDIF();
-        if(m_Debug && idstart == 0) buffer.printBuffer();
+        if(m_Debug && idstart == 0) m_DebugOut << buffer <<std::endl;
         c.DIFStarter[idstart]++;
         if(!bufferNavigator.validBuffer()) continue;
         DIFPtr* d = bufferNavigator.getDIFPtr();
-        if(m_Debug) assert(d != NULL);
-        if(d != NULL)
+        if(m_Debug) assert(d != nullptr);
+        if(d != nullptr)
         {
           c.DIFPtrValueAtReturnedPos[bufferNavigator.getDIFBufferStart()[d->getGetFramePtrReturn()]]++;
           if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d->getGetFramePtrReturn()] == 0xa0);
@@ -77,7 +78,7 @@ public:
         }
         if(processSC) { m_Destination.processSlowControl(bufferNavigator.getSCBuffer()); }
 
-        SDHCAL_buffer eod = bufferNavigator.getEndOfAllData();
+        Buffer eod = bufferNavigator.getEndOfAllData();
         c.SizeAfterAllData[eod.size()]++;
         unsigned char* debug_variable_3 = eod.end();
         if(m_Verbose) m_VerboseOut << "END DATA BUFFER END " << (unsigned int*)debug_variable_1 << " " << (unsigned int*)debug_variable_3 << std::endl;
@@ -85,7 +86,7 @@ public:
         if(m_Verbose)
         {
           m_VerboseOut << "End of Data remaining stuff : ";
-          eod.printBuffer();
+          m_VerboseOut << eod <<std::endl;
         }
 
         int nonzeroCount = 0;
@@ -100,6 +101,7 @@ public:
   void printAllCounters() { c.printAllCounters(m_DebugOut); }
 
 private:
+  Buffer buffer;
   SDHCAL_buffer_LoopCounter c;
   SOURCE&                   m_Source;
   DESTINATION&              m_Destination;
