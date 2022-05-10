@@ -5,6 +5,7 @@
 ![Linux Clang](https://github.com/SDHCAL/streamout/workflows/Linux%20Clang/badge.svg)
 ![Windows](https://github.com/SDHCAL/streamout/workflows/Windows/badge.svg)
 [![ROOT interface](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml)
+[![CMake ilcsoft](https://github.com/SDHCAL/streamout/actions/workflows/CMake-ilcsoft.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/CMake-ilcsoft.yml)
 
 ## Standalone SDHCAL raw data processor ##
 
