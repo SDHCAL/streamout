@@ -67,6 +67,6 @@ jobs:
       with:
         token: ${{ secrets.ACCESS_PUBLIC_REPOS }}
         repository-name: SDHCAL/SDHCAL.github.io
-        branch: gh-pages
+        branch: master
         folder: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
         target-folder: streamout
