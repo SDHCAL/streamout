@@ -69,4 +69,4 @@ jobs:
         REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
         BRANCH: main
         FOLDER: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
-        TARGET_FOLDER: docs/streamout
+        TARGET_FOLDER: assets/projects/streamout
