@@ -63,7 +63,7 @@ jobs:
       run: cmake --install ${{ env.CMAKE_BUILD_PREFIX }} --prefix ${{ env.CMAKE_INSTALL_PREFIX }} --strip && mv ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/pdf/streamout_Manual.pdf ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/streamout_Manual.pdf
 
     - name: 🎉 Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@releases/v4.3.3
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_PUBLIC_REPOS }}
         REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
