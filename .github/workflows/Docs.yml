@@ -67,6 +67,6 @@ jobs:
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_PUBLIC_REPOS }}
         REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
-        BRANCH: main
+        BRANCH: master
         FOLDER: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
         TARGET_FOLDER: assets/projects/streamout
