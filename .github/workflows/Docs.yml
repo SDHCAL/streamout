@@ -65,8 +65,8 @@ jobs:
     - name: 🎉 Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
       with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_PUBLIC_REPOS }}
-        REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
-        BRANCH: master
-        FOLDER: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
-        TARGET_FOLDER: assets/projects/streamout
+        token: ${{ secrets.ACCESS_PUBLIC_REPOS }}
+        repository_name: SDHCAL/SDHCAL.github.io
+        branch: master
+        folder: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
+        target_folder: assets/projects/streamout
