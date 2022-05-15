@@ -65,7 +65,7 @@ jobs:
     - name: 🎉 Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        ACCESS_TOKEN: ${{ secrets.INTER_REPOS }}
+        ACCESS_TOKEN: ${{ secrets.ACCESS_PUBLIC_REPOS }}
         REPOSITORY_NAME: SDHCAL/SDHCAL.github.io
         BRANCH: main
         FOLDER: ${{ env.CMAKE_INSTALL_PREFIX }}/share/doc/streamout/html/
