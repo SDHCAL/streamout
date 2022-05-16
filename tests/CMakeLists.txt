@@ -1,5 +1,10 @@
 include(CLI11)
 
+add_executable(RawdataReader.test RawdataReader.test.cc)
+target_link_libraries(RawdataReader.test PRIVATE Streamout::Interface::RawdataReader Streamout::Interface::Dump Streamout::Core CLI11)
+install(TARGETS RawdataReader.test RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+add_test(NAME RawdataReader.test COMMAND RawdataReader.test)
+
 add_executable(Buffer.test Buffer.test.cc)
 target_include_directories(Buffer.test PUBLIC include)
 target_link_libraries(Buffer.test PUBLIC Streamout::Core doctest_with_main)

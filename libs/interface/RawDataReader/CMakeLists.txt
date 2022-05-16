@@ -1,0 +1,8 @@
+missive(WARN "Build with RawdataReader interface")
+include(Zlib-ng)
+add_library(RawdataReader src/RawdataReader.cc)
+target_include_directories(RawdataReader PUBLIC include)
+target_link_libraries(RawdataReader PUBLIC Streamout::Core ZLIB::ZLIB)
+install(TARGETS RawdataReader RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+add_library(Streamout::Interface::RawdataReader ALIAS RawdataReader)
+target_link_libraries(Interfaces INTERFACE Streamout::Interface::RawdataReader)
