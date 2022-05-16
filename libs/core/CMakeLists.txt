@@ -2,7 +2,7 @@ add_library(Core
             src/Bits.cc
             src/DIFSlowControl.cc
             src/DIFUnpacker.cc
-						src/Buffer.cc
+            src/Buffer.cc
             src/SDHCAL_buffer_LoopCounter.cc
             src/SDHCAL_RawBuffer_Navigator.cc
             src/DIFPtr.cc)

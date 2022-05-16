@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "DIFPtr.h"
 #include "Buffer.h"
+#include "DIFPtr.h"
 
 #include <iostream>
 #include <ostream>

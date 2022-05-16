@@ -18,21 +18,21 @@ public:
   std::uint32_t  getStartOfDIF();
   unsigned char* getDIFBufferStart();
   std::uint32_t  getDIFBufferSize();
-  Buffer  getDIFBuffer();
+  Buffer         getDIFBuffer();
   DIFPtr*        getDIFPtr();
   std::uint32_t  getEndOfDIFData();
   std::uint32_t  getSizeAfterDIFPtr();
   std::uint32_t  getDIF_CRC();
   bool           hasSlowControlData();
-  Buffer  getSCBuffer();
+  Buffer         getSCBuffer();
   bool           badSCData();
-  Buffer  getEndOfAllData();
+  Buffer         getEndOfAllData();
   static void    StartAt(const int& start);
 
 private:
   void          setSCBuffer();
-  Buffer m_Buffer;
-  Buffer m_SCbuffer;
+  Buffer        m_Buffer;
+  Buffer        m_SCbuffer;
   std::uint32_t m_DIFstartIndex{0};
   DIFPtr*       m_TheDIFPtr{nullptr};
   bool          m_BadSCdata{false};

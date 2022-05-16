@@ -39,7 +39,7 @@ public:
     {
       while(m_Source.nextDIFbuffer())
       {
-        Buffer              buffer           = m_Source.getSDHCALBuffer();
+        Buffer                     buffer           = m_Source.getSDHCALBuffer();
         unsigned char*             debug_variable_1 = buffer.end();
         SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
         unsigned char*             debug_variable_2 = bufferNavigator.getDIFBuffer().end();
