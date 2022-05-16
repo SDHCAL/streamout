@@ -11,7 +11,7 @@ void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)
   if(start >= 0) m_Start = start;
 }
 
-SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const Buffer& b, const int& start) : m_Buffer(b), m_SCbuffer(0, 0)
+SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const Buffer& b, const int& start) : m_Buffer(b)
 {
   StartAt(start);
   m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);

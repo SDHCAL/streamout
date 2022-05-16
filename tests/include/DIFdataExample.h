@@ -12,14 +12,11 @@ public:
   DIFdataExample();
   bool          nextEvent();
   bool          nextDIFbuffer();
-  Buffer getSDHCALBuffer() { return Buffer(_RAWbuffer, BUFFER_SIZE); }
+  Buffer getSDHCALBuffer() { return Buffer(_RAWbuffer); }
 
 private:
-  enum
-  {
-    BUFFER_SIZE = 143
-  };  // 94+49=143
-  unsigned char _RAWbuffer[BUFFER_SIZE];
+  static constexpr std::size_t BUFFER_SIZE{143}; // 94+49=143
+  std::array<bit8_t,BUFFER_SIZE> _RAWbuffer;
   bool          _first;
   int           _stop{0};
   int           _stopDIF{0};
