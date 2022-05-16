@@ -4,8 +4,8 @@
 
 #pragma once
 
+#include "Buffer.h"
 #include "SDHCAL_RawBuffer_Navigator.h"
-#include "SDHCAL_buffer.h"
 #include "SDHCAL_buffer_LoopCounter.h"
 
 #include <cassert>
@@ -39,7 +39,7 @@ public:
     {
       while(m_Source.nextDIFbuffer())
       {
-        SDHCAL_buffer              buffer           = m_Source.getSDHCALBuffer();
+        Buffer              buffer           = m_Source.getSDHCALBuffer();
         unsigned char*             debug_variable_1 = buffer.end();
         SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
         unsigned char*             debug_variable_2 = bufferNavigator.getDIFBuffer().end();
@@ -77,7 +77,7 @@ public:
         }
         if(processSC) { m_Destination.processSlowControl(bufferNavigator.getSCBuffer()); }
 
-        SDHCAL_buffer eod = bufferNavigator.getEndOfAllData();
+        Buffer eod = bufferNavigator.getEndOfAllData();
         c.SizeAfterAllData[eod.size()]++;
         unsigned char* debug_variable_3 = eod.end();
         if(m_Verbose) m_VerboseOut << "END DATA BUFFER END " << (unsigned int*)debug_variable_1 << " " << (unsigned int*)debug_variable_3 << std::endl;

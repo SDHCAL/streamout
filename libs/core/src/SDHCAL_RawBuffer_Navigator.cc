@@ -11,7 +11,7 @@ void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)
   if(start >= 0) m_Start = start;
 }
 
-SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const SDHCAL_buffer& b, const int& start) : m_Buffer(b), m_SCbuffer(0, 0)
+SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const Buffer& b, const int& start) : m_Buffer(b), m_SCbuffer(0, 0)
 {
   StartAt(start);
   m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);
@@ -30,7 +30,7 @@ unsigned char* SDHCAL_RawBuffer_Navigator::getDIFBufferStart() { return &(m_Buff
 
 std::uint32_t SDHCAL_RawBuffer_Navigator::getDIFBufferSize() { return m_Buffer.size() - m_DIFstartIndex; }
 
-SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getDIFBuffer() { return SDHCAL_buffer(getDIFBufferStart(), getDIFBufferSize()); }
+Buffer SDHCAL_RawBuffer_Navigator::getDIFBuffer() { return Buffer(getDIFBufferStart(), getDIFBufferSize()); }
 
 DIFPtr* SDHCAL_RawBuffer_Navigator::getDIFPtr()
 {
@@ -53,7 +53,7 @@ uint32_t SDHCAL_RawBuffer_Navigator::getDIF_CRC()
 
 bool SDHCAL_RawBuffer_Navigator::hasSlowControlData() { return getDIFBufferStart()[getEndOfDIFData()] == 0xb1; }
 
-SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getSCBuffer()
+Buffer SDHCAL_RawBuffer_Navigator::getSCBuffer()
 {
   setSCBuffer();
   return m_SCbuffer;
@@ -98,10 +98,10 @@ void SDHCAL_RawBuffer_Navigator::setSCBuffer()
   }
 }
 
-SDHCAL_buffer SDHCAL_RawBuffer_Navigator::getEndOfAllData()
+Buffer SDHCAL_RawBuffer_Navigator::getEndOfAllData()
 {
   setSCBuffer();
-  if(hasSlowControlData() && !m_BadSCdata) { return SDHCAL_buffer(&(m_SCbuffer.begin()[m_SCbuffer.size()]), getSizeAfterDIFPtr() - 3 - m_SCbuffer.size()); }
+  if(hasSlowControlData() && !m_BadSCdata) { return Buffer(&(m_SCbuffer.begin()[m_SCbuffer.size()]), getSizeAfterDIFPtr() - 3 - m_SCbuffer.size()); }
   else
-    return SDHCAL_buffer(&(getDIFBufferStart()[getEndOfDIFData()]), getSizeAfterDIFPtr() - 3);  // remove the 2 bytes for CRC and the DIF trailer
+    return Buffer(&(getDIFBufferStart()[getEndOfDIFData()]), getSizeAfterDIFPtr() - 3);  // remove the 2 bytes for CRC and the DIF trailer
 }

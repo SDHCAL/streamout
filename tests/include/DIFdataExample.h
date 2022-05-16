@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "SDHCAL_buffer.h"
+#include "Buffer.h"
 
 class DIFdataExample
 {
@@ -12,7 +12,7 @@ public:
   DIFdataExample();
   bool          nextEvent();
   bool          nextDIFbuffer();
-  SDHCAL_buffer getSDHCALBuffer() { return SDHCAL_buffer(_RAWbuffer, BUFFER_SIZE); }
+  Buffer getSDHCALBuffer() { return Buffer(_RAWbuffer, BUFFER_SIZE); }
 
 private:
   enum

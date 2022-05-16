@@ -5,7 +5,7 @@
 #pragma once
 
 #include "DIFPtr.h"
-#include "SDHCAL_buffer.h"
+#include "Buffer.h"
 
 #include <iostream>
 #include <ostream>
@@ -18,7 +18,7 @@ public:
   void processDIF(DIFPtr*);
   void processFrame(DIFPtr*, uint32_t frameIndex);
   void processPadInFrame(DIFPtr*, uint32_t frameIndex, uint32_t channelIndex);
-  void processSlowControl(SDHCAL_buffer);
+  void processSlowControl(Buffer);
   void end();
 
 private:
