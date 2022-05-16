@@ -31,14 +31,14 @@ void ROOTtreeDest::processDIF(DIFPtr* d)
   _data.AbsoluteBCID = d->getAbsoluteBCID();
 }
 
-void ROOTtreeDest::processFrame(DIFPtr* d, uint32_t frameIndex)
+void ROOTtreeDest::processFrame(DIFPtr* d, std::uint32_t frameIndex)
 {
   _data.ASICid     = d->getASICid(frameIndex);
   _data.frame_BCID = d->getFrameBCID(frameIndex);
   _data.timeStamp  = d->getFrameTimeToTrigger(frameIndex);
 }
 
-void ROOTtreeDest::processPadInFrame(DIFPtr* d, uint32_t frameIndex, uint32_t channelIndex)
+void ROOTtreeDest::processPadInFrame(DIFPtr* d, std::uint32_t frameIndex, std::uint32_t channelIndex)
 {
   _data.CHANNELid = channelIndex;
   _data.Thresh    = d->getThresholdStatus(frameIndex, channelIndex);
