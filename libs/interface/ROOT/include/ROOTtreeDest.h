@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "DIFPtr.h"
 #include "Buffer.h"
+#include "DIFPtr.h"
 #include "TTree.h"
 
 class ROOTtreeDest
@@ -24,7 +24,7 @@ public:
 
   void start();
   void processDIF(DIFPtr*);
-  void processFrame(DIFPtr*,std::uint32_t frameIndex);
+  void processFrame(DIFPtr*, std::uint32_t frameIndex);
   void processPadInFrame(DIFPtr*, std::uint32_t frameIndex, std::uint32_t channelIndex);
   void processSlowControl(const Buffer&) { ; }
   void end() { ; }
