@@ -20,13 +20,18 @@ RawdataReader::RawdataReader(const char* fileName)
 
 void RawdataReader::uncompress()
 {
-  // static const std::size_t size_buffer{0x20000};
-  /*std::size_t shift{3*sizeof(uint32_t)+sizeof(uint64_t)};
-  static bit8_t obuf[size_buffer];
-  std::size_t size_buffer_end;
-  int rc=::uncompress(obuf,&size_buffer_end, &m_Buffer.at<bit8_t>(shift),m_Buffer.size<bit8_t>()-shift);
-  memcpy(&m_Buffer.at<bit8_t>(shift),obuf,size_buffer_end);
-  m_Buffer.setSize(size_buffer_end+shift);*/
+  static const std::size_t size_buffer{0x20000};
+  std::size_t              shift{3 * sizeof(std::uint32_t) + sizeof(std::uint64_t)};
+  static bit8_t            obuf[size_buffer];
+  std::size_t              size_buffer_end{0x20000};
+  int                      rc = ::uncompress(obuf, &size_buffer_end, &m_Buffer[shift], m_Buffer.size() - shift);
+  switch(rc)
+  {
+    case Z_OK: break;
+    default: throw "decompress error"; break;
+  }
+  memcpy(&m_Buffer[shift], obuf, size_buffer_end);
+  m_Buffer.setSize(size_buffer_end + shift);
 }
 
 void RawdataReader::closeFile()
@@ -37,7 +42,7 @@ void RawdataReader::closeFile()
   }
   catch(const std::ios_base::failure& e)
   {
-    std::cout<<"Caught an ios_base::failure in closeFile : "<<e.what()<<" "<<e.code()<<std::endl;
+    std::cout << "Caught an ios_base::failure in closeFile : " << e.what() << " " << e.code() << std::endl;
     throw;
   }
 }
@@ -58,8 +63,8 @@ void RawdataReader::openFile(const char* fileName)
   }
   catch(const std::ios_base::failure& e)
   {
-    std::cout<<"Caught an ios_base::failure in openFile : "<<e.what()<<" "<<e.code()<<std::endl;
-		throw;
+    std::cout << "Caught an ios_base::failure in openFile : " << e.what() << " " << e.code() << std::endl;
+    throw;
   }
 }
 
@@ -93,6 +98,8 @@ bool RawdataReader::nextDIFbuffer()
       std::uint32_t bsize{0};
       m_FileStream.read(reinterpret_cast<char*>(&bsize), sizeof(std::uint32_t));
       m_FileStream.read(reinterpret_cast<char*>(&m_buf[0]), bsize);
+      m_Buffer = Buffer(m_buf);
+      m_Buffer.setSize(bsize);
     }
   }
   catch(const std::ios_base::failure& e)
@@ -102,7 +109,11 @@ bool RawdataReader::nextDIFbuffer()
   return true;
 }
 
-Buffer RawdataReader::getSDHCALBuffer() { return m_Buffer; }
+Buffer RawdataReader::getSDHCALBuffer()
+{
+  uncompress();
+  return m_Buffer;
+}
 
 void RawdataReader::setFileSize(const std::size_t& size) { m_FileSize = size; }
 

@@ -12,4 +12,4 @@ void Buffer::printBuffer(unsigned int start, unsigned int stop, std::ostream& fl
   flux << std::dec << std::endl;
 }
 
-Buffer::~Buffer() { std::cout << "SDHCAL_buffer destructor called" << std::endl; }
+Buffer::~Buffer() {}
