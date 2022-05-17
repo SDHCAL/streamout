@@ -5,6 +5,4 @@
 
 #include "Bits.h"
 
-#include <iostream>
-
 std::ostream& operator<<(std::ostream& os, const bit8_t& c) { return os << c + 0; }

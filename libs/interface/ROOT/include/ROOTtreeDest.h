@@ -7,9 +7,10 @@
 
 #include "Buffer.h"
 #include "DIFPtr.h"
+#include "Interface.h"
 #include "TTree.h"
 
-class ROOTtreeDest
+class ROOTtreeDest : public Interface
 {
 public:
   typedef struct

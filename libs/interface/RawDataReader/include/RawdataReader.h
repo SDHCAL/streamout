@@ -4,21 +4,24 @@
 
 #pragma once
 
-#include "Buffer.h"
+#include "Interface.h"
 
 #include <array>
 #include <cstdint>
 #include <fstream>
+#include <string>
 #include <vector>
 
 class Buffer;
 
-class RawdataReader
+class RawdataReader : public Interface
 {
 public:
   explicit RawdataReader(const char* fileName);
+  void   start();
+  void   end();
   float  getFileSize();
-  void   openFile(const char* fileName);
+  void   openFile(const std::string& fileName);
   void   closeFile();
   bool   nextEvent();
   bool   nextDIFbuffer();
@@ -36,4 +39,5 @@ private:
   std::uint32_t       m_EventNumber{0};
   std::vector<bit8_t> m_buf;
   Buffer              m_Buffer;
+  std::string         m_Filename;
 };

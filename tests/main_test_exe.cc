@@ -8,7 +8,7 @@
 #include "SDHCAL_buffer_loop.h"
 #include "textDump.h"
 
-#include <iostream>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 int main(int argc, char** argv)
 {
@@ -32,10 +32,11 @@ int main(int argc, char** argv)
   SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
   DIFdataExample                               source;
   textDump                                     destination;
-  SDHCAL_buffer_loop<DIFdataExample, textDump> toto(source, destination, debug, std::cout, verbose);
+  SDHCAL_buffer_loop<DIFdataExample, textDump> toto(source, destination, debug);
+  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>(), spdlog::level::info);
   toto.loop(eventNbr);
-  std::cout << "******************************" << std::endl;
+  toto.log()->info("******************************");
   toto.printAllCounters();
-  std::cout << "******************************" << std::endl;
+  toto.log()->info("******************************");
   return 0;
 }

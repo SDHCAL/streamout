@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include <iostream>
 #include <map>
+#include <memory>
+#include <spdlog/fwd.h>
 #include <string>
 
 struct SDHCAL_buffer_LoopCounter
@@ -19,6 +20,6 @@ public:
   std::map<int, int> SizeAfterAllData;
   std::map<int, int> NonZeroValusAtEndOfData;
 
-  void printCounter(const std::string& description, const std::map<int, int>& m, std::ostream& out = std::cout);
-  void printAllCounters(std::ostream& out = std::cout);
+  void printCounter(const std::string& description, const std::map<int, int>& m, const std::shared_ptr<spdlog::logger>& logger);
+  void printAllCounters(const std::shared_ptr<spdlog::logger>& logger);
 };

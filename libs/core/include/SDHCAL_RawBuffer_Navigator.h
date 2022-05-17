@@ -7,7 +7,6 @@
 #include "Buffer.h"
 #include "DIFPtr.h"
 
-#include <iostream>
 // class to navigate in the raw data buffer
 class SDHCAL_RawBuffer_Navigator
 {

@@ -4,6 +4,10 @@
 
 #include "DIFPtr.h"
 
+#include "spdlog/spdlog.h"
+
+#include <string>
+
 DIFPtr::DIFPtr(unsigned char* p, const std::uint32_t& max_size) : theDIF_(p), theSize_(max_size)
 {
   theFrames_.clear();
@@ -12,8 +16,8 @@ DIFPtr::DIFPtr(unsigned char* p, const std::uint32_t& max_size) : theDIF_(p), th
   {
     theGetFramePtrReturn_ = DIFUnpacker::getFramePtr(theFrames_, theLines_, theSize_, theDIF_);
   }
-  catch(std::string e)
+  catch(const std::string& e)
   {
-    std::cout << "DIF " << getID() << " T ? " << hasTemperature() << " " << e << std::endl;
+    spdlog::get("streamout")->error(" DIF {} T ? {} {}", getID(), hasTemperature(), e);
   }
 }

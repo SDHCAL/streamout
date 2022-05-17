@@ -5,6 +5,11 @@ target_link_libraries(RawdataReader.test PRIVATE Streamout::Interface::RawdataRe
 install(TARGETS RawdataReader.test RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 add_test(NAME RawdataReader.test COMMAND RawdataReader.test)
 
+add_executable(Formatters.test Formatters.test.cc)
+target_link_libraries(Formatters.test PRIVATE Streamout::Core)
+install(TARGETS Formatters.test RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+add_test(NAME Formatters.test COMMAND Formatters.test)
+
 add_executable(Buffer.test Buffer.test.cc)
 target_include_directories(Buffer.test PUBLIC include)
 target_link_libraries(Buffer.test PUBLIC Streamout::Core doctest_with_main)

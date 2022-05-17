@@ -31,7 +31,6 @@ bool DIFdataExample::nextEvent()
 {
   while(_stop != 10)
   {
-    std::cout << "Event " << _stop << std::endl;
     _stop++;
     return true;
   }

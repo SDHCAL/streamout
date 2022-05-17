@@ -15,8 +15,12 @@ void RawdataReader::setDefaultBufferSize(const std::size_t& size) { m_BufferSize
 RawdataReader::RawdataReader(const char* fileName)
 {
   m_buf.reserve(m_BufferSize);
-  openFile(fileName);
+  m_Filename = fileName;
 }
+
+void RawdataReader::start() { openFile(m_Filename); }
+
+void RawdataReader::end() { closeFile(); }
 
 void RawdataReader::uncompress()
 {
@@ -42,18 +46,18 @@ void RawdataReader::closeFile()
   }
   catch(const std::ios_base::failure& e)
   {
-    std::cout << "Caught an ios_base::failure in closeFile : " << e.what() << " " << e.code() << std::endl;
+    log()->error("Caught an ios_base::failure in closeFile : {} {}", e.what(), e.code().value());
     throw;
   }
 }
 
-void RawdataReader::openFile(const char* fileName)
+void RawdataReader::openFile(const std::string& fileName)
 {
   try
   {
     m_FileStream.rdbuf()->pubsetbuf(0, 0);
     m_FileStream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    m_FileStream.open(fileName, std::ios::in | std::ios::binary | std::ios::ate);  // Start at the end to directly calculate the size of the file then come back to beginning
+    m_FileStream.open(fileName.c_str(), std::ios::in | std::ios::binary | std::ios::ate);  // Start at the end to directly calculate the size of the file then come back to beginning
     m_FileStream.rdbuf()->pubsetbuf(0, 0);
     if(m_FileStream.is_open())
     {
@@ -63,7 +67,7 @@ void RawdataReader::openFile(const char* fileName)
   }
   catch(const std::ios_base::failure& e)
   {
-    std::cout << "Caught an ios_base::failure in openFile : " << e.what() << " " << e.code() << std::endl;
+    log()->error("Caught an ios_base::failure in openFile : {} {}", e.what(), e.code().value());
     throw;
   }
 }
@@ -99,7 +103,6 @@ bool RawdataReader::nextDIFbuffer()
       m_FileStream.read(reinterpret_cast<char*>(&bsize), sizeof(std::uint32_t));
       m_FileStream.read(reinterpret_cast<char*>(&m_buf[0]), bsize);
       m_Buffer = Buffer(m_buf);
-      m_Buffer.setSize(bsize);
     }
   }
   catch(const std::ios_base::failure& e)

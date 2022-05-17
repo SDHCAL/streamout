@@ -4,6 +4,7 @@
 
 #include "SDHCAL_RawBuffer_Navigator.h"
 
+#include <iostream>
 int SDHCAL_RawBuffer_Navigator::m_Start = 92;
 
 void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)

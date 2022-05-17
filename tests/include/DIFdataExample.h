@@ -5,11 +5,14 @@
 #pragma once
 
 #include "Buffer.h"
+#include "Interface.h"
 
-class DIFdataExample
+class DIFdataExample : public Interface
 {
 public:
   DIFdataExample();
+  void   start() {}
+  void   end() {}
   bool   nextEvent();
   bool   nextDIFbuffer();
   Buffer getSDHCALBuffer() { return Buffer(_RAWbuffer); }

@@ -8,7 +8,6 @@
 #include "Bits.h"
 
 #include <array>
-#include <iostream>
 #include <vector>
 
 class Buffer
@@ -27,10 +26,9 @@ public:
   bit8_t* begin() { return m_Buffer; }
   bit8_t* end() { return m_Buffer + m_Size; }
   bit8_t& operator[](const std::size_t& pos) { return m_Buffer[pos]; }
+  bit8_t& operator[](const std::size_t& pos) const { return m_Buffer[pos]; }
 
   void setSize(const std::size_t& size) { m_Size = size; }
-  void printBuffer(uint32_t start, uint32_t stop, std::ostream& flux = std::cout);
-  void printBuffer(uint32_t start = 0, std::ostream& flux = std::cout) { printBuffer(start, size()); }
   virtual ~Buffer();
 
 private:
