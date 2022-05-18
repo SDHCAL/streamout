@@ -1,10 +1,16 @@
 include(ExternalData)
 include(CLI11)
 
+set(ExternalData_URL_TEMPLATES
+    "https://github.com/SDHCAL/streamout_test_files/blob/main/SMM_210616_040234_732873.dat?raw=true"
+    )
+
 add_executable(RawdataReader.test RawdataReader.test.cc)
 target_link_libraries(RawdataReader.test PRIVATE Streamout::Interface::RawdataReader Streamout::Interface::Dump Streamout::Core CLI11)
 install(TARGETS RawdataReader.test RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
-add_test(NAME RawdataReader.test COMMAND RawdataReader.test)
+ExternalData_Add_Test(RawdataReader.run NAME RawdataReader.test COMMAND RawdataReader.test -f DATA{data/SMM_210616_040234_732873.dat} -s 20 -v warn )
+ExternalData_Add_Target(RawdataReader.run)
+#add_test(NAME RawdataReader.test COMMAND RawdataReader.test -f DATA{${CMAKE_CURRENT_SOURCE_DIR}/data/SMM_210616_040234_732873.dat} -s 20 -v warn)
 
 add_executable(Formatters.test Formatters.test.cc)
 target_link_libraries(Formatters.test PRIVATE Streamout::Core)

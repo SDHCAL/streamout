@@ -53,5 +53,4 @@ int main(int argc, char** argv)
   std::cout << "******************************" << std::endl;
   toto.printAllCounters();
   std::cout << "******************************" << std::endl;
-  return 0;
 }
