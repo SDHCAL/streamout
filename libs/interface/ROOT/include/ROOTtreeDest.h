@@ -25,8 +25,8 @@ public:
 
   void start();
   void processDIF(const DIFPtr&);
-  void processFrame(const DIFPtr&,const std::uint32_t& frameIndex);
-  void processPadInFrame(const DIFPtr&,const std::uint32_t& frameIndex,const std::uint32_t& channelIndex);
+  void processFrame(const DIFPtr&, const std::uint32_t& frameIndex);
+  void processPadInFrame(const DIFPtr&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);
   void processSlowControl(const Buffer&) { ; }
   void end() { ; }
 

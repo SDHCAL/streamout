@@ -22,25 +22,25 @@ void ROOTtreeDest::dataReset()
 
 void ROOTtreeDest::start() { dataReset(); }
 
-void ROOTtreeDest::processDIF(DIFPtr* d)
+void ROOTtreeDest::processDIF(const DIFPtr& d)
 {
-  _data.DIFid        = d->getDIFid();
-  _data.DTC          = d->getDTC();
-  _data.GTC          = d->getGTC();
-  _data.DIF_BCID     = d->getBCID();
-  _data.AbsoluteBCID = d->getAbsoluteBCID();
+  _data.DIFid        = d.getDIFid();
+  _data.DTC          = d.getDTC();
+  _data.GTC          = d.getGTC();
+  _data.DIF_BCID     = d.getBCID();
+  _data.AbsoluteBCID = d.getAbsoluteBCID();
 }
 
-void ROOTtreeDest::processFrame(DIFPtr* d, std::uint32_t frameIndex)
+void ROOTtreeDest::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
 {
-  _data.ASICid     = d->getASICid(frameIndex);
-  _data.frame_BCID = d->getFrameBCID(frameIndex);
-  _data.timeStamp  = d->getFrameTimeToTrigger(frameIndex);
+  _data.ASICid     = d.getASICid(frameIndex);
+  _data.frame_BCID = d.getFrameBCID(frameIndex);
+  _data.timeStamp  = d.getFrameTimeToTrigger(frameIndex);
 }
 
-void ROOTtreeDest::processPadInFrame(DIFPtr* d, std::uint32_t frameIndex, std::uint32_t channelIndex)
+void ROOTtreeDest::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
   _data.CHANNELid = channelIndex;
-  _data.Thresh    = d->getThresholdStatus(frameIndex, channelIndex);
+  _data.Thresh    = d.getThresholdStatus(frameIndex, channelIndex);
   if(_data.Thresh != 0) _tree->Fill();
 }
