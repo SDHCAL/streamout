@@ -4,11 +4,13 @@
 
 #include "DIFUnpacker.h"
 
+#include "Formatters.h"
 #include "Words.h"
 
 #include <bitset>
 #include <cstdint>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 std::uint64_t DIFUnpacker::GrayToBin(const std::uint64_t& n)
 {
@@ -31,10 +33,14 @@ std::uint32_t DIFUnpacker::getStartOfDIF(const unsigned char* cbuf, const std::u
   for(std::uint32_t i = start; i < size_buf; i++)
   {
     if(cbuf[i] != DU::START_OF_DIF && cbuf[i] != DU::START_OF_DIF_TEMP) continue;
-    id0 = i;
+    else
+    {
+      id0 = i;
+      break;
+    }
     // if (cbuf[id0+DU::ID_SHIFT]>0xFF) continue;
-    break;
   }
+  std::cout << "*********************** " << id0 << std::endl;
   return id0;
 }
 
@@ -107,10 +113,10 @@ std::uint32_t DIFUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std:
     if(DIFUnpacker::hasAnalogReadout(cb, idx)) fshift = DIFUnpacker::getAnalogPtr(vLines, cb, fshift);  // to be implemented
   }
   else
-    std::uint32_t fshift = idx + DU::BCID_SHIFT + 3;
+    fshift = idx + DU::BCID_SHIFT + 3;
   if(cb[fshift] != DU::START_OF_FRAME)
   {
-    std::cout << "This is not a start of frame " << cb[fshift] << "\n";
+    std::cout << "This is not a start of frame " << to_hex(cb[fshift]) << " \n";
     return fshift;
   }
   do {

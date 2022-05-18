@@ -3,6 +3,7 @@
 */
 #include "RawdataReader.h"
 
+#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 #include <zlib.h>
@@ -28,7 +29,7 @@ void RawdataReader::uncompress()
   std::size_t              shift{3 * sizeof(std::uint32_t) + sizeof(std::uint64_t)};
   static bit8_t            obuf[size_buffer];
   std::size_t              size_buffer_end{0x20000};
-  int                      rc = ::uncompress(obuf, &size_buffer_end, &m_Buffer[shift], m_Buffer.size() - shift);
+  std::int8_t              rc = ::uncompress(obuf, static_cast<std::uint64_t*>(&size_buffer_end), &m_Buffer[shift], m_Buffer.size() - shift);
   switch(rc)
   {
     case Z_OK: break;
