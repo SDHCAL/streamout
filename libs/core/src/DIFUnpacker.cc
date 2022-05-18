@@ -40,7 +40,7 @@ std::uint32_t DIFUnpacker::getStartOfDIF(const unsigned char* cbuf, const std::u
     }
     // if (cbuf[id0+DU::ID_SHIFT]>0xFF) continue;
   }
-  std::cout << "*********************** " << id0 << std::endl;
+  // std::cout << "*********************** " << id0 << std::endl;
   return id0;
 }
 
