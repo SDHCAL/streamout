@@ -1,9 +1,10 @@
 include(ExternalData)
 include(CLI11)
 
+# cmake-lint: disable=C0103
 set(ExternalData_URL_TEMPLATES
-    "https://github.com/SDHCAL/streamout_test_files/blob/main/SMM_210616_040234_732873.dat?raw=true"
-    )
+    "https://github.com/SDHCAL/streamout_test_files/blob/main/SMM_210616_040234_732873.dat?raw=true")
+# pass
 
 add_executable(RawdataReader.test RawdataReader.test.cc)
 target_link_libraries(RawdataReader.test PRIVATE Streamout::Interface::RawdataReader Streamout::Interface::Dump Streamout::Core CLI11)
