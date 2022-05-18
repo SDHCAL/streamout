@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-  spdlog::set_level(spdlog::level::critical);
+  spdlog::set_level(spdlog::level::trace);
   CLI::App    app{"SDHCAL buffer loop with textDump destination"};
   std::string filename{""};
   app.add_option("-f,--filename", filename, "Path of the file");
@@ -38,10 +38,10 @@ int main(int argc, char** argv)
   SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
   RawdataReader source(filename.c_str());
   textDump      destination;
-  destination.setLevel(spdlog::level::off);
+  destination.setLevel(spdlog::level::warn);
   SDHCAL_buffer_loop<RawdataReader, textDump> toto(source, destination, debug);
-  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>(), spdlog::level::warn);
-  toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/1.txt", true), spdlog::level::warn);
+  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>(), spdlog::level::trace);
+  toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/1.txt", true), spdlog::level::trace);
   toto.loop(eventNbr);
   std::cout << "******************************" << std::endl;
   toto.printAllCounters();

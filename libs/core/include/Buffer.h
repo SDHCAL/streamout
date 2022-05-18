@@ -23,8 +23,8 @@ public:
   std::size_t capacity() const { return m_Capacity; }
 
   void    set(unsigned char* b) { m_Buffer = b; }
-  bit8_t* begin() { return m_Buffer; }
-  bit8_t* end() { return m_Buffer + m_Size; }
+  bit8_t* begin() const { return m_Buffer; }
+  bit8_t* end() const { return m_Buffer + m_Size; }
   bit8_t& operator[](const std::size_t& pos) { return m_Buffer[pos]; }
   bit8_t& operator[](const std::size_t& pos) const { return m_Buffer[pos]; }
 
