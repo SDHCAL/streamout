@@ -17,10 +17,14 @@ int main(int argc, char** argv)
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
   app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1)->check(CLI::PositiveNumber);
-  bool verbose{false};
-  app.add_flag("-v,--verbose", verbose, "Set verbosity");
+  spdlog::level::level_enum verbosity{spdlog::level::trace};
+  app.add_option("-v,--verbosity", verbosity, "Verbosity level.")
+    ->transform(CLI::CheckedTransformer(
+      std::map<std::string, spdlog::level::level_enum>(
+        {{"off", spdlog::level::off}, {"trace", spdlog::level::trace}, {"debug", spdlog::level::debug}, {"info", spdlog::level::info}, {"warn", spdlog::level::warn}, {"error", spdlog::level::err}, {"critical", spdlog::level::critical}}),
+      CLI::ignore_case));
   bool debug{false};
-  app.add_flag("-d,--debug", verbose, "Set debug");
+  app.add_flag("-d,--debug", debug, "Set debug");
   try
   {
     app.parse(argc, argv);
@@ -29,11 +33,14 @@ int main(int argc, char** argv)
   {
     return app.exit(e);
   }
-  SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
+
+  spdlog::set_level(verbosity);
+
+  RawBufferNavigator::StartAt(bitsToSkip);
   DIFdataExample                               source;
   textDump                                     destination;
   SDHCAL_buffer_loop<DIFdataExample, textDump> toto(source, destination, debug);
-  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>(), spdlog::level::info);
+  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.loop(eventNbr);
   toto.log()->info("******************************");
   toto.printAllCounters();

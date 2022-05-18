@@ -1,4 +1,4 @@
-/** \file SDHCAL_buffer.h
+/** \file Buffer.h
  *  \copyright 2022 G.Grenier F.Lagarde A.Pingault L.Mirabito
  *  \see https://github.com/apingault/Trivent4HEP
  */

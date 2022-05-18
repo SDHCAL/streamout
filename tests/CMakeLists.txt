@@ -1,3 +1,4 @@
+include(ExternalData)
 include(CLI11)
 
 add_executable(RawdataReader.test RawdataReader.test.cc)

@@ -6,8 +6,9 @@
 
 #include "Buffer.h"
 #include "Formatters.h"
-#include "SDHCAL_RawBuffer_Navigator.h"
+#include "RawBufferNavigator.h"
 #include "SDHCAL_buffer_LoopCounter.h"
+#include "Timer.h"
 
 #include <cassert>
 #include <memory>
@@ -16,20 +17,6 @@
 #include <vector>
 
 // function to loop on buffers
-//
-// template class should implement
-// void SOURCE::start();
-// bool SOURCE::next();
-// void SOURCE::end();
-// SDHCAL_buffer SOURCE::getSDHCALBuffer();
-//
-// void DESTINATION::start();
-// void DESTINATION::processDIF(DIFPtr*);
-// void DESTINATION::processFrame(DIFPtr*,uint32_t frameIndex);
-// void DESTINATION::processPadInFrame(DIFPtr*,uint32_t frameIndex, uint32_t channelIndex);
-// void DESTINATION::processSlowControl(SDHCAL_buffer);
-// void DESTINATION::end();
-//
 
 template<typename SOURCE, typename DESTINATION> class SDHCAL_buffer_loop
 {
@@ -53,33 +40,36 @@ public:
 
   void loop(const std::int32_t& m_NbrEventsToProcess = 0)
   {
+    Timer timer;
+    timer.start();
     m_Source.start();
     m_Destination.start();
+    RawBufferNavigator bufferNavigator;
     while(m_Source.nextEvent() && (m_NbrEventsToProcess == 0 || m_NbrEventsToProcess >= m_NbrEvents))
     {
       m_Logger->warn("===*** Event number {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
       {
-        const Buffer&              buffer           = m_Source.getSDHCALBuffer();
-        bit8_t*                    debug_variable_1 = buffer.end();
-        SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
-        bit8_t*                    debug_variable_2 = bufferNavigator.getDIFBuffer().end();
+        const Buffer& buffer           = m_Source.getSDHCALBuffer();
+        bit8_t*       debug_variable_1 = buffer.end();
+        bufferNavigator.setBuffer(buffer);
+        bit8_t* debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
         uint32_t idstart = bufferNavigator.getStartOfDIF();
         if(m_Debug && idstart == 0) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
-        if(!bufferNavigator.validBuffer()) continue;
-        DIFPtr* d = bufferNavigator.getDIFPtr();
-        if(m_Debug) assert(d != nullptr);
-        if(d != nullptr)
+        if(!bufferNavigator.validBuffer())
         {
-          c.DIFPtrValueAtReturnedPos[bufferNavigator.getDIFBufferStart()[d->getGetFramePtrReturn()]]++;
-          if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d->getGetFramePtrReturn()] == 0xa0);
+          m_Logger->error("!bufferNavigator.validBuffer()");
+          continue;
         }
+        DIFPtr& d = bufferNavigator.getDIFPtr();
+        c.DIFPtrValueAtReturnedPos[bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()]]++;
+        if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()] == 0xa0);
         c.SizeAfterDIFPtr[bufferNavigator.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
-        for(uint32_t i = 0; i < d->getNumberOfFrames(); i++)
+        for(uint32_t i = 0; i < d.getNumberOfFrames(); i++)
         {
           m_Destination.processFrame(d, i);
           for(uint32_t j = 0; j < 64; j++) m_Destination.processPadInFrame(d, i, j);
@@ -100,10 +90,10 @@ public:
 
         Buffer eod = bufferNavigator.getEndOfAllData();
         c.SizeAfterAllData[eod.size()]++;
-        unsigned char* debug_variable_3 = eod.end();
+        bit8_t* debug_variable_3 = eod.end();
         m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));
         if(m_Debug) assert(debug_variable_1 == debug_variable_3);
-        if(eod.size()!=0)m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
+        if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
 
         int nonzeroCount = 0;
         for(unsigned char* it = eod.begin(); it != eod.end(); it++)
@@ -115,8 +105,10 @@ public:
     }  // end of event while loop
     m_Destination.end();
     m_Source.end();
+    timer.stop();
+    fmt::print("=== elapsed time {}ms ({}ms/event) ===\n", timer.getElapsedTime() / 1000, timer.getElapsedTime() / (1000 * m_NbrEvents));
   }
-  void                            printAllCounters() { c.printAllCounters(m_Logger); }
+  void                            printAllCounters() { c.printAllCounters(); }
   std::shared_ptr<spdlog::logger> log() { return m_Logger; }
 
 private:

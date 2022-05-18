@@ -36,7 +36,7 @@ int main(int argc, char** argv)
   {
     return app.exit(e);
   }
-  SDHCAL_RawBuffer_Navigator::StartAt(bitsToSkip);
+  RawBufferNavigator::StartAt(bitsToSkip);
   TFile                                            hfile(outputFileName.c_str(), writeOption.c_str(), title.c_str());
   DIFdataExample                                   source;
   ROOTtreeDest                                     destination;

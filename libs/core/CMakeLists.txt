@@ -7,8 +7,8 @@ add_library(Core
             src/DIFUnpacker.cc
             src/Buffer.cc
             src/SDHCAL_buffer_LoopCounter.cc
-            src/SDHCAL_RawBuffer_Navigator.cc
-            src/DIFPtr.cc)
+            src/RawBufferNavigator.cc
+)
 target_include_directories(Core PUBLIC include)
 target_link_libraries(Core PUBLIC spdlog::spdlog fmt::fmt)
 target_compile_definitions(Core PRIVATE "-DDATA_FORMAT_VERSION=${DATA_FORMAT_VERSION}")

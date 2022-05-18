@@ -18,14 +18,14 @@ class RawdataReader : public Interface
 {
 public:
   explicit RawdataReader(const char* fileName);
-  void   start();
-  void   end();
-  float  getFileSize();
-  void   openFile(const std::string& fileName);
-  void   closeFile();
-  bool   nextEvent();
-  bool   nextDIFbuffer();
-  Buffer getSDHCALBuffer();
+  void          start();
+  void          end();
+  float         getFileSize();
+  void          openFile(const std::string& fileName);
+  void          closeFile();
+  bool          nextEvent();
+  bool          nextDIFbuffer();
+  const Buffer& getSDHCALBuffer();
   virtual ~RawdataReader() { closeFile(); }
   static void setDefaultBufferSize(const std::size_t& size);
 

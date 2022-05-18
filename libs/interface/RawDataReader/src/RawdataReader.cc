@@ -113,7 +113,7 @@ bool RawdataReader::nextDIFbuffer()
   return true;
 }
 
-Buffer RawdataReader::getSDHCALBuffer()
+const Buffer& RawdataReader::getSDHCALBuffer()
 {
   uncompress();
   return m_Buffer;

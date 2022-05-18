@@ -21,9 +21,9 @@ public:
     m_InternalLogger->set_level(spdlog::level::trace);
   }
   void                             start();
-  void                             processDIF(DIFPtr*);
-  void                             processFrame(DIFPtr*, uint32_t frameIndex);
-  void                             processPadInFrame(DIFPtr*, uint32_t frameIndex, uint32_t channelIndex);
+  void                             processDIF(const DIFPtr&);
+  void                             processFrame(const DIFPtr&, uint32_t frameIndex);
+  void                             processPadInFrame(const DIFPtr&, uint32_t frameIndex, uint32_t channelIndex);
   void                             processSlowControl(Buffer);
   void                             end();
   std::shared_ptr<spdlog::logger>& print() { return m_InternalLogger; }

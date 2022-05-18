@@ -1,4 +1,4 @@
-/** \file SDHCAL_RawBuffer_Navigator.h
+/** \file RawBufferNavigator.h
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
@@ -6,19 +6,28 @@
 
 #include "Buffer.h"
 #include "DIFPtr.h"
+#include "DIFUnpacker.h"
 
 // class to navigate in the raw data buffer
-class SDHCAL_RawBuffer_Navigator
+class RawBufferNavigator
 {
 public:
-  explicit SDHCAL_RawBuffer_Navigator(const Buffer& b, const int& start = -1);
-  ~SDHCAL_RawBuffer_Navigator();
+  RawBufferNavigator()  = default;
+  ~RawBufferNavigator() = default;
+  explicit RawBufferNavigator(const Buffer& b, const int& start = -1);
+  void setBuffer(const Buffer& b, const int& start = -1)
+  {
+    m_BadSCdata = false;
+    m_Buffer    = b;
+    StartAt(start);
+    m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);
+  }
   bool           validBuffer();
   std::uint32_t  getStartOfDIF();
   unsigned char* getDIFBufferStart();
   std::uint32_t  getDIFBufferSize();
   Buffer         getDIFBuffer();
-  DIFPtr*        getDIFPtr();
+  DIFPtr&        getDIFPtr();
   std::uint32_t  getEndOfDIFData();
   std::uint32_t  getSizeAfterDIFPtr();
   std::uint32_t  getDIF_CRC();
@@ -33,7 +42,7 @@ private:
   Buffer        m_Buffer;
   Buffer        m_SCbuffer;
   std::uint32_t m_DIFstartIndex{0};
-  DIFPtr*       m_TheDIFPtr{nullptr};
+  DIFPtr        m_TheDIFPtr;
   bool          m_BadSCdata{false};
   static int    m_Start;
 };

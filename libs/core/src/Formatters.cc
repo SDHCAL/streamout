@@ -7,6 +7,7 @@
 
 #include "Bits.h"
 #include "Buffer.h"
+#include "Words.h"
 
 #include <fmt/format.h>
 

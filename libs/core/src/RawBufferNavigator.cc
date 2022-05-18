@@ -1,49 +1,45 @@
-/** \file SDHCAL_RawBuffer_Navigator.cc
+/** \file RawBufferNavigator.cc
 *  \copyright 2022 G.Grenier F.Lagarde
 */
 
-#include "SDHCAL_RawBuffer_Navigator.h"
+#include "RawBufferNavigator.h"
 
 #include <iostream>
-int SDHCAL_RawBuffer_Navigator::m_Start = 92;
 
-void SDHCAL_RawBuffer_Navigator::StartAt(const int& start)
+int RawBufferNavigator::m_Start = 92;
+
+void RawBufferNavigator::StartAt(const int& start)
 {
   if(start >= 0) m_Start = start;
 }
 
-SDHCAL_RawBuffer_Navigator::SDHCAL_RawBuffer_Navigator(const Buffer& b, const int& start) : m_Buffer(b)
+RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b)
 {
   StartAt(start);
   m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);
 }
 
-SDHCAL_RawBuffer_Navigator::~SDHCAL_RawBuffer_Navigator()
+bool RawBufferNavigator::validBuffer() { return m_DIFstartIndex != 0; }
+
+std::uint32_t RawBufferNavigator::getStartOfDIF() { return m_DIFstartIndex; }
+
+unsigned char* RawBufferNavigator::getDIFBufferStart() { return &(m_Buffer.begin()[m_DIFstartIndex]); }
+
+std::uint32_t RawBufferNavigator::getDIFBufferSize() { return m_Buffer.size() - m_DIFstartIndex; }
+
+Buffer RawBufferNavigator::getDIFBuffer() { return Buffer(getDIFBufferStart(), getDIFBufferSize()); }
+
+DIFPtr& RawBufferNavigator::getDIFPtr()
 {
-  if(m_TheDIFPtr != nullptr) delete m_TheDIFPtr;
-}
-
-bool SDHCAL_RawBuffer_Navigator::validBuffer() { return m_DIFstartIndex != 0; }
-
-std::uint32_t SDHCAL_RawBuffer_Navigator::getStartOfDIF() { return m_DIFstartIndex; }
-
-unsigned char* SDHCAL_RawBuffer_Navigator::getDIFBufferStart() { return &(m_Buffer.begin()[m_DIFstartIndex]); }
-
-std::uint32_t SDHCAL_RawBuffer_Navigator::getDIFBufferSize() { return m_Buffer.size() - m_DIFstartIndex; }
-
-Buffer SDHCAL_RawBuffer_Navigator::getDIFBuffer() { return Buffer(getDIFBufferStart(), getDIFBufferSize()); }
-
-DIFPtr* SDHCAL_RawBuffer_Navigator::getDIFPtr()
-{
-  if(m_TheDIFPtr == nullptr) m_TheDIFPtr = new DIFPtr(getDIFBufferStart(), getDIFBufferSize());
+  m_TheDIFPtr.setBuffer(getDIFBufferStart(), getDIFBufferSize());
   return m_TheDIFPtr;
 }
 
-std::uint32_t SDHCAL_RawBuffer_Navigator::getEndOfDIFData() { return getDIFPtr()->getGetFramePtrReturn() + 3; }
+std::uint32_t RawBufferNavigator::getEndOfDIFData() { return getDIFPtr().getGetFramePtrReturn() + 3; }
 
-std::uint32_t SDHCAL_RawBuffer_Navigator::getSizeAfterDIFPtr() { return getDIFBufferSize() - getDIFPtr()->getGetFramePtrReturn(); }
+std::uint32_t RawBufferNavigator::getSizeAfterDIFPtr() { return getDIFBufferSize() - getDIFPtr().getGetFramePtrReturn(); }
 
-uint32_t SDHCAL_RawBuffer_Navigator::getDIF_CRC()
+std::uint32_t RawBufferNavigator::getDIF_CRC()
 {
   uint32_t i{getEndOfDIFData()};
   uint32_t ret{0};
@@ -52,21 +48,21 @@ uint32_t SDHCAL_RawBuffer_Navigator::getDIF_CRC()
   return ret;
 }
 
-bool SDHCAL_RawBuffer_Navigator::hasSlowControlData() { return getDIFBufferStart()[getEndOfDIFData()] == 0xb1; }
+bool RawBufferNavigator::hasSlowControlData() { return getDIFBufferStart()[getEndOfDIFData()] == 0xb1; }
 
-Buffer SDHCAL_RawBuffer_Navigator::getSCBuffer()
+Buffer RawBufferNavigator::getSCBuffer()
 {
   setSCBuffer();
   return m_SCbuffer;
 }
 
-bool SDHCAL_RawBuffer_Navigator::badSCData()
+bool RawBufferNavigator::badSCData()
 {
   setSCBuffer();
   return m_BadSCdata;
 }
 
-void SDHCAL_RawBuffer_Navigator::setSCBuffer()
+void RawBufferNavigator::setSCBuffer()
 {
   if(!hasSlowControlData()) return;
   if(m_SCbuffer.size() != 0) return;  // deja fait
@@ -99,7 +95,7 @@ void SDHCAL_RawBuffer_Navigator::setSCBuffer()
   }
 }
 
-Buffer SDHCAL_RawBuffer_Navigator::getEndOfAllData()
+Buffer RawBufferNavigator::getEndOfAllData()
 {
   setSCBuffer();
   if(hasSlowControlData() && !m_BadSCdata) { return Buffer(&(m_SCbuffer.begin()[m_SCbuffer.size()]), getSizeAfterDIFPtr() - 3 - m_SCbuffer.size()); }
