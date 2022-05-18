@@ -28,8 +28,8 @@ void RawdataReader::uncompress()
   static const std::size_t size_buffer{0x20000};
   std::size_t              shift{3 * sizeof(std::uint32_t) + sizeof(std::uint64_t)};
   static bit8_t            obuf[size_buffer];
-  std::size_t              size_buffer_end{0x20000};
-  std::int8_t              rc = ::uncompress(obuf, reinterpret_cast<std::uint64_t*>(&size_buffer_end), &m_Buffer[shift], m_Buffer.size() - shift);
+  unsigned long            size_buffer_end{0x20000};  // NOLINT(runtime/int)
+  std::int8_t              rc = ::uncompress(obuf, &size_buffer_end, &m_Buffer[shift], m_Buffer.size() - shift);
   switch(rc)
   {
     case Z_OK: break;
