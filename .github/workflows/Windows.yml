@@ -23,5 +23,5 @@ jobs:
     - name: Build
       run: cmake --build build
     - name: Test
-      run: ctest -VV
+      run: ctest -C Build -VV
       working-directory: ./build
