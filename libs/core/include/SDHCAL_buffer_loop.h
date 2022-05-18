@@ -61,9 +61,9 @@ public:
       while(m_Source.nextDIFbuffer())
       {
         const Buffer&              buffer           = m_Source.getSDHCALBuffer();
-        bit8_t*             debug_variable_1 = buffer.end();
+        bit8_t*                    debug_variable_1 = buffer.end();
         SDHCAL_RawBuffer_Navigator bufferNavigator(buffer);
-        bit8_t*             debug_variable_2 = bufferNavigator.getDIFBuffer().end();
+        bit8_t*                    debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
         uint32_t idstart = bufferNavigator.getStartOfDIF();
@@ -103,7 +103,7 @@ public:
         unsigned char* debug_variable_3 = eod.end();
         m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));
         if(m_Debug) assert(debug_variable_1 == debug_variable_3);
-        m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
+        if(eod.size()!=0)m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
 
         int nonzeroCount = 0;
         for(unsigned char* it = eod.begin(); it != eod.end(); it++)
