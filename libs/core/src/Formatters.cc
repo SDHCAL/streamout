@@ -24,13 +24,13 @@ std::string to_dec(const Buffer& b, const std::size_t& begin, const std::size_t&
   return ret;
 }
 
-std::string to_dec(const bit8_t& b) { return fmt::format("{:#08d}", b); }
+std::string to_dec(const bit8_t& b) { return fmt::format("{:#d}", b); }
 
-std::string to_dec(const bit16_t& b) { return fmt::format("{:#016d}", b); }
+std::string to_dec(const bit16_t& b) { return fmt::format("{:#d}", b); }
 
-std::string to_dec(const bit32_t& b) { return fmt::format("{:#032d}", b); }
+std::string to_dec(const bit32_t& b) { return fmt::format("{:#d}", b); }
 
-std::string to_dec(const bit64_t& b) { return fmt::format("{:#064d}", b); }
+std::string to_dec(const bit64_t& b) { return fmt::format("{:#d}", b); }
 
 std::string to_hex(const Buffer& b, const std::size_t& begin, const std::size_t& end)
 {
@@ -45,13 +45,13 @@ std::string to_hex(const Buffer& b, const std::size_t& begin, const std::size_t&
   return ret;
 }
 
-std::string to_hex(const bit8_t& b) { return fmt::format("{:#08x}", b); }
+std::string to_hex(const bit8_t& b) { return fmt::format("{:#02x}", b); }
 
-std::string to_hex(const bit16_t& b) { return fmt::format("{:#016x}", b); }
+std::string to_hex(const bit16_t& b) { return fmt::format("{:#04x}", b); }
 
-std::string to_hex(const bit32_t& b) { return fmt::format("{:#032x}", b); }
+std::string to_hex(const bit32_t& b) { return fmt::format("{:#08x}", b); }
 
-std::string to_hex(const bit64_t& b) { return fmt::format("{:#064x}", b); }
+std::string to_hex(const bit64_t& b) { return fmt::format("{:#016x}", b); }
 
 std::string to_bin(const Buffer& b, const std::size_t& begin, const std::size_t& end)
 {
@@ -87,10 +87,10 @@ std::string to_oct(const Buffer& b, const std::size_t& begin, const std::size_t&
   return ret;
 }
 
-std::string to_oct(const bit8_t& b) { return fmt::format("{:#08o}", b); }
+std::string to_oct(const bit8_t& b) { return fmt::format("{:#04o}", b); }
 
-std::string to_oct(const bit16_t& b) { return fmt::format("{:#016o}", b); }
+std::string to_oct(const bit16_t& b) { return fmt::format("{:#08o}", b); }
 
-std::string to_oct(const bit32_t& b) { return fmt::format("{:#032o}", b); }
+std::string to_oct(const bit32_t& b) { return fmt::format("{:#016o}", b); }
 
-std::string to_oct(const bit64_t& b) { return fmt::format("{:#064o}", b); }
+std::string to_oct(const bit64_t& b) { return fmt::format("{:#032o}", b); }
