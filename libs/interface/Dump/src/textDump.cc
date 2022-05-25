@@ -10,28 +10,19 @@ void textDump::start() { print()->info("Will dump bunch of DIF data"); }
 
 void textDump::processDIF(const DIFPtr& d)
 {
-  print()->info("DIF number is {}", d.getDIFid());
-  print()->info("DTC value is {}", d.getDTC());
-  print()->info("GTC value is {}", d.getGTC());
-  print()->info("DIF BCID is {}", d.getBCID());
-  print()->info("Absolute BCID is {}", d.getAbsoluteBCID());
-  print()->info("The number of frame is {}", d.getNumberOfFrames());
+  print()->info("DIF_ID : {}, DTC : {}, GTC : {}, DIF BCID {}, Absolute BCID : {}, Nbr frames {}", d.getDIFid(),d.getDTC(), d.getGTC(),d.getBCID(),d.getAbsoluteBCID(),d.getNumberOfFrames());
 }
 
 void textDump::processFrame(const DIFPtr& d, uint32_t frameIndex)
 {
-  print()->info("Displaying frame number {}", frameIndex);
-  print()->info("ASIC ID is {}", d.getASICid(frameIndex));
-  print()->info("Frame BCID is {}", d.getFrameBCID(frameIndex));
-  print()->info("Frame Time To Trigger (a.k.a timestamp) is {}", d.getFrameTimeToTrigger(frameIndex));
+  print()->info("\tDisplaying frame number {} : ASIC ID {}, Frame BCID {}, Frame Time To Trigger (a.k.a timestamp) is {}", frameIndex,d.getASICid(frameIndex),d.getFrameBCID(frameIndex),d.getFrameTimeToTrigger(frameIndex));
 }
 
 void textDump::processPadInFrame(const DIFPtr& d, uint32_t frameIndex, uint32_t channelIndex)
 {
   if(d.getThresholdStatus(frameIndex, channelIndex) > 0)
   {
-    print()->info("Displaying channel number {}", channelIndex);
-    print()->info("Threshold status is {}", d.getThresholdStatus(frameIndex, channelIndex));
+    print()->info("\t\tChannel {}, Threshold {}", channelIndex,d.getThresholdStatus(frameIndex, channelIndex));
   }
 }
 
