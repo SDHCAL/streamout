@@ -13,11 +13,7 @@ void RawBufferNavigator::StartAt(const int& start)
   if(start >= 0) m_Start = start;
 }
 
-RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b)
-{
-  StartAt(start);
-  m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);
-}
+RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b) { setBuffer(b, start); }
 
 bool RawBufferNavigator::validBuffer() { return m_DIFstartIndex != 0; }
 

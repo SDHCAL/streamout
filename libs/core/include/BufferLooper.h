@@ -1,13 +1,13 @@
-/** \file SDHCAL_buffer_loop.h
- *  \copyright 2022 G.Grenier F.Lagarde
- */
+/** \file BufferLooper.h
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
 
 #pragma once
 
 #include "Buffer.h"
+#include "BufferLooperCounter.h"
 #include "Formatters.h"
 #include "RawBufferNavigator.h"
-#include "SDHCAL_buffer_LoopCounter.h"
 #include "Timer.h"
 
 #include <cassert>
@@ -18,10 +18,10 @@
 
 // function to loop on buffers
 
-template<typename SOURCE, typename DESTINATION> class SDHCAL_buffer_loop
+template<typename SOURCE, typename DESTINATION> class BufferLooper
 {
 public:
-  SDHCAL_buffer_loop(SOURCE& source, DESTINATION& dest, bool debug = false) : m_Source(source), m_Destination(dest), m_Debug(debug)
+  BufferLooper(SOURCE& source, DESTINATION& dest, bool debug = false) : m_Source(source), m_Destination(dest), m_Debug(debug)
   {
     m_Logger = spdlog::create<spdlog::sinks::null_sink_mt>("streamout");
     if(!spdlog::get("streamout")) { spdlog::register_logger(m_Logger); }
@@ -38,14 +38,14 @@ public:
     m_Destination.setLogger(m_Logger);
   }
 
-  void loop(const std::int32_t& m_NbrEventsToProcess = 0)
+  void loop(const std::uint32_t& m_NbrEventsToProcess = 0)
   {
     Timer timer;
     timer.start();
     m_Source.start();
     m_Destination.start();
     RawBufferNavigator bufferNavigator;
-    while(m_Source.nextEvent() && (m_NbrEventsToProcess == 0 || m_NbrEventsToProcess >= m_NbrEvents))
+    while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
       m_Logger->warn("===*** Event number {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
@@ -69,10 +69,10 @@ public:
         if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()] == 0xa0);
         c.SizeAfterDIFPtr[bufferNavigator.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
-        for(uint32_t i = 0; i < d.getNumberOfFrames(); i++)
+        for(std::size_t i = 0; i < d.getNumberOfFrames(); i++)
         {
           m_Destination.processFrame(d, i);
-          for(uint32_t j = 0; j < 64; j++) m_Destination.processPadInFrame(d, i, j);
+          for(std::size_t j = 0; j < 64; j++) m_Destination.processPadInFrame(d, i, j);
         }
 
         bool processSC = false;
@@ -96,7 +96,7 @@ public:
         if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
 
         int nonzeroCount = 0;
-        for(unsigned char* it = eod.begin(); it != eod.end(); it++)
+        for(bit8_t* it = eod.begin(); it != eod.end(); it++)
           if(static_cast<int>(*it) != 0) nonzeroCount++;
         c.NonZeroValusAtEndOfData[nonzeroCount]++;
       }  // end of DIF while loop
@@ -114,7 +114,7 @@ public:
 private:
   std::shared_ptr<spdlog::logger> m_Logger{nullptr};
   std::vector<spdlog::sink_ptr>   m_Sinks;
-  SDHCAL_buffer_LoopCounter       c;
+  BufferLooperCounter             c;
   SOURCE&                         m_Source{nullptr};
   DESTINATION&                    m_Destination{nullptr};
   bool                            m_Debug{false};

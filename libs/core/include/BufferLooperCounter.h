@@ -1,4 +1,4 @@
-/** \file SDHCAL_buffer_LoopCounter.h
+/** \file BufferLooperCounter.h
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 
-struct SDHCAL_buffer_LoopCounter
+struct BufferLooperCounter
 {
 public:
   int                hasSlowControl    = 0;

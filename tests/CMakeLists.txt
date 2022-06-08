@@ -11,7 +11,6 @@ if(BUILD_RAWDATA_INTERFACE)
   install(TARGETS RawdataReader.test RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
   ExternalData_Add_Test(RawdataReader.run NAME RawdataReader.test COMMAND RawdataReader.test -f DATA{data/SMM_210616_040234_732873.dat} -s 20 -v warn )
   ExternalData_Add_Target(RawdataReader.run)
-  add_test(NAME RawdataReader.test COMMAND RawdataReader.test -f DATA{${CMAKE_CURRENT_SOURCE_DIR}/data/SMM_210616_040234_732873.dat} -s 20 -v warn)
 endif()
 
 add_executable(Formatters.test Formatters.test.cc)

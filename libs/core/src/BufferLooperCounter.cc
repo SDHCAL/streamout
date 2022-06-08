@@ -2,11 +2,11 @@
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
-#include "SDHCAL_buffer_LoopCounter.h"
+#include "BufferLooperCounter.h"
 
 #include <fmt/core.h>
 
-void SDHCAL_buffer_LoopCounter::printAllCounters()
+void BufferLooperCounter::printAllCounters()
 {
   fmt::print("BUFFER LOOP FINAL STATISTICS : \n");
   printCounter("Start of DIF header", DIFStarter);
@@ -17,7 +17,7 @@ void SDHCAL_buffer_LoopCounter::printAllCounters()
   printCounter("Number on non zero values in end of data buffer", NonZeroValusAtEndOfData);
 }
 
-void SDHCAL_buffer_LoopCounter::printCounter(const std::string& description, const std::map<int, int>& m)
+void BufferLooperCounter::printCounter(const std::string& description, const std::map<int, int>& m)
 {
   std::string out{"statistics for " + description + " : \n"};
   for(std::map<int, int>::const_iterator it = m.begin(); it != m.end(); it++)
