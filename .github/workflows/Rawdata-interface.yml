@@ -1,5 +1,5 @@
 ---
-name: LCIO interface
+name: RAWDATA interface
 
 on:
   push:
