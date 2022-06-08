@@ -1,5 +1,5 @@
 ---
-name: ROOT interface
+name: LCIO interface
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v3
 
     - name: 🔧 Configure
-      run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=ON -DBUILD_LCIO_INTERFACE=OFF -DBUILD_RAWDATA_INTERFACE=OFF
+      run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=OFF -DBUILD_LCIO_INTERFACE=OFF -DBUILD_RAWDATA_INTERFACE=ON
 
     - name: ⚙️ Build
       run: cmake --build ./build --config Release --parallel 2

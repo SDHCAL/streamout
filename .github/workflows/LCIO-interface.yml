@@ -36,7 +36,7 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v3
 
     - name: 🔧 Configure
-      run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=OFF -DBUILD_LCIO_INTERFACE=ON
+      run: cmake -G Ninja -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_ROOT_INTERFACE=OFF -DBUILD_LCIO_INTERFACE=ON -DBUILD_RAWDATA_INTERFACE=OFF
 
     - name: ⚙️ Build
       run: cmake --build ./build --config Release --parallel 2
