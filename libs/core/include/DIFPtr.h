@@ -94,13 +94,6 @@ inline std::uint32_t                DIFPtr::getFrameAsicHeader(uint32_t i) const
 inline std::uint32_t                DIFPtr::getFrameBCID(uint32_t i) const { return DIFUnpacker::getFrameBCID(theFrames_[i]); }
 inline std::uint32_t                DIFPtr::getFrameTimeToTrigger(uint32_t i) const { return getBCID() - getFrameBCID(i); }
 inline bool                         DIFPtr::getFrameLevel(uint32_t i, uint32_t ipad, uint32_t ilevel) const { return DIFUnpacker::getFrameLevel(theFrames_[i], ipad, ilevel); }
-/*void                                dumpDIFInfo()
-  {
-    printf("DIF %d DTC %d GTC %d ABCID %lld BCID %d Lines %d Temperature %d \n", getID(), getDTC(), getGTC(), getAbsoluteBCID(), getBCID(), getLines(), hasTemperature());
-
-    if(hasTemperature()) printf("T: ASU1 %d %f ASU2 %d %f DIF %d  %f \n", getTASU1(), getTemperatureASU1(), getTASU2(), getTemperatureASU2(), getTDIF(), getTemperatureDIF());
-    printf("Found %ld Lines and %ld Frames \n", theLines_.size(), theFrames_.size());
-  }*/
 // Addition by GG
 inline uint32_t                     DIFPtr::getDIFid() const { return getID() & 0xFF; }
 inline uint32_t                     DIFPtr::getASICid(uint32_t i) const { return getFrameAsicHeader(i) & 0xFF; }
