@@ -37,10 +37,10 @@ int main(int argc, char** argv)
     return app.exit(e);
   }
   RawBufferNavigator::StartAt(bitsToSkip);
-  TFile                                            hfile(outputFileName.c_str(), writeOption.c_str(), title.c_str());
-  DIFdataExample                                   source;
-  ROOTtreeDest                                     destination;
-  SDHCAL_buffer_loop<DIFdataExample, ROOTtreeDest> toto(source, destination, debug);
+  TFile                                      hfile(outputFileName.c_str(), writeOption.c_str(), title.c_str());
+  DIFdataExample                             source;
+  ROOTtreeDest                               destination;
+  BufferLooper<DIFdataExample, ROOTtreeDest> toto(source, destination, debug);
   toto.loop(eventNbr);
   std::cout << "******************************" << std::endl;
   toto.printAllCounters();
