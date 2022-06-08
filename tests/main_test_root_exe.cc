@@ -2,10 +2,10 @@
  *  \copyright 2022 G.Grenier F.Lagarde
  */
 
+#include "BufferLooper.h"
 #include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
 #include "ROOTtreeDest.h"
-#include "SDHCAL_buffer_loop.h"
 #include "TFile.h"
 
 #include <iostream>
@@ -13,7 +13,7 @@
 int main(int argc, char** argv)
 {
   CLI::App      app{"SDHCAL buffer loop with ROOT file destination"};
-  std::uint32_t eventNbr{0};
+  std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
   app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1)->check(CLI::PositiveNumber);

@@ -3,9 +3,9 @@
 *  \copyright 2022 G.Grenier F.Lagarde
 */
 
+#include "BufferLooper.h"
 #include "CLI/CLI.hpp"
 #include "DIFdataExample.h"
-#include "SDHCAL_buffer_loop.h"
 #include "textDump.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -13,7 +13,7 @@
 int main(int argc, char** argv)
 {
   CLI::App      app{"SDHCAL buffer loop with textDump destination"};
-  std::uint32_t eventNbr{0};
+  std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
   app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1)->check(CLI::PositiveNumber);
@@ -37,9 +37,9 @@ int main(int argc, char** argv)
   spdlog::set_level(verbosity);
 
   RawBufferNavigator::StartAt(bitsToSkip);
-  DIFdataExample                               source;
-  textDump                                     destination;
-  SDHCAL_buffer_loop<DIFdataExample, textDump> toto(source, destination, debug);
+  DIFdataExample                         source;
+  textDump                               destination;
+  BufferLooper<DIFdataExample, textDump> toto(source, destination, debug);
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.loop(eventNbr);
   toto.log()->info("******************************");

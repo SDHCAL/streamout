@@ -5,11 +5,12 @@
 
 #include "RawdataReader.h"
 
+#include "BufferLooper.h"
 #include "CLI/CLI.hpp"
-#include "SDHCAL_buffer_loop.h"
 #include "textDump.h"
 
 #include <iostream>
+#include <limits>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -18,7 +19,7 @@ int main(int argc, char** argv)
   CLI::App    app{"SDHCAL buffer loop with textDump destination"};
   std::string filename{""};
   app.add_option("-f,--filename", filename, "Path of the file");
-  std::uint32_t eventNbr{0};
+  std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
   app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1);
@@ -45,7 +46,7 @@ int main(int argc, char** argv)
   RawdataReader source(filename.c_str());
   textDump      destination;
   destination.setLevel(spdlog::level::trace);
-  SDHCAL_buffer_loop<RawdataReader, textDump> toto(source, destination, debug);
+  BufferLooper<RawdataReader, textDump> toto(source, destination, debug);
 
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
