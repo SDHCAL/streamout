@@ -11,12 +11,11 @@
 
 ## Available interfaces ##
 
-### Input ###
-
-### Output ###
-
-[![ROOT interface](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml)
-[![LCIO interface](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml)
+|                Description                |    Type    |                                                                                           Build                                                                                            |
+|:-----------------------------------------:|:----------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Reading the rawdata from binary file .dat | **Input**  | [![Rawdata interface](https://github.com/SDHCAL/streamout/actions/workflows/Rawdata-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/Rawdata-interface.yml) |
+|            Write to ROOT file             | **Output** |     [![ROOT interface](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml)      |
+|            Write to LCIO file             | **Output** |     [![LCIO interface](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml)      |
 
 ## Standalone SDHCAL raw data processor ##
 
