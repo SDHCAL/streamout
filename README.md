@@ -1,5 +1,7 @@
 # SDHCAL v0.1.0 #
 
+Standalone SDHCAL raw data processor
+
 [![macOS](https://github.com/SDHCAL/streamout/workflows/macOS/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/macOS.yml)
 [![Linux GCC](https://github.com/SDHCAL/streamout/workflows/Linux%20GCC/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/Linux-gcc.yml)
 [![Linux Clang](https://github.com/SDHCAL/streamout/workflows/Linux%20Clang/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/Linux-clang.yml)
@@ -17,6 +19,21 @@
 |            Write to ROOT file             | **Output** |     [![ROOT interface](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/ROOT-interface.yml)      |
 |            Write to LCIO file             | **Output** |     [![LCIO interface](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/LCIO-interface.yml)      |
 
-## Standalone SDHCAL raw data processor ##
+## Documentation [![docs](https://github.com/SDHCAL/streamout/actions/workflows/Docs.yml/badge.svg)](https://github.com/SDHCAL/streamout/actions/workflows/Docs.yml) ##
 
-[Documentation](https://sdhcal.github.io/docs/streamout)
+<h1 align="center">
+  <a href="https://sdhcal.github.io/assets/projects/streamout/">
+
+  ```markdown
+  🌍 Online
+  ```
+
+  </a>
+  <a href="https://sdhcal.github.io/assets/projects/streamout/streamout_Manual.pdf">
+
+  ```markdown
+  📖 PDF
+  ```
+
+  </a>
+</h1>
