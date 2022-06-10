@@ -9,7 +9,6 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <memory>
-#include <ostream>
 #include <spdlog/logger.h>
 
 class textDump : public Interface

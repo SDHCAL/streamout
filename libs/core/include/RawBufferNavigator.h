@@ -22,6 +22,7 @@ public:
     StartAt(start);
     m_DIFstartIndex = DIFUnpacker::getStartOfDIF(m_Buffer.begin(), m_Buffer.size(), m_Start);
   }
+  std::uint8_t   getDetectorID();
   bool           validBuffer();
   std::uint32_t  getStartOfDIF();
   unsigned char* getDIFBufferStart();

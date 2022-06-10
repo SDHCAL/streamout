@@ -31,6 +31,11 @@ int main(int argc, char** argv)
       CLI::ignore_case));
   bool debug{false};
   app.add_flag("-d,--debug", debug, "Set debug");
+
+  std::vector<DetectorID> detectorIDs{DetectorID::HARDROC, DetectorID::RUNHEADER};
+  app.add_option("--detectorID", detectorIDs, "Detector IDs")
+    ->transform(CLI::CheckedTransformer(std::map<std::string, DetectorID>({{"HARDROC", DetectorID::HARDROC}, {"HARDROC_NEW", DetectorID::HARDROC_NEW}, {"RUNHEADER", DetectorID::RUNHEADER}}), CLI::ignore_case));
+
   try
   {
     app.parse(argc, argv);
@@ -47,7 +52,7 @@ int main(int argc, char** argv)
   textDump      destination;
   destination.setLevel(spdlog::level::trace);
   BufferLooper<RawdataReader, textDump> toto(source, destination, debug);
-
+  toto.setDetectorIDs(detectorIDs);
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
   toto.loop(eventNbr);

@@ -6,16 +6,17 @@
 
 #include "Buffer.h"
 #include "BufferLooperCounter.h"
+#include "DetectorId.h"
 #include "Formatters.h"
 #include "RawBufferNavigator.h"
 #include "Timer.h"
 
+#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/spdlog.h>
 #include <vector>
-
 // function to loop on buffers
 
 template<typename SOURCE, typename DESTINATION> class BufferLooper
@@ -50,12 +51,20 @@ public:
       m_Logger->warn("===*** Event number {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
       {
-        const Buffer& buffer           = m_Source.getSDHCALBuffer();
-        bit8_t*       debug_variable_1 = buffer.end();
+        const Buffer& buffer = m_Source.getSDHCALBuffer();
         bufferNavigator.setBuffer(buffer);
+
+        bit8_t* debug_variable_1 = buffer.end();
         bit8_t* debug_variable_2 = bufferNavigator.getDIFBuffer().end();
-        m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
+        if(debug_variable_1 != debug_variable_2) m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
+
+        if(std::find(m_DetectorIDs.begin(), m_DetectorIDs.end(), static_cast<DetectorID>(bufferNavigator.getDetectorID())) == m_DetectorIDs.end())
+        {
+          m_Logger->trace("{}", bufferNavigator.getDetectorID());
+          continue;
+        }
+
         uint32_t idstart = bufferNavigator.getStartOfDIF();
         if(m_Debug && idstart == 0) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
@@ -91,7 +100,7 @@ public:
         Buffer eod = bufferNavigator.getEndOfAllData();
         c.SizeAfterAllData[eod.size()]++;
         bit8_t* debug_variable_3 = eod.end();
-        m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));
+        if(debug_variable_1 != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));
         if(m_Debug) assert(debug_variable_1 == debug_variable_3);
         if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
 
@@ -111,7 +120,10 @@ public:
   void                            printAllCounters() { c.printAllCounters(); }
   std::shared_ptr<spdlog::logger> log() { return m_Logger; }
 
+  void setDetectorIDs(const std::vector<DetectorID>& detectorIDs) { m_DetectorIDs = detectorIDs; }
+
 private:
+  std::vector<DetectorID>         m_DetectorIDs;
   std::shared_ptr<spdlog::logger> m_Logger{nullptr};
   std::vector<spdlog::sink_ptr>   m_Sinks;
   BufferLooperCounter             c;

@@ -15,6 +15,8 @@ void RawBufferNavigator::StartAt(const int& start)
 
 RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b) { setBuffer(b, start); }
 
+std::uint8_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
+
 bool RawBufferNavigator::validBuffer() { return m_DIFstartIndex != 0; }
 
 std::uint32_t RawBufferNavigator::getStartOfDIF() { return m_DIFstartIndex; }

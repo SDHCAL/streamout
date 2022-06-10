@@ -1,2 +1,8 @@
 missive(WARN "Build with LCIO interface")
 include(Lcio)
+add_library(LCIOWriter src/LCIOWriter.cc)
+target_include_directories(LCIOWriter PUBLIC include)
+target_link_libraries(LCIOWriter PUBLIC Streamout::Core LCIO::LCIO)
+install(TARGETS LCIOWriter RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+add_library(Streamout::Interface::LCIOWriter ALIAS LCIOWriter)
+target_link_libraries(Interfaces INTERFACE Streamout::Interface::LCIOWriter)
