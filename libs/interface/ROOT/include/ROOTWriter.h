@@ -8,9 +8,12 @@
 #include "Buffer.h"
 #include "DIFPtr.h"
 #include "Interface.h"
-#include "TTree.h"
+#include "Event.h"
 
-class ROOTtreeDest : public Interface
+#include <TTree.h>
+#include <TFile.h>
+
+class ROOTWritter : public Interface
 {
 public:
   typedef struct
@@ -21,7 +24,7 @@ public:
     ULong64_t AbsoluteBCID;
   } DATA;
 
-  ROOTtreeDest();
+  ROOTWritter();
 
   void start();
   void processDIF(const DIFPtr&);
@@ -31,7 +34,8 @@ public:
   void end() { ; }
 
 private:
+  TFile* m_File{nullptr};
+  TTree* _tree{nullptr};
   DATA   _data;
-  TTree* _tree;
   void   dataReset();
 };

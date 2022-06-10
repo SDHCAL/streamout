@@ -5,14 +5,14 @@
 
 #include "ROOTtreeDest.h"
 
-ROOTtreeDest::ROOTtreeDest()
+ROOTWritter::ROOTWritter()
 {
   dataReset();
   _tree = new TTree("RawData", "Raw SDHCAL data tree");
   _tree->Branch("data", &_data, "DIFid/i:ASICid:CHANNELid:Thresh:DTC:GTC:DIF_BCID:frame_BCID:timeStamp:AbsoluteBCID/l");
 }
 
-void ROOTtreeDest::dataReset()
+void ROOTWritter::dataReset()
 {
   _data.DIFid = _data.ASICid = _data.CHANNELid = 0;
   _data.Thresh                                 = 0;
@@ -20,9 +20,9 @@ void ROOTtreeDest::dataReset()
   _data.AbsoluteBCID                                                          = 0;
 }
 
-void ROOTtreeDest::start() { dataReset(); }
+void ROOTWritter::start() { dataReset(); }
 
-void ROOTtreeDest::processDIF(const DIFPtr& d)
+void ROOTWritter::processDIF(const DIFPtr& d)
 {
   _data.DIFid        = d.getDIFid();
   _data.DTC          = d.getDTC();
@@ -31,14 +31,14 @@ void ROOTtreeDest::processDIF(const DIFPtr& d)
   _data.AbsoluteBCID = d.getAbsoluteBCID();
 }
 
-void ROOTtreeDest::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
+void ROOTWritter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
 {
   _data.ASICid     = d.getASICid(frameIndex);
   _data.frame_BCID = d.getFrameBCID(frameIndex);
   _data.timeStamp  = d.getFrameTimeToTrigger(frameIndex);
 }
 
-void ROOTtreeDest::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
+void ROOTWritter::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
   _data.CHANNELid = channelIndex;
   _data.Thresh    = d.getThresholdStatus(frameIndex, channelIndex);
