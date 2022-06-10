@@ -30,5 +30,7 @@ enum DU : std::uint8_t
   FRAME_ASIC_HEADER_SHIFT = 0,
   FRAME_BCID_SHIFT        = 1,
   FRAME_DATA_SHIFT        = 4,
-  FRAME_SIZE              = 20
+  FRAME_SIZE              = 20,
+
+  NUMBER_PAD = 64
 };

@@ -35,6 +35,8 @@ option(BUILD_DOCS "Build the docs" OFF)
 ## Version of the data
 set(DATA_FORMAT_VERSION "13" CACHE STRING "Version of the data format")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_subdirectory(libs)
 
 if(BUILD_APPS)

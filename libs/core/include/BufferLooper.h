@@ -10,6 +10,7 @@
 #include "Formatters.h"
 #include "RawBufferNavigator.h"
 #include "Timer.h"
+#include "Words.h"
 
 #include <algorithm>
 #include <cassert>
@@ -48,6 +49,11 @@ public:
     RawBufferNavigator bufferNavigator;
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
+      /// START EVENT ///
+      m_Source.startEvent();
+      m_Destination.startEvent();
+      ///////////////////
+
       m_Logger->warn("===*** Event number {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
       {
@@ -65,6 +71,11 @@ public:
           continue;
         }
 
+        /// START DIF ///
+        m_Source.startDIF();
+        m_Destination.startDIF();
+        ///////////////////
+
         uint32_t idstart = bufferNavigator.getStartOfDIF();
         if(m_Debug && idstart == 0) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
@@ -78,10 +89,25 @@ public:
         if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()] == 0xa0);
         c.SizeAfterDIFPtr[bufferNavigator.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
-        for(std::size_t i = 0; i < d.getNumberOfFrames(); i++)
+        for(std::size_t i = 0; i < d.getNumberOfFrames(); ++i)
         {
+          /// START FRAME ///
+          m_Source.startFrame();
+          m_Destination.startFrame();
+          ///////////////////
           m_Destination.processFrame(d, i);
-          for(std::size_t j = 0; j < 64; j++) m_Destination.processPadInFrame(d, i, j);
+          for(std::size_t j = 0; j < DU::NUMBER_PAD; ++j)
+          {
+            m_Source.startPad();
+            m_Destination.startPad();
+            m_Destination.processPadInFrame(d, i, j);
+            m_Source.endPad();
+            m_Destination.endPad();
+          }
+          /// START FRAME ///
+          m_Source.endFrame();
+          m_Destination.endFrame();
+          ///////////////////
         }
 
         bool processSC = false;
@@ -108,9 +134,17 @@ public:
         for(bit8_t* it = eod.begin(); it != eod.end(); it++)
           if(static_cast<int>(*it) != 0) nonzeroCount++;
         c.NonZeroValusAtEndOfData[nonzeroCount]++;
+        /// START DIF ///
+        m_Source.endDIF();
+        m_Destination.endDIF();
+        ///////////////////
       }  // end of DIF while loop
       m_Logger->warn("***=== Event number {} ===***", m_NbrEvents);
       m_NbrEvents++;
+      /// START EVENT ///
+      m_Source.endEvent();
+      m_Destination.endEvent();
+      ///////////////////
     }  // end of event while loop
     m_Destination.end();
     m_Source.end();

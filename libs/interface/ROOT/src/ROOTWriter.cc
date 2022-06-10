@@ -1,46 +1,83 @@
 /**
-*  \file ROOTtreeDest.cc
+*  \file ROOTWriter.cc
 *  \copyright 2022 G.Grenier F.Lagarde
 */
 
-#include "ROOTtreeDest.h"
+#include "ROOTWriter.h"
 
-ROOTWritter::ROOTWritter()
+void ROOTWriter::setFilename(const std::string& filename) { m_Filename = filename; }
+
+ROOTWriter::ROOTWriter() {}
+
+void ROOTWriter::start()
 {
-  dataReset();
-  _tree = new TTree("RawData", "Raw SDHCAL data tree");
-  _tree->Branch("data", &_data, "DIFid/i:ASICid:CHANNELid:Thresh:DTC:GTC:DIF_BCID:frame_BCID:timeStamp:AbsoluteBCID/l");
+  m_File = TFile::Open(m_Filename.c_str(), "RECREATE", m_Filename.c_str(), ROOT::CompressionSettings(ROOT::kLZMA, 9));
+  m_Tree = new TTree("RawData", "Raw SDHCAL data tree");
+  m_Tree->Branch("Events", &m_Event, 10, 0);
 }
 
-void ROOTWritter::dataReset()
+void ROOTWriter::end()
 {
-  _data.DIFid = _data.ASICid = _data.CHANNELid = 0;
-  _data.Thresh                                 = 0;
-  _data.DTC = _data.GTC = _data.DIF_BCID = _data.frame_BCID = _data.timeStamp = 0;
-  _data.AbsoluteBCID                                                          = 0;
+  if(m_Tree) m_Tree->Write();
+  if(m_File)
+  {
+    m_File->Write();
+    m_File->Close();
+  }
+  if(m_File) delete m_File;
 }
 
-void ROOTWritter::start() { dataReset(); }
-
-void ROOTWritter::processDIF(const DIFPtr& d)
+void ROOTWriter::processDIF(const DIFPtr& d)
 {
-  _data.DIFid        = d.getDIFid();
-  _data.DTC          = d.getDTC();
-  _data.GTC          = d.getGTC();
-  _data.DIF_BCID     = d.getBCID();
-  _data.AbsoluteBCID = d.getAbsoluteBCID();
+  m_DIF->setID(d.getDIFid());
+  m_DIF->setDTC(d.getDTC());
+  m_DIF->setGTC(d.getGTC());
+  m_DIF->setDIFBCID(d.getBCID());
+  m_DIF->setAbsoluteBCID(d.getAbsoluteBCID());
 }
 
-void ROOTWritter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
+void ROOTWriter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
 {
-  _data.ASICid     = d.getASICid(frameIndex);
-  _data.frame_BCID = d.getFrameBCID(frameIndex);
-  _data.timeStamp  = d.getFrameTimeToTrigger(frameIndex);
+  m_Hit->setDIF(d.getDIFid());
+  m_Hit->setASIC(d.getASICid(frameIndex));
+  m_Hit->setDTC(d.getDTC());
+  m_Hit->setGTC(d.getGTC());
+  m_Hit->setDIFBCID(d.getBCID());
+  m_Hit->setAbsoluteBCID(d.getAbsoluteBCID());
+  m_Hit->setFrameBCID(d.getFrameBCID(frameIndex));
+  m_Hit->setTimestamp(d.getFrameTimeToTrigger(frameIndex));
 }
 
-void ROOTWritter::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
+void ROOTWriter::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
-  _data.CHANNELid = channelIndex;
-  _data.Thresh    = d.getThresholdStatus(frameIndex, channelIndex);
-  if(_data.Thresh != 0) _tree->Fill();
+  m_Hit->setChannel(static_cast<std::uint8_t>(channelIndex));
+  m_Hit->setThreshold(static_cast<std::uint8_t>(d.getThresholdStatus(frameIndex, channelIndex)));
 }
+
+void ROOTWriter::startEvent() { m_Event = new Event(); }
+
+void ROOTWriter::endEvent()
+{
+  m_Tree->Fill();
+  if(m_Event) delete m_Event;
+}
+
+void ROOTWriter::startDIF() { m_DIF = new DIF(); }
+
+void ROOTWriter::endDIF()
+{
+  m_Event->addDIF(*m_DIF);
+  delete m_DIF;
+}
+
+void ROOTWriter::startFrame() { m_Hit = new Hit(); }
+
+void ROOTWriter::endFrame()
+{
+  if(m_Hit->getThreshold() != 0) { m_DIF->addHit(*m_Hit); }
+  delete m_Hit;
+}
+
+void ROOTWriter::startPad() {}
+
+void ROOTWriter::endPad() {}
