@@ -33,6 +33,4 @@ public:
 
   static std::uint32_t getAnalogPtr(std::vector<unsigned char*>& vLines, unsigned char* cb, const std::uint32_t& idx = 0);
   static std::uint32_t getFramePtr(std::vector<unsigned char*>& vFrame, std::vector<unsigned char*>& vLines, const std::uint32_t& max_size, unsigned char* cb, const std::uint32_t& idx = 0);
-  static void          dumpFrameOld(const unsigned char* buf);
-  static std::uint32_t swap_bytes(const unsigned char* buf);  // Stolen from DCBufferReader
 };
