@@ -68,7 +68,7 @@ void RawdataReader::openFile(const std::string& fileName)
   }
   catch(const std::ios_base::failure& e)
   {
-    log()->error("Caught an ios_base::failure in openFile : {} {}", e.what(), e.code().value());
+    log()->error("Caught an ios_base::failure in openFile : {}", e.what());
     throw;
   }
 }
@@ -82,6 +82,7 @@ bool RawdataReader::nextEvent()
   }
   catch(const std::ios_base::failure& e)
   {
+    log()->error("Caught an ios_base::failure in openFile : {}", e.what());
     return false;
   }
   return true;
@@ -108,6 +109,7 @@ bool RawdataReader::nextDIFbuffer()
   }
   catch(const std::ios_base::failure& e)
   {
+    log()->error("Caught an ios_base::failure in openFile : {}", e.what());
     return false;
   }
   return true;
