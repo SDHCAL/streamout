@@ -1,8 +1,22 @@
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 if(NOT $ENV{ROOTSYS} STREQUAL "")
   set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}" "$ENV{ROOTSYS}")
+  set(ROOT_DIR "$ENV{ROOTSYS}")
 endif()
+include("${ROOT_USE_FILE}")
+
 find_package(ROOT REQUIRED COMPONENTS Core Tree)
+
+# This is required for ROOT < 6.16
+string(REPLACE "-L " "-L" ROOT_EXE_LINKER_FLAGS "${ROOT_EXE_LINKER_FLAGS}")
+# This is required on if there is more than one flag (like on macOS)
+separate_arguments(ROOT_EXE_LINKER_FLAGS)
+# For ROOT versions than 6.16, things break
+# if nothing is in the global include list!
+if (${ROOT_VERSION} VERSION_LESS "6.16")
+	include_directories(ROOT_NONEXISTENT_DIRECTORY_HACK)
+endif()
+
 missive(WARN "Build with ROOT interface")
 get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
 
