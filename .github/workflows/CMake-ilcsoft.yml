@@ -17,6 +17,8 @@ jobs:
     strategy:
       fail-fast: false
 
+    container: ghcr.io/flagarde/ci_bak-ubuntu-gcc-9-x86_64:main
+
     steps:
     - uses: actions/checkout@v3
       with:
