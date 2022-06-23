@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Install git
-      run: apt-get install -y --no-install-recommends git
+      run: apt-get install -y --no-install-recommends git make
       
     - uses: actions/checkout@v3
       with:
