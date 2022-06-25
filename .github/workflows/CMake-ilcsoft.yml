@@ -20,6 +20,9 @@ jobs:
     container: ghcr.io/flagarde/ci_bak-ubuntu-gcc-9-x86_64:main
 
     steps:
+    - name: Install git
+      run: apt-get install -y --no-install-recommends git make
+
     - uses: actions/checkout@v3
       with:
         submodules: true
