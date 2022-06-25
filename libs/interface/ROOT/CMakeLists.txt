@@ -11,9 +11,7 @@ string(REPLACE "-L " "-L" ROOT_EXE_LINKER_FLAGS "${ROOT_EXE_LINKER_FLAGS}")
 # cmake-lint: disable=E1120
 separate_arguments(ROOT_EXE_LINKER_FLAGS)
 # pass
-if(${ROOT_VERSION} VERSION_LESS "6.16")
-  include_directories(ROOT_NONEXISTENT_DIRECTORY_HACK)
-endif()
+include_directories(${ROOT_INCLUDE_DIRS})
 
 missive(WARN "Build with ROOT interface")
 get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
