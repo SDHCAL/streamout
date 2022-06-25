@@ -3,10 +3,9 @@ if(NOT $ENV{ROOTSYS} STREQUAL "")
   set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}" "$ENV{ROOTSYS}")
   set(ROOT_DIR "$ENV{ROOTSYS}")
 endif()
-include("${ROOT_USE_FILE}")
 
 find_package(ROOT REQUIRED COMPONENTS Core Tree)
-
+include("${ROOT_USE_FILE}")
 string(REPLACE "-L " "-L" ROOT_EXE_LINKER_FLAGS "${ROOT_EXE_LINKER_FLAGS}")
 # cmake-lint: disable=E1120
 separate_arguments(ROOT_EXE_LINKER_FLAGS)
