@@ -35,3 +35,10 @@ jobs:
 
     - name: ⚙️ Build
       run: cmake --build ./build --config Release --parallel 2
+
+    - name: Install
+      run: cmake --install build
+
+    - name: Test
+      run: ctest -C Debug -VV
+      working-directory: ./build
