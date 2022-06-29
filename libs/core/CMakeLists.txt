@@ -6,7 +6,7 @@ add_library(Core
             src/DIFSlowControl.cc
             src/DIFUnpacker.cc
             src/Buffer.cc
-  src/BufferLooperCounter.cc
+            src/BufferLooperCounter.cc
             src/RawBufferNavigator.cc
 )
 target_include_directories(Core PUBLIC include)

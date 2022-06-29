@@ -13,7 +13,7 @@ project(streamout VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data proces
 #set(CMAKE_MACOSX_RPATH TRUE)
 #set(CMAKE_SKIP_BUILD_RPATH FALSE)
 #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
+#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
 
@@ -23,11 +23,9 @@ default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
 include(Standards)
 cxx_14()
 
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_INSTALL_PREFIX}/lib/cmake")
-
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" ON)
 option(BUILD_LCIO_INTERFACE "Flag to toggle building LCIO output" ON)
-option(BUILD_RAWDATA_INTERFACE "Flag to toggle building LCIO output" ON)
+option(BUILD_RAWDATA_INTERFACE "Flag to toggle building Rawdata input" ON)
 option(BUILD_TESTS "Build the test" ON)
 option(BUILD_APPS "Build the apps" ON)
 option(BUILD_DOCS "Build the docs" OFF)
