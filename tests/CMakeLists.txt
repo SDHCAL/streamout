@@ -42,7 +42,7 @@ endif()
 
 if(BUILD_ROOT_INTERFACE AND BUILD_RAWDATA_INTERFACE)
   add_executable(RawdataROOT.test RawdataROOT.test.cc)
-  target_link_libraries(RawdataROOT.test PRIVATE Streamout::Interface::ROOT Streamout::Interface::RawdataReader CLI11)
+  target_link_libraries(RawdataROOT.test PRIVATE Streamout::Interface::ROOTWriter Streamout::Interface::RawdataReader CLI11)
   install(TARGETS RawdataROOT.test RUNTIME DESTINATION bin/tests LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
   ExternalData_Add_Test(RawdataROOT.run NAME RawdataROOT.test COMMAND RawdataROOT.test -f DATA{data/SMM_210616_040234_732873.dat} -s 20 -e 10)
   ExternalData_Add_Target(RawdataROOT.run)
