@@ -82,7 +82,6 @@ bool RawdataReader::nextEvent()
   }
   catch(const std::ios_base::failure& e)
   {
-    log()->error("Caught an ios_base::failure in openFile : {}", e.what());
     return false;
   }
   return true;

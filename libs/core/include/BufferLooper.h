@@ -76,8 +76,8 @@ public:
         m_Destination.startDIF();
         ///////////////////
 
-        uint32_t idstart = bufferNavigator.getStartOfDIF();
-        if(m_Debug && idstart == 0) m_Logger->info(to_hex(buffer));
+        std::int32_t idstart = bufferNavigator.getStartOfDIF();
+        if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
         if(!bufferNavigator.validBuffer())
         {

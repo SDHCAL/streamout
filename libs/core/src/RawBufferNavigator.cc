@@ -4,13 +4,32 @@
 
 #include "RawBufferNavigator.h"
 
+#include "Words.h"
+
 #include <iostream>
+
+std::int32_t RawBufferNavigator::getStartOfPayload()
+{
+  for(std::size_t i = m_Start; i < m_Buffer.size(); i++)
+  {
+    if(m_Buffer[i] == DU::START_OF_DIF || m_Buffer[i] == DU::START_OF_DIF_TEMP) return i;
+  }
+  return -1;
+}
 
 int RawBufferNavigator::m_Start = 92;
 
 void RawBufferNavigator::StartAt(const int& start)
 {
   if(start >= 0) m_Start = start;
+}
+
+void RawBufferNavigator::setBuffer(const Buffer& b, const int& start)
+{
+  m_BadSCdata = false;
+  m_Buffer    = b;
+  StartAt(start);
+  m_DIFstartIndex = getStartOfPayload();
 }
 
 RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b) { setBuffer(b, start); }

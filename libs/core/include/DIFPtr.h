@@ -4,9 +4,12 @@
 
 #pragma once
 
-#include "DIFUnpacker.h"
+#include "Formatters.h"
+#include "Utilities.h"
+#include "Words.h"
 
 #include <cstdint>
+#include <iostream>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
@@ -41,17 +44,22 @@ public:
   std::uint32_t                getFrameTimeToTrigger(const std::uint32_t&) const;
   bool                         getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
   // Addition by GG
-  uint32_t                     getDIFid() const;
-  uint32_t                     getASICid(const std::uint32_t&) const;
-  uint32_t                     getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
+  std::uint32_t                getDIFid() const;
+  std::uint32_t                getASICid(const std::uint32_t&) const;
+  std::uint32_t                getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
 
 private:
+  std::uint32_t               getAnalogPtr(const std::uint32_t& idx = 0);
+  std::uint32_t               getFrameAsicHeaderInternal(const unsigned char* framePtr) const;
+  std::uint32_t               getFramePtr();
   std::uint32_t               theSize_{0};
   std::uint32_t               theGetFramePtrReturn_{0};
   unsigned char*              theDIF_{nullptr};
   std::vector<unsigned char*> theFrames_;
   std::vector<unsigned char*> theLines_;
 };
+
+inline std::uint32_t DIFPtr::getFrameAsicHeaderInternal(const unsigned char* framePtr) const { return (framePtr[DU::FRAME_ASIC_HEADER_SHIFT]); }
 
 inline void DIFPtr::setBuffer(unsigned char* p, const std::uint32_t& max_size)
 {
@@ -61,7 +69,7 @@ inline void DIFPtr::setBuffer(unsigned char* p, const std::uint32_t& max_size)
   theDIF_  = p;
   try
   {
-    theGetFramePtrReturn_ = DIFUnpacker::getFramePtr(theFrames_, theLines_, theSize_, theDIF_);
+    theGetFramePtrReturn_ = getFramePtr();
   }
   catch(const std::string& e)
   {
@@ -69,32 +77,119 @@ inline void DIFPtr::setBuffer(unsigned char* p, const std::uint32_t& max_size)
   }
 }
 
-inline unsigned char*               DIFPtr::getPtr() const { return theDIF_; }
-inline std::uint32_t                DIFPtr::getGetFramePtrReturn() const { return theGetFramePtrReturn_; }
+inline unsigned char* DIFPtr::getPtr() const { return theDIF_; }
+
+inline std::uint32_t DIFPtr::getGetFramePtrReturn() const { return theGetFramePtrReturn_; }
+
 inline std::vector<unsigned char*>& DIFPtr::getFramesVector() { return theFrames_; }
+
 inline std::vector<unsigned char*>& DIFPtr::getLinesVector() { return theLines_; }
-inline std::uint32_t                DIFPtr::getID() const { return DIFUnpacker::getID(theDIF_); }
-inline std::uint32_t                DIFPtr::getDTC() const { return DIFUnpacker::getDTC(theDIF_); }
-inline std::uint32_t                DIFPtr::getGTC() const { return DIFUnpacker::getGTC(theDIF_); }
-inline std::uint64_t                DIFPtr::getAbsoluteBCID() const { return DIFUnpacker::getAbsoluteBCID(theDIF_); }
-inline std::uint32_t                DIFPtr::getBCID() const { return DIFUnpacker::getBCID(theDIF_); }
-inline std::uint32_t                DIFPtr::getLines() const { return DIFUnpacker::getLines(theDIF_); }
-inline bool                         DIFPtr::hasLine(const std::uint32_t& line) const { return DIFUnpacker::hasLine(line, theDIF_); }
-inline std::uint32_t                DIFPtr::getTASU1() const { return DIFUnpacker::getTASU1(theDIF_); }
-inline std::uint32_t                DIFPtr::getTASU2() const { return DIFUnpacker::getTASU2(theDIF_); }
-inline std::uint32_t                DIFPtr::getTDIF() const { return DIFUnpacker::getTDIF(theDIF_); }
-inline float                        DIFPtr::getTemperatureDIF() const { return 0.508 * getTDIF() - 9.659; }
-inline float                        DIFPtr::getTemperatureASU1() const { return (getTASU1() >> 3) * 0.0625; }
-inline float                        DIFPtr::getTemperatureASU2() const { return (getTASU2() >> 3) * 0.0625; }
-inline bool                         DIFPtr::hasTemperature() const { return DIFUnpacker::hasTemperature(theDIF_); }
-inline bool                         DIFPtr::hasAnalogReadout() const { return DIFUnpacker::hasAnalogReadout(theDIF_); }
-inline std::uint32_t                DIFPtr::getNumberOfFrames() const { return theFrames_.size(); }
-inline unsigned char*               DIFPtr::getFramePtr(const std::uint32_t& i) const { return theFrames_[i]; }
-inline std::uint32_t                DIFPtr::getFrameAsicHeader(const std::uint32_t& i) const { return DIFUnpacker::getFrameAsicHeader(theFrames_[i]); }
-inline std::uint32_t                DIFPtr::getFrameBCID(const std::uint32_t& i) const { return DIFUnpacker::getFrameBCID(theFrames_[i]); }
-inline std::uint32_t                DIFPtr::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
-inline bool                         DIFPtr::getFrameLevel(const std::uint32_t& i, const std::uint32_t& ipad, const std::uint32_t& ilevel) const { return DIFUnpacker::getFrameLevel(theFrames_[i], ipad, ilevel); }
+
+inline std::uint32_t DIFPtr::getID() const { return theDIF_[DU::ID_SHIFT]; }
+
+inline std::uint32_t DIFPtr::getDTC() const { return (theDIF_[DU::DTC_SHIFT] << 24) + (theDIF_[DU::DTC_SHIFT + 1] << 16) + (theDIF_[DU::DTC_SHIFT + 2] << 8) + theDIF_[DU::DTC_SHIFT + 3]; }
+
+inline std::uint32_t DIFPtr::getGTC() const { return (theDIF_[DU::GTC_SHIFT] << 24) + (theDIF_[DU::GTC_SHIFT + 1] << 16) + (theDIF_[DU::GTC_SHIFT + 2] << 8) + theDIF_[DU::GTC_SHIFT + 3]; }
+
+inline std::uint64_t DIFPtr::getAbsoluteBCID() const
+{
+  std::uint64_t Shift{16777216ULL};  // to shift the value from the 24 first bits
+  std::uint64_t pos{DU::ABCID_SHIFT};
+  std::uint64_t LBC = ((theDIF_[pos] << 16) | (theDIF_[pos + 1] << 8) | (theDIF_[pos + 2])) * Shift + ((theDIF_[pos + 3] << 16) | (theDIF_[pos + 4] << 8) | (theDIF_[pos + 5]));
+  return LBC;
+}
+
+inline std::uint32_t DIFPtr::getBCID() const { return (theDIF_[DU::BCID_SHIFT] << 16) + (theDIF_[DU::BCID_SHIFT + 1] << 8) + theDIF_[DU::BCID_SHIFT + 2]; }
+
+inline std::uint32_t DIFPtr::getLines() const { return (theDIF_[DU::LINES_SHIFT] >> 4) & 0x5; }
+
+inline bool DIFPtr::hasLine(const std::uint32_t& line) const { return ((theDIF_[DU::LINES_SHIFT] >> line) & 0x1); }
+
+inline std::uint32_t DIFPtr::getTASU1() const { return (theDIF_[DU::TASU1_SHIFT] << 24) + (theDIF_[DU::TASU1_SHIFT + 1] << 16) + (theDIF_[DU::TASU1_SHIFT + 2] << 8) + theDIF_[DU::TASU1_SHIFT + 3]; }
+
+inline std::uint32_t DIFPtr::getTASU2() const { return (theDIF_[DU::TASU2_SHIFT] << 24) + (theDIF_[DU::TASU2_SHIFT + 1] << 16) + (theDIF_[DU::TASU2_SHIFT + 2] << 8) + theDIF_[DU::TASU2_SHIFT + 3]; }
+
+inline std::uint32_t DIFPtr::getTDIF() const { return theDIF_[DU::TDIF_SHIFT]; }
+
+inline float DIFPtr::getTemperatureDIF() const { return 0.508 * getTDIF() - 9.659; }
+
+inline float DIFPtr::getTemperatureASU1() const { return (getTASU1() >> 3) * 0.0625; }
+
+inline float DIFPtr::getTemperatureASU2() const { return (getTASU2() >> 3) * 0.0625; }
+
+inline bool DIFPtr::hasTemperature() const { return (theDIF_[0] == DU::START_OF_DIF_TEMP); }
+
+inline bool DIFPtr::hasAnalogReadout() const { return getLines() != 0; }
+
+inline std::uint32_t DIFPtr::getNumberOfFrames() const { return theFrames_.size(); }
+
+inline unsigned char* DIFPtr::getFramePtr(const std::uint32_t& i) const { return theFrames_[i]; }
+
+inline std::uint32_t DIFPtr::getFrameAsicHeader(const std::uint32_t& i) const { return getFrameAsicHeaderInternal(theFrames_[i]); }
+
+inline std::uint32_t DIFPtr::getFrameBCID(const std::uint32_t& i) const { return GrayToBin((theFrames_[i][DU::FRAME_BCID_SHIFT] << 16) + (theFrames_[i][DU::FRAME_BCID_SHIFT + 1] << 8) + theFrames_[i][DU::FRAME_BCID_SHIFT + 2]); }
+
+inline std::uint32_t DIFPtr::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
+
+inline bool DIFPtr::getFrameLevel(const std::uint32_t& i, const std::uint32_t& ipad, const std::uint32_t& ilevel) const
+{
+  return ((theFrames_[i][DU::FRAME_DATA_SHIFT + ((3 - ipad / 16) * 4 + (ipad % 16) / 4)] >> (7 - (((ipad % 16) % 4) * 2 + ilevel))) & 0x1);
+}
 // Addition by GG
-inline uint32_t                     DIFPtr::getDIFid() const { return getID() & 0xFF; }
-inline uint32_t                     DIFPtr::getASICid(const std::uint32_t& i) const { return getFrameAsicHeader(i) & 0xFF; }
-inline uint32_t                     DIFPtr::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((uint32_t)getFrameLevel(i, ipad, 0)); }
+inline uint32_t DIFPtr::getDIFid() const { return getID() & 0xFF; }
+
+inline uint32_t DIFPtr::getASICid(const std::uint32_t& i) const { return getFrameAsicHeader(i) & 0xFF; }
+
+inline uint32_t DIFPtr::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
+
+inline std::uint32_t DIFPtr::getFramePtr()
+{
+  std::uint32_t fshift{0};
+  if(DATA_FORMAT_VERSION >= 13)
+  {
+    fshift = DU::LINES_SHIFT + 1;
+    if(hasTemperature()) fshift = DU::TDIF_SHIFT + 1;      // jenlev 1
+    if(hasAnalogReadout()) fshift = getAnalogPtr(fshift);  // to be implemented
+  }
+  else
+    fshift = DU::BCID_SHIFT + 3;
+  if(theDIF_[fshift] != DU::START_OF_FRAME)
+  {
+    std::cout << "This is not a start of frame " << to_hex(theDIF_[fshift]) << " \n";
+    return fshift;
+  }
+  do {
+    if(theDIF_[fshift] == DU::END_OF_DIF) return fshift;
+    if(theDIF_[fshift] == DU::START_OF_FRAME) fshift++;
+    if(theDIF_[fshift] == DU::END_OF_FRAME)
+    {
+      fshift++;
+      continue;
+    }
+    std::uint32_t header = getFrameAsicHeaderInternal(&theDIF_[fshift]);
+    if(header == DU::END_OF_FRAME) return (fshift + 2);
+    if(header < 1 || header > 48) { throw header + " Header problem " + fshift; }
+    theFrames_.push_back(&theDIF_[fshift]);
+    fshift += DU::FRAME_SIZE;
+    if(fshift > theSize_)
+    {
+      std::cout << "fshift " << fshift << " exceed " << theSize_ << "\n";
+      return fshift;
+    }
+    if(theDIF_[fshift] == DU::END_OF_FRAME) fshift++;
+  } while(true);
+}
+
+inline std::uint32_t DIFPtr::getAnalogPtr(const std::uint32_t& idx)
+{
+  std::uint32_t fshift{idx};
+  if(theDIF_[fshift] != DU::START_OF_LINES) return fshift;
+  fshift++;
+  while(theDIF_[fshift] != DU::END_OF_LINES)
+  {
+    theLines_.push_back(&theDIF_[fshift]);
+    std::uint32_t nchip{theDIF_[fshift]};
+    fshift += 1 + nchip * 64 * 2;
+  }
+  return fshift++;
+}
