@@ -13,7 +13,7 @@ std::size_t RawdataReader::m_BufferSize = 0x100000;
 
 void RawdataReader::setDefaultBufferSize(const std::size_t& size) { m_BufferSize = size; }
 
-RawdataReader::RawdataReader(const char* fileName)
+RawdataReader::RawdataReader(const char* fileName) : InterfaceReader("RawdataReader", "1.0.0")
 {
   m_buf.reserve(m_BufferSize);
   m_Filename = fileName;
@@ -114,7 +114,7 @@ bool RawdataReader::nextDIFbuffer()
   return true;
 }
 
-const Buffer& RawdataReader::getSDHCALBuffer()
+const Buffer& RawdataReader::getBuffer()
 {
   uncompress();
   return m_Buffer;

@@ -5,8 +5,9 @@
 #include "RawBufferNavigator.h"
 
 #include "Words.h"
+#include "spdlog/spdlog.h"
 
-#include <iostream>
+RawBufferNavigator::RawBufferNavigator(const std::shared_ptr<spdlog::logger>& logger) { m_Logger = logger; }
 
 std::int32_t RawBufferNavigator::getStartOfPayload()
 {
@@ -24,21 +25,20 @@ void RawBufferNavigator::StartAt(const int& start)
   if(start >= 0) m_Start = start;
 }
 
-void RawBufferNavigator::setBuffer(const Buffer& b, const int& start)
+void RawBufferNavigator::setBuffer(const Buffer& b)
 {
-  m_BadSCdata = false;
-  m_Buffer    = b;
-  StartAt(start);
+  m_BadSCdata     = false;
+  m_Buffer        = b;
   m_DIFstartIndex = getStartOfPayload();
 }
 
-RawBufferNavigator::RawBufferNavigator(const Buffer& b, const int& start) : m_Buffer(b) { setBuffer(b, start); }
+RawBufferNavigator::RawBufferNavigator(const Buffer& b) : m_Buffer(b) { setBuffer(b); }
 
 std::uint8_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
 
 bool RawBufferNavigator::validBuffer() { return m_DIFstartIndex != 0; }
 
-std::uint32_t RawBufferNavigator::getStartOfDIF() { return m_DIFstartIndex; }
+std::int32_t RawBufferNavigator::getStartOfDIF() { return m_DIFstartIndex; }
 
 unsigned char* RawBufferNavigator::getDIFBufferStart() { return &(m_Buffer.begin()[m_DIFstartIndex]); }
 
@@ -96,7 +96,7 @@ void RawBufferNavigator::setSCBuffer()
     uint32_t scsize = m_SCbuffer[k];
     if(scsize != 74 && scsize != 109)
     {
-      std::cout << "PROBLEM WITH SC SIZE " << scsize << std::endl;
+      m_Logger->error("PROBLEM WITH SC SIZE {}", scsize);
       k           = 0;
       m_BadSCdata = true;
       break;
@@ -108,7 +108,7 @@ void RawBufferNavigator::setSCBuffer()
   else
   {
     m_BadSCdata = true;
-    std::cout << "PROBLEM SC TRAILER NOT FOUND " << std::endl;
+    m_Logger->error("PROBLEM SC TRAILER NOT FOUND ");
   }
 }
 

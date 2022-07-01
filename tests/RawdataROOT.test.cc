@@ -5,19 +5,20 @@
 
 #include "BufferLooper.h"
 #include "CLI/CLI.hpp"
+#include "Filesystem.h"
 #include "ROOTWriter.h"
 #include "RawdataReader.h"
 
-#include <iostream>
 #include <limits>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 int main(int argc, char** argv)
 {
-  CLI::App    app{"SDHCAL buffer loop with textDump destination"};
-  std::string filename{""};
-  app.add_option("-f,--filename", filename, "Path of the file");
+  CLI::App app{"SDHCAL buffer loop with textDump destination"};
+  app.set_version_flag("--version", streamout_version.to_string());
+  std::string file{""};
+  app.add_option("-f,--filename", file, "Path of the file");
   std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
@@ -35,6 +36,9 @@ int main(int argc, char** argv)
   app.add_option("--detectorID", detectorIDs, "Detector IDs")
     ->transform(CLI::CheckedTransformer(std::map<std::string, DetectorID>({{"HARDROC", DetectorID::HARDROC}, {"HARDROC_NEW", DetectorID::HARDROC_NEW}, {"RUNHEADER", DetectorID::RUNHEADER}}), CLI::ignore_case));
 
+  std::string output_path{path(argv[0])};
+  app.add_option("--output_path", output_path, "Output path")->envname("STREAMOUT_OUTPUT_PATH");
+
   try
   {
     app.parse(argc, argv);
@@ -47,15 +51,15 @@ int main(int argc, char** argv)
   spdlog::set_level(verbosity);
 
   RawBufferNavigator::StartAt(bitsToSkip);
-  RawdataReader source(filename.c_str());
+  RawdataReader source(file.c_str());
   ROOTWriter    destination;
-  destination.setFilename((filename + ".root").c_str());
+  destination.setFilename((output_path + "/" + filename(file) + ".root").c_str());
   BufferLooper<RawdataReader, ROOTWriter> toto(source, destination, debug);
   toto.setDetectorIDs(detectorIDs);
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   // toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
   toto.loop(eventNbr);
-  std::cout << "******************************" << std::endl;
+  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  std::cout << "******************************" << std::endl;
+  toto.log()->warn("****************");
 }

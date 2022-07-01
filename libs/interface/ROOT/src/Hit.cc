@@ -4,8 +4,19 @@
 */
 
 #include "Hit.h"
-
-#include <cstdint>
+void Hit::clear()
+{
+  m_DIF          = 0;
+  m_ASIC         = 0;
+  m_Channel      = 0;
+  m_Threshold    = 0;
+  m_DTC          = 0;
+  m_GTC          = 0;
+  m_DIFBCID      = 0;
+  m_FrameBCID    = 0;
+  m_Timestamp    = 0;
+  m_AbsoluteBCID = 0;
+}
 
 void Hit::setDIF(const std::uint8_t& dif) { m_DIF = dif; }
 
@@ -27,22 +38,22 @@ void Hit::setTimestamp(const std::uint32_t& timestamp) { m_Timestamp = timestamp
 
 void Hit::setAbsoluteBCID(const std::uint64_t& absolutebcid) { m_AbsoluteBCID = absolutebcid; }
 
-std::uint8_t Hit::getDIFid() { return m_DIF; }
+std::uint8_t Hit::getDIFid() const { return m_DIF; }
 
-std::uint8_t Hit::getASICid() { return m_ASIC; }
+std::uint8_t Hit::getASICid() const { return m_ASIC; }
 
-std::uint8_t Hit::getChannelId() { return m_Channel; }
+std::uint8_t Hit::getChannel() const { return m_Channel; }
 
-std::uint8_t Hit::getThreshold() { return m_Threshold; }
+std::uint8_t Hit::getThreshold() const { return m_Threshold; }
 
-std::uint32_t Hit::getDTC() { return m_DTC; }
+std::uint32_t Hit::getDTC() const { return m_DTC; }
 
-std::uint32_t Hit::getGTC() { return m_GTC; }
+std::uint32_t Hit::getGTC() const { return m_GTC; }
 
-std::uint32_t Hit::getDIFBCID() { return m_DIFBCID; }
+std::uint32_t Hit::getDIFBCID() const { return m_DIFBCID; }
 
-std::uint32_t Hit::getFrameBCID() { return m_FrameBCID; }
+std::uint32_t Hit::getFrameBCID() const { return m_FrameBCID; }
 
-std::uint32_t Hit::getTimestamp() { return m_Timestamp; }
+std::uint32_t Hit::getTimestamp() const { return m_Timestamp; }
 
-std::uint64_t Hit::getAbsoluteBCID() { return m_AbsoluteBCID; }
+std::uint64_t Hit::getAbsoluteBCID() const { return m_AbsoluteBCID; }

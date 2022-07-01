@@ -7,7 +7,7 @@
 #include "Buffer.h"
 #include "Interface.h"
 
-class DIFdataExample : public Interface
+class DIFdataExample : public InterfaceReader
 {
 public:
   DIFdataExample();
@@ -15,7 +15,7 @@ public:
   void   end() {}
   bool   nextEvent();
   bool   nextDIFbuffer();
-  Buffer getSDHCALBuffer() { return Buffer(_RAWbuffer); }
+  Buffer getBuffer() { return m_Buffer = _RAWbuffer; }
 
 private:
   static constexpr std::size_t    BUFFER_SIZE{143};  // 94+49=143

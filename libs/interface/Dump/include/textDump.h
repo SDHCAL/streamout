@@ -11,13 +11,14 @@
 #include <memory>
 #include <spdlog/logger.h>
 
-class textDump : public Interface
+class textDump : public InterfaceWriter
 {
 public:
-  textDump()
+  textDump() : InterfaceWriter("textDump", "1.0.0")
   {
     m_InternalLogger = std::make_shared<spdlog::logger>("textDump", std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
     m_InternalLogger->set_level(spdlog::level::trace);
+    addCompatibility("RawdataReader", ">=1.0.0");
   }
   void                             start();
   void                             processDIF(const DIFPtr&);

@@ -9,14 +9,14 @@
 #include "CLI/CLI.hpp"
 #include "textDump.h"
 
-#include <iostream>
 #include <limits>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 int main(int argc, char** argv)
 {
-  CLI::App    app{"SDHCAL buffer loop with textDump destination"};
+  CLI::App app{"SDHCAL buffer loop with textDump destination"};
+  app.set_version_flag("--version", streamout_version.to_string());
   std::string filename{""};
   app.add_option("-f,--filename", filename, "Path of the file");
   std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
   toto.loop(eventNbr);
-  std::cout << "******************************" << std::endl;
+  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  std::cout << "******************************" << std::endl;
+  toto.log()->warn("****************");
 }

@@ -1,0 +1,9 @@
+/**
+*  \file Bits.h
+*  \copyright 2022 G.Grenier F.Lagarde
+*/
+#pragma once
+
+#include "Version.h"
+
+inline static const Version streamout_version{@SEMVER_MAJOR@,@SEMVER_MINOR@,@SEMVER_PATCH@,@SEMVER_PRERELEASE@,@SEMVER_PRERELEASE_NUMBER@};

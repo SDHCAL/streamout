@@ -1,6 +1,10 @@
 include(ExternalData)
 include(CLI11)
 
+add_executable(Filesystem.test Filesystem.test.cc)
+target_link_libraries(Filesystem.test PRIVATE Streamout::Core doctest_with_main)
+install(TARGETS Filesystem.test RUNTIME DESTINATION bin/tests)
+
 if(BUILD_RAWDATA_INTERFACE)
   # cmake-lint: disable=C0103
   set(ExternalData_URL_TEMPLATES
@@ -46,4 +50,9 @@ if(BUILD_ROOT_INTERFACE AND BUILD_RAWDATA_INTERFACE)
   install(TARGETS RawdataROOT.test RUNTIME DESTINATION bin/tests LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
   ExternalData_Add_Test(RawdataROOT.run NAME RawdataROOT.test COMMAND RawdataROOT.test -f DATA{data/SMM_210616_040234_732873.dat} -s 20 -e 10)
   ExternalData_Add_Target(RawdataROOT.run)
+
+  add_executable(ROOTchecker.test ROOTchecker.test.cc)
+  target_compile_features(ROOTchecker.test PUBLIC ${ROOT_CXX_STANDARD})
+  target_link_libraries(ROOTchecker.test PUBLIC CLI11 doctest_with_main Streamout::Interface::ROOT::Event Streamout::Core)
+  install(TARGETS ROOTchecker.test  RUNTIME DESTINATION bin/tests)
 endif()

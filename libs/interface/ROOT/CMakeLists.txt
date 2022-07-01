@@ -10,7 +10,7 @@ string(REPLACE "-L " "-L" ROOT_EXE_LINKER_FLAGS "${ROOT_EXE_LINKER_FLAGS}")
 # cmake-lint: disable=E1120
 separate_arguments(ROOT_EXE_LINKER_FLAGS)
 # pass
-include_directories(${ROOT_INCLUDE_DIRS})
+#include_directories(${ROOT_INCLUDE_DIRS})
 
 missive(WARN "Build with ROOT interface")
 get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
@@ -18,12 +18,16 @@ get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEAT
 root_generate_dictionary(G__Hit "${CMAKE_CURRENT_SOURCE_DIR}/include/Hit.h" LINKDEF "${CMAKE_CURRENT_SOURCE_DIR}/include/HitLinkDef.h")
 add_library(Hit OBJECT "src/Hit.cc" G__Hit.cxx)
 target_compile_features(Hit PUBLIC ${ROOT_CXX_STANDARD})
-target_include_directories(Hit PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/streamout>)
-target_link_libraries(Hit PUBLIC ROOT::Core)
+target_include_directories(Hit PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/streamout> ${ROOT_INCLUDE_DIRS})
+target_link_libraries(Hit PUBLIC Streamout::Core ROOT::Core)
 set_target_properties(Hit PROPERTIES PUBLIC_HEADER "include/Hit.h;include/HitLinkDef.h")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libHit_rdict.pcm DESTINATION "${CMAKE_INSTALL_BINDIR}/tests")
 add_library(HitStatic STATIC $<TARGET_OBJECTS:Hit>)
 add_library(HitShared SHARED $<TARGET_OBJECTS:Hit>)
+target_link_libraries(HitStatic PUBLIC ROOT::Core ROOT::Tree)
+target_include_directories(HitStatic PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/streamout> ${ROOT_INCLUDE_DIRS})
+target_link_libraries(HitShared PUBLIC ROOT::Core ROOT::Tree)
+target_include_directories(HitShared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/streamout> ${ROOT_INCLUDE_DIRS})
 add_library(Streamout::Interface::ROOT::Hit ALIAS HitStatic)
 
 root_generate_dictionary(G__DIF "${CMAKE_CURRENT_SOURCE_DIR}/include/DIF.h" LINKDEF "${CMAKE_CURRENT_SOURCE_DIR}/include/DIFLinkDef.h")
@@ -36,6 +40,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libDIF_rdict.pcm DESTINATION "${CMAKE_
 add_library(DIFStatic STATIC $<TARGET_OBJECTS:DIF>)
 add_library(DIFShared SHARED $<TARGET_OBJECTS:DIF>)
 add_library(Streamout::Interface::ROOT::DIF ALIAS DIFStatic)
+target_link_libraries(DIFStatic PUBLIC HitStatic)
+target_link_libraries(DIFShared PUBLIC HitShared)
 
 root_generate_dictionary(G__Event "${CMAKE_CURRENT_SOURCE_DIR}/include/Event.h" LINKDEF "${CMAKE_CURRENT_SOURCE_DIR}/include/EventLinkDef.h")
 add_library(Event OBJECT "src/Event.cc" G__Event.cxx)
@@ -47,6 +53,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libEvent_rdict.pcm DESTINATION "${CMAK
 add_library(EventStatic STATIC $<TARGET_OBJECTS:Event>)
 add_library(EventShared SHARED $<TARGET_OBJECTS:Event>)
 add_library(Streamout::Interface::ROOT::Event ALIAS EventStatic)
+target_compile_features(EventStatic PUBLIC ${ROOT_CXX_STANDARD})
+target_link_libraries(EventStatic PUBLIC DIFStatic)
+target_link_libraries(EventShared PUBLIC DIFShared)
 
 add_library(ROOTWriter src/ROOTWriter.cc)
 target_compile_features(ROOTWriter PUBLIC ${ROOT_CXX_STANDARD})

@@ -8,22 +8,28 @@
 
 #include <TObject.h>
 #include <cstdint>
+#include <map>
 #include <vector>
+
+using Hits_const_iterator = std::vector<Hit>::const_iterator;
 
 class DIF : public TObject
 {
 public:
-  void          addHit(const Hit&);
-  void          setID(const std::uint8_t&);
-  std::uint8_t  getID() const;
-  void          setDTC(const std::uint32_t&);
-  std::uint32_t getDTC() const;
-  void          setGTC(const std::uint32_t&);
-  std::uint32_t getGTC() const;
-  void          setDIFBCID(const std::uint32_t&);
-  std::uint32_t getDIFBCID() const;
-  void          setAbsoluteBCID(const std::uint64_t&);
-  std::uint64_t getAbsoluteBCID() const;
+  void                             clear();
+  void                             addHit(const Hit&);
+  void                             setID(const std::uint8_t&);
+  std::uint8_t                     getID() const;
+  void                             setDTC(const std::uint32_t&);
+  std::uint32_t                    getDTC() const;
+  void                             setGTC(const std::uint32_t&);
+  std::uint32_t                    getGTC() const;
+  void                             setDIFBCID(const std::uint32_t&);
+  std::uint32_t                    getDIFBCID() const;
+  void                             setAbsoluteBCID(const std::uint64_t&);
+  std::uint64_t                    getAbsoluteBCID() const;
+  std::vector<Hit>::const_iterator cbegin() const;
+  std::vector<Hit>::const_iterator cend() const;
 
 private:
   std::uint8_t     m_ID{0};

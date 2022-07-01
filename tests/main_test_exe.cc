@@ -12,7 +12,8 @@
 
 int main(int argc, char** argv)
 {
-  CLI::App      app{"SDHCAL buffer loop with textDump destination"};
+  CLI::App app{"SDHCAL buffer loop with textDump destination"};
+  app.set_version_flag("--version", streamout_version.to_string());
   std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
   std::uint32_t bitsToSkip{92};
@@ -42,8 +43,8 @@ int main(int argc, char** argv)
   BufferLooper<DIFdataExample, textDump> toto(source, destination, debug);
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.loop(eventNbr);
-  toto.log()->info("******************************");
+  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  toto.log()->info("******************************");
+  toto.log()->warn("****************");
   return 0;
 }

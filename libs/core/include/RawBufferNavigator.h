@@ -6,18 +6,21 @@
 
 #include "Buffer.h"
 #include "DIFPtr.h"
+#include "spdlog/spdlog.h"
+
+#include <memory>
 
 // class to navigate in the raw data buffer
 class RawBufferNavigator
 {
 public:
-  RawBufferNavigator()  = default;
+  explicit RawBufferNavigator(const std::shared_ptr<spdlog::logger>&);
   ~RawBufferNavigator() = default;
-  explicit RawBufferNavigator(const Buffer& b, const int& start = -1);
-  void           setBuffer(const Buffer& b, const int& start = -1);
+  explicit RawBufferNavigator(const Buffer& b);
+  void           setBuffer(const Buffer& b);
   std::uint8_t   getDetectorID();
   bool           validBuffer();
-  std::uint32_t  getStartOfDIF();
+  std::int32_t   getStartOfDIF();
   unsigned char* getDIFBufferStart();
   std::uint32_t  getDIFBufferSize();
   Buffer         getDIFBuffer();
@@ -30,14 +33,15 @@ public:
   bool           badSCData();
   Buffer         getEndOfAllData();
   static void    StartAt(const int& start);
+  std::int32_t   getStartOfPayload();
 
 private:
-  std::int32_t getStartOfPayload();
-  void         setSCBuffer();
-  Buffer       m_Buffer;
-  Buffer       m_SCbuffer;
-  std::int32_t m_DIFstartIndex{0};
-  DIFPtr       m_TheDIFPtr;
-  bool         m_BadSCdata{false};
-  static int   m_Start;
+  std::shared_ptr<spdlog::logger> m_Logger{nullptr};
+  void                            setSCBuffer();
+  Buffer                          m_Buffer;
+  Buffer                          m_SCbuffer;
+  std::int32_t                    m_DIFstartIndex{0};
+  DIFPtr                          m_TheDIFPtr;
+  bool                            m_BadSCdata{false};
+  static int                      m_Start;
 };

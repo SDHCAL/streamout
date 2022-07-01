@@ -10,6 +10,7 @@
 class Hit : public TObject
 {
 public:
+  void          clear();
   void          setDIF(const std::uint8_t&);
   void          setASIC(const std::uint8_t&);
   void          setChannel(const std::uint8_t&);
@@ -20,16 +21,16 @@ public:
   void          setFrameBCID(const std::uint32_t&);
   void          setTimestamp(const std::uint32_t&);
   void          setAbsoluteBCID(const std::uint64_t&);
-  std::uint8_t  getDIFid();
-  std::uint8_t  getASICid();
-  std::uint8_t  getChannelId();
-  std::uint8_t  getThreshold();
-  std::uint32_t getDTC();
-  std::uint32_t getGTC();
-  std::uint32_t getDIFBCID();
-  std::uint32_t getFrameBCID();
-  std::uint32_t getTimestamp();
-  std::uint64_t getAbsoluteBCID();
+  std::uint8_t  getDIFid() const;
+  std::uint8_t  getASICid() const;
+  std::uint8_t  getChannel() const;
+  std::uint8_t  getThreshold() const;
+  std::uint32_t getDTC() const;
+  std::uint32_t getGTC() const;
+  std::uint32_t getDIFBCID() const;
+  std::uint32_t getFrameBCID() const;
+  std::uint32_t getTimestamp() const;
+  std::uint64_t getAbsoluteBCID() const;
 
 private:
   std::uint8_t  m_DIF{0};

@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-class ROOTWriter : public Interface
+class ROOTWriter : public InterfaceWriter
 {
 public:
   ROOTWriter();

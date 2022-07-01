@@ -7,13 +7,13 @@
 
 void ROOTWriter::setFilename(const std::string& filename) { m_Filename = filename; }
 
-ROOTWriter::ROOTWriter() {}
+ROOTWriter::ROOTWriter() : InterfaceWriter("ROOTWriter", "1.0.0") { addCompatibility("RawdataReader", ">=1.0.0"); }
 
 void ROOTWriter::start()
 {
-  m_File = TFile::Open(m_Filename.c_str(), "RECREATE", m_Filename.c_str(), ROOT::CompressionSettings(ROOT::kLZMA, 9));
+  m_File = TFile::Open(m_Filename.c_str(), "RECREATE", m_Filename.c_str(), ROOT::CompressionSettings(ROOT::kZLIB, 5));
   m_Tree = new TTree("RawData", "Raw SDHCAL data tree");
-  m_Tree->Branch("Events", &m_Event, 10, 0);
+  m_Tree->Branch("Events", &m_Event, 512000, 99);
 }
 
 void ROOTWriter::end()
@@ -50,11 +50,15 @@ void ROOTWriter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
 
 void ROOTWriter::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
-  m_Hit->setChannel(static_cast<std::uint8_t>(channelIndex));
+  m_Hit->setChannel(channelIndex);
   m_Hit->setThreshold(static_cast<std::uint8_t>(d.getThresholdStatus(frameIndex, channelIndex)));
 }
 
-void ROOTWriter::startEvent() { m_Event = new Event(); }
+void ROOTWriter::startEvent()
+{
+  m_Event = new Event();
+  // m_Event->clear();
+}
 
 void ROOTWriter::endEvent()
 {
@@ -62,7 +66,11 @@ void ROOTWriter::endEvent()
   if(m_Event) delete m_Event;
 }
 
-void ROOTWriter::startDIF() { m_DIF = new DIF(); }
+void ROOTWriter::startDIF()
+{
+  m_DIF = new DIF();
+  // m_DIF->clear();
+}
 
 void ROOTWriter::endDIF()
 {
@@ -70,11 +78,15 @@ void ROOTWriter::endDIF()
   delete m_DIF;
 }
 
-void ROOTWriter::startFrame() { m_Hit = new Hit(); }
+void ROOTWriter::startFrame()
+{
+  m_Hit = new Hit();
+  // m_Hit->clear();
+}
 
 void ROOTWriter::endFrame()
 {
-  if(m_Hit->getThreshold() != 0) { m_DIF->addHit(*m_Hit); }
+  m_DIF->addHit(*m_Hit);
   delete m_Hit;
 }
 

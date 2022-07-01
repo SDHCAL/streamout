@@ -9,6 +9,8 @@ cmmm(VERSION "2.3" REPOSITORY "flagarde/CMakeMM" VERBOSITY VERBOSE)
 cmmm_modules_list(PROVIDER github REPOSITORY "SDHCAL/CMakeModules" BRANCH main DESTINATION "Modules")
 
 project(streamout VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data processor" HOMEPAGE_URL "https://github.com/SDHCAL/streamout" LANGUAGES CXX)
+set(SEMVER_PRERELEASE "beta")
+set(SEMVER_PRERELEASE_NUMBER "1")
 
 #set(CMAKE_MACOSX_RPATH TRUE)
 #set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -21,7 +23,7 @@ include(DefaultInstallPrefix)
 default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
 
 include(Standards)
-cxx_14()
+cxx_17()
 
 option(BUILD_ROOT_INTERFACE "Flag to toggle building ROOT output" ON)
 option(BUILD_LCIO_INTERFACE "Flag to toggle building LCIO output" ON)

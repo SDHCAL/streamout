@@ -28,3 +28,9 @@ std::uint32_t DIF::getDIFBCID() const { return m_DIFBCID; }
 void DIF::setAbsoluteBCID(const std::uint64_t& absolutebcid) { m_AbsoluteBCID = absolutebcid; }
 
 std::uint64_t DIF::getAbsoluteBCID() const { return m_AbsoluteBCID; }
+
+std::vector<Hit>::const_iterator DIF::cbegin() const { return m_Hits.cbegin(); }
+
+std::vector<Hit>::const_iterator DIF::cend() const { return m_Hits.cend(); }
+
+void DIF::clear() { m_Hits.clear(); }

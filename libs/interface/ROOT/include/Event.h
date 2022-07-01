@@ -10,11 +10,15 @@
 #include <cstdint>
 #include <map>
 
+using DIFs_const_iterator = std::map<std::uint8_t, DIF>::const_iterator;
+
 class Event : public TObject
 {
 public:
-  void clear();
-  void addDIF(const DIF& dif);
+  void                                        clear();
+  void                                        addDIF(const DIF& dif);
+  std::map<std::uint8_t, DIF>::const_iterator cbegin() const;
+  std::map<std::uint8_t, DIF>::const_iterator cend() const;
 
 private:
   std::map<std::uint8_t, DIF> DIFs;

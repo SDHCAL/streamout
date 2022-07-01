@@ -14,7 +14,7 @@
 
 class Buffer;
 
-class RawdataReader : public Interface
+class RawdataReader : public InterfaceReader
 {
 public:
   explicit RawdataReader(const char* fileName);
@@ -25,7 +25,7 @@ public:
   void          closeFile();
   bool          nextEvent();
   bool          nextDIFbuffer();
-  const Buffer& getSDHCALBuffer();
+  const Buffer& getBuffer();
   virtual ~RawdataReader() { closeFile(); }
   static void setDefaultBufferSize(const std::size_t& size);
 
@@ -38,6 +38,5 @@ private:
   std::uint32_t       m_NumberOfDIF{0};
   std::uint32_t       m_EventNumber{0};
   std::vector<bit8_t> m_buf;
-  Buffer              m_Buffer;
   std::string         m_Filename;
 };

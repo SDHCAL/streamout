@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "AppVersion.h"
 #include "Buffer.h"
 #include "BufferLooperCounter.h"
 #include "DetectorId.h"
@@ -14,9 +15,12 @@
 
 #include <algorithm>
 #include <cassert>
+#include <fmt/color.h>
+#include <map>
 #include <memory>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/spdlog.h>
+#include <string>
 #include <vector>
 // function to loop on buffers
 
@@ -42,11 +46,35 @@ public:
 
   void loop(const std::uint32_t& m_NbrEventsToProcess = 0)
   {
+    // clang-format off
+    fmt::print(fg(fmt::color::medium_orchid) | fmt::emphasis::bold,
+                "\n"
+                "░██████╗████████╗██████╗░███████╗░█████╗░███╗░░░███╗░█████╗░██╗░░░██╗████████╗\n"
+                "██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗░████║██╔══██╗██║░░░██║╚══██╔══╝\n"
+                "╚█████╗░░░░██║░░░██████╔╝█████╗░░███████║██╔████╔██║██║░░██║██║░░░██║░░░██║░░░\n"
+                "░╚═══██╗░░░██║░░░██╔══██╗██╔══╝░░██╔══██║██║╚██╔╝██║██║░░██║██║░░░██║░░░██║░░░\n"
+                "██████╔╝░░░██║░░░██║░░██║███████╗██║░░██║██║░╚═╝░██║╚█████╔╝╚██████╔╝░░░██║░░░\n"
+                "╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░╚════╝░░╚═════╝░░░░╚═╝░░░v{}\n"
+                "\n",
+                streamout_version.to_string());
+    // clang-format on
+    log()->info("Streamout Version : {}", streamout_version.to_string());
+    log()->info("Using InterfaceReader {} version {}", m_Source.getName(), m_Source.getVersion().to_string());
+    log()->info("Using InterfaceWriter {} version {}", m_Destination.getName(), m_Destination.getVersion().to_string());
+
+    if(!m_Destination.checkCompatibility(m_Source.getName(), m_Source.getVersion().to_string()))
+    {
+      log()->critical("{} version {} is not compatible with {} version {} ! ", m_Source.getName(), m_Source.getVersion().to_string(), m_Destination.getName(), m_Destination.getVersion().to_string());
+      log()->info("Compatible Interfaces for {} are", m_Destination.getName());
+      for(std::map<std::string, std::string>::iterator it = m_Destination.getCompatibility().begin(); it != m_Destination.getCompatibility().end(); ++it) { log()->info("{} version {}", it->first, it->second); }
+      std::exit(-1);
+    }
+
     Timer timer;
     timer.start();
     m_Source.start();
     m_Destination.start();
-    RawBufferNavigator bufferNavigator;
+    RawBufferNavigator bufferNavigator(m_Logger);
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
       /// START EVENT ///
@@ -54,12 +82,11 @@ public:
       m_Destination.startEvent();
       ///////////////////
 
-      m_Logger->warn("===*** Event number {} ***===", m_NbrEvents);
+      m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
       {
-        const Buffer& buffer = m_Source.getSDHCALBuffer();
+        const Buffer& buffer = m_Source.getBuffer();
         bufferNavigator.setBuffer(buffer);
-
         bit8_t* debug_variable_1 = buffer.end();
         bit8_t* debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         if(debug_variable_1 != debug_variable_2) m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
@@ -77,6 +104,7 @@ public:
         ///////////////////
 
         std::int32_t idstart = bufferNavigator.getStartOfDIF();
+
         if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
         if(!bufferNavigator.validBuffer())
@@ -98,11 +126,14 @@ public:
           m_Destination.processFrame(d, i);
           for(std::size_t j = 0; j < DU::NUMBER_PAD; ++j)
           {
-            m_Source.startPad();
-            m_Destination.startPad();
-            m_Destination.processPadInFrame(d, i, j);
-            m_Source.endPad();
-            m_Destination.endPad();
+            if(d.getThresholdStatus(i, j) != 0)
+            {
+              m_Source.startPad();
+              m_Destination.startPad();
+              m_Destination.processPadInFrame(d, i, j);
+              m_Source.endPad();
+              m_Destination.endPad();
+            }
           }
           /// START FRAME ///
           m_Source.endFrame();
@@ -139,7 +170,7 @@ public:
         m_Destination.endDIF();
         ///////////////////
       }  // end of DIF while loop
-      m_Logger->warn("***=== Event number {} ===***", m_NbrEvents);
+      m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       m_NbrEvents++;
       /// START EVENT ///
       m_Source.endEvent();

@@ -8,6 +8,7 @@
 #include "Bits.h"
 
 #include <array>
+#include <string>
 #include <vector>
 
 class Buffer
