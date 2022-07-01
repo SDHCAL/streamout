@@ -14,12 +14,7 @@
 class textDump : public InterfaceWriter
 {
 public:
-  textDump() : InterfaceWriter("textDump", "1.0.0")
-  {
-    m_InternalLogger = std::make_shared<spdlog::logger>("textDump", std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-    m_InternalLogger->set_level(spdlog::level::trace);
-    addCompatibility("RawdataReader", ">=1.0.0");
-  }
+  textDump();
   void                             start();
   void                             processDIF(const DIFPtr&);
   void                             processFrame(const DIFPtr&, uint32_t frameIndex);

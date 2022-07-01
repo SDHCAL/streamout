@@ -5,7 +5,7 @@
 
 #include "DIFdataExample.h"
 
-DIFdataExample::DIFdataExample() : InterfaceReader("DIFdataExample", "1"), _first(true)
+DIFdataExample::DIFdataExample() : InterfaceReader("DIFdataExample", "1.0.0"), _first(true)
 {
   for(int i = 0; i < BUFFER_SIZE; ++i) _RAWbuffer[i] = 0;
   int istuff              = 94;    // should be greater than 92 for SDHCAL data, for may 2012, it was 94
@@ -29,7 +29,7 @@ DIFdataExample::DIFdataExample() : InterfaceReader("DIFdataExample", "1"), _firs
 
 bool DIFdataExample::nextEvent()
 {
-  while(_stop != 10)
+  while(_stop != 100)
   {
     _stop++;
     return true;

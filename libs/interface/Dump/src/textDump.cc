@@ -6,6 +6,14 @@
 
 #include "DIFPtr.h"
 
+textDump::textDump() : InterfaceWriter("textDump", "1.0.0")
+{
+  m_InternalLogger = std::make_shared<spdlog::logger>("textDump", std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+  m_InternalLogger->set_level(spdlog::level::trace);
+  addCompatibility("RawdataReader", ">=1.0.0");
+  addCompatibility("DIFdataExample", ">=1.0.0");
+}
+
 void textDump::start() { print()->info("Will dump bunch of DIF data"); }
 
 void textDump::processDIF(const DIFPtr& d) { print()->info("DIF_ID : {}, DTC : {}, GTC : {}, DIF BCID {}, Absolute BCID : {}, Nbr frames {}", d.getDIFid(), d.getDTC(), d.getGTC(), d.getBCID(), d.getAbsoluteBCID(), d.getNumberOfFrames()); }
