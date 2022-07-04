@@ -58,6 +58,7 @@ public:
                 "\n",
                 streamout_version.to_string());
     // clang-format on
+    log()->info("*******************************************************************");
     log()->info("Streamout Version : {}", streamout_version.to_string());
     log()->info("Using InterfaceReader {} version {}", m_Source.getName(), m_Source.getVersion().to_string());
     log()->info("Using InterfaceWriter {} version {}", m_Destination.getName(), m_Destination.getVersion().to_string());
@@ -69,12 +70,18 @@ public:
       for(std::map<std::string, std::string>::iterator it = m_Destination.getCompatibility().begin(); it != m_Destination.getCompatibility().end(); ++it) { log()->info("{} version {}", it->first, it->second); }
       std::exit(-1);
     }
-
-    Timer timer;
+    if(!m_DetectorIDs.empty())
+    {
+      std::string ids;
+      for(std::vector<DetectorID>::const_iterator it = m_DetectorIDs.cbegin(); it != m_DetectorIDs.cend(); ++it) ids += std::to_string(static_cast<std::uint16_t>(*it)) + ";";
+      log()->info("Detector ID(s) other than {} will be ignored", ids);
+    }
+    log()->info("*******************************************************************");
+    RawBufferNavigator bufferNavigator(m_Logger);
+    Timer              timer;
     timer.start();
     m_Source.start();
     m_Destination.start();
-    RawBufferNavigator bufferNavigator(m_Logger);
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
       /// START EVENT ///
@@ -87,14 +94,23 @@ public:
       {
         const Buffer& buffer = m_Source.getBuffer();
         bufferNavigator.setBuffer(buffer);
+        if(std::find(m_DetectorIDs.begin(), m_DetectorIDs.end(), static_cast<DetectorID>(bufferNavigator.getDetectorID())) == m_DetectorIDs.end())
+        {
+          m_Logger->debug("Ignoring detector ID : {}", bufferNavigator.getDetectorID());
+          continue;
+        }
+
         bit8_t* debug_variable_1 = buffer.end();
         bit8_t* debug_variable_2 = bufferNavigator.getDIFBuffer().end();
         if(debug_variable_1 != debug_variable_2) m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
         if(m_Debug) assert(debug_variable_1 == debug_variable_2);
 
-        if(std::find(m_DetectorIDs.begin(), m_DetectorIDs.end(), static_cast<DetectorID>(bufferNavigator.getDetectorID())) == m_DetectorIDs.end())
+        std::int32_t idstart = bufferNavigator.getStartOfPayload();
+        if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
+        c.DIFStarter[idstart]++;
+        if(!bufferNavigator.validBuffer())
         {
-          m_Logger->trace("{}", bufferNavigator.getDetectorID());
+          m_Logger->error("!bufferNavigator.validBuffer()");
           continue;
         }
 
@@ -103,15 +119,6 @@ public:
         m_Destination.startDIF();
         ///////////////////
 
-        std::int32_t idstart = bufferNavigator.getStartOfDIF();
-
-        if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
-        c.DIFStarter[idstart]++;
-        if(!bufferNavigator.validBuffer())
-        {
-          m_Logger->error("!bufferNavigator.validBuffer()");
-          continue;
-        }
         DIFPtr& d = bufferNavigator.getDIFPtr();
         c.DIFPtrValueAtReturnedPos[bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()]]++;
         if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()] == 0xa0);

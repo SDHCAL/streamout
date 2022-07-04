@@ -13,9 +13,14 @@ std::int32_t RawBufferNavigator::getStartOfPayload()
 {
   for(std::size_t i = m_Start; i < m_Buffer.size(); i++)
   {
-    if(m_Buffer[i] == DU::START_OF_DIF || m_Buffer[i] == DU::START_OF_DIF_TEMP) return i;
+    if(m_Buffer[i] == DU::START_OF_DIF || m_Buffer[i] == DU::START_OF_DIF_TEMP)
+    {
+      m_StartPayload = i;
+      return m_StartPayload;
+    }
   }
-  return -1;
+  m_StartPayload = -1;
+  return m_StartPayload;
 }
 
 int RawBufferNavigator::m_Start = 92;
@@ -27,22 +32,20 @@ void RawBufferNavigator::StartAt(const int& start)
 
 void RawBufferNavigator::setBuffer(const Buffer& b)
 {
-  m_BadSCdata     = false;
-  m_Buffer        = b;
-  m_DIFstartIndex = getStartOfPayload();
+  m_BadSCdata = false;
+  m_Buffer    = b;
+  // m_DIFstartIndex = getStartOfPayload();
 }
 
 RawBufferNavigator::RawBufferNavigator(const Buffer& b) : m_Buffer(b) { setBuffer(b); }
 
 std::uint8_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
 
-bool RawBufferNavigator::validBuffer() { return m_DIFstartIndex != -1; }
+bool RawBufferNavigator::validBuffer() { return m_StartPayload != -1; }
 
-std::int32_t RawBufferNavigator::getStartOfDIF() { return m_DIFstartIndex; }
+bit8_t* RawBufferNavigator::getDIFBufferStart() { return &(m_Buffer.begin()[m_StartPayload]); }
 
-unsigned char* RawBufferNavigator::getDIFBufferStart() { return &(m_Buffer.begin()[m_DIFstartIndex]); }
-
-std::uint32_t RawBufferNavigator::getDIFBufferSize() { return m_Buffer.size() - m_DIFstartIndex; }
+std::uint32_t RawBufferNavigator::getDIFBufferSize() { return m_Buffer.size() - m_StartPayload; }
 
 Buffer RawBufferNavigator::getDIFBuffer() { return Buffer(getDIFBufferStart(), getDIFBufferSize()); }
 
@@ -86,8 +89,8 @@ void RawBufferNavigator::setSCBuffer()
   if(m_BadSCdata) return;
   m_SCbuffer.set(&(getDIFBufferStart()[getEndOfDIFData()]));
   // compute Slow Control size
-  std::size_t maxsize{m_Buffer.size() - m_DIFstartIndex - getEndOfDIFData() + 1};  // should I +1 here ?
-  uint32_t    k{1};                                                                // SC Header
+  std::size_t maxsize{m_Buffer.size() - m_StartPayload - getEndOfDIFData() + 1};  // should I +1 here ?
+  uint32_t    k{1};                                                               // SC Header
   uint32_t    dif_ID{m_SCbuffer[1]};
   uint32_t    chipSize{m_SCbuffer[3]};
   while((dif_ID != 0xa1 && m_SCbuffer[k] != 0xa1 && k < maxsize) || (dif_ID == 0xa1 && m_SCbuffer[k + 2] == chipSize && k < maxsize))

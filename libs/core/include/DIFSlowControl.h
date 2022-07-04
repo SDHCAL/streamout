@@ -22,27 +22,27 @@ public:
   DIFSlowControl(const std::uint8_t& version, const std::uint8_t& DIFid, unsigned char* buf);
 
   //! get DIF id
-  inline std::uint8_t getDIFId();
+  std::uint8_t getDIFId();
 
   //! Get chips map
   /**
     @return a map of < Asic Id, map of <string (parameter name),int (parameter value) >
    */
-  inline std::map<int, std::map<std::string, int>> getChipsMap();
+  std::map<int, std::map<std::string, int>> getChipsMap();
 
   //! Get one chip map
   /**
     @param asicid ASIC ID
     @return a map of <string (parameter name),int (parameter value) >
    */
-  inline std::map<std::string, int> getChipSlowControl(const int& asicid);
+  std::map<std::string, int> getChipSlowControl(const int& asicid);
 
   //! Get one Chip value
   /**
     @param asicid ASic ID
     @param param Parameter name
    */
-  inline int getChipSlowControl(const std::int8_t& asicid, const std::string& param);
+  int getChipSlowControl(const std::int8_t& asicid, const std::string& param);
 
   std::map<int, std::map<std::string, int>>::const_iterator cbegin() const { return m_MapSC.cbegin(); }
 
