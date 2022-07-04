@@ -6,15 +6,9 @@
 
 #include <bitset>
 #include <cstdint>
+#include <iosfwd>
 #include <map>
 #include <string>
-/**
-\class DIFSlowControl
-\author  L.Mirabito
-\date March 2010
-\version 1.0
-\brief Handler of DIF Slow Control  info
-*/
 
 class DIFSlowControl
 {
@@ -50,8 +44,9 @@ public:
    */
   inline int getChipSlowControl(const std::int8_t& asicid, const std::string& param);
 
-  //! print out full map
-  void Dump();
+  std::map<int, std::map<std::string, int>>::const_iterator cbegin() const { return m_MapSC.cbegin(); }
+
+  std::map<int, std::map<std::string, int>>::const_iterator cend() const { return m_MapSC.cend(); }
 
 private:
   //! Default Constructor
@@ -71,3 +66,5 @@ private:
   unsigned int                              m_NbrAsic{0};   //! Number of Asic
   std::map<int, std::map<std::string, int>> m_MapSC;        //! Storage map (asic,name,value)
 };
+
+std::string to_string(const DIFSlowControl& c);

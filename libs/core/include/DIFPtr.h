@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Bits.h"
 #include "Formatters.h"
 #include "Utilities.h"
 #include "Words.h"
@@ -17,51 +18,51 @@
 class DIFPtr
 {
 public:
-  void                         setBuffer(unsigned char*, const std::uint32_t&);
-  unsigned char*               getPtr() const;
-  std::uint32_t                getGetFramePtrReturn() const;
-  std::vector<unsigned char*>& getFramesVector();
-  std::vector<unsigned char*>& getLinesVector();
-  std::uint32_t                getID() const;
-  std::uint32_t                getDTC() const;
-  std::uint32_t                getGTC() const;
-  std::uint64_t                getAbsoluteBCID() const;
-  std::uint32_t                getBCID() const;
-  std::uint32_t                getLines() const;
-  bool                         hasLine(const std::uint32_t&) const;
-  std::uint32_t                getTASU1() const;
-  std::uint32_t                getTASU2() const;
-  std::uint32_t                getTDIF() const;
-  float                        getTemperatureDIF() const;
-  float                        getTemperatureASU1() const;
-  float                        getTemperatureASU2() const;
-  bool                         hasTemperature() const;
-  bool                         hasAnalogReadout() const;
-  std::uint32_t                getNumberOfFrames() const;
-  unsigned char*               getFramePtr(const std::uint32_t&) const;
-  std::uint32_t                getFrameAsicHeader(const std::uint32_t&) const;
-  std::uint32_t                getFrameBCID(const std::uint32_t&) const;
-  std::uint32_t                getFrameTimeToTrigger(const std::uint32_t&) const;
-  bool                         getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
+  void                  setBuffer(unsigned char*, const std::uint32_t&);
+  bit8_t*               getPtr() const;
+  std::uint32_t         getGetFramePtrReturn() const;
+  std::vector<bit8_t*>& getFramesVector();
+  std::vector<bit8_t*>& getLinesVector();
+  std::uint32_t         getID() const;
+  std::uint32_t         getDTC() const;
+  std::uint32_t         getGTC() const;
+  std::uint64_t         getAbsoluteBCID() const;
+  std::uint32_t         getBCID() const;
+  std::uint32_t         getLines() const;
+  bool                  hasLine(const std::uint32_t&) const;
+  std::uint32_t         getTASU1() const;
+  std::uint32_t         getTASU2() const;
+  std::uint32_t         getTDIF() const;
+  float                 getTemperatureDIF() const;
+  float                 getTemperatureASU1() const;
+  float                 getTemperatureASU2() const;
+  bool                  hasTemperature() const;
+  bool                  hasAnalogReadout() const;
+  std::uint32_t         getNumberOfFrames() const;
+  bit8_t*               getFramePtr(const std::uint32_t&) const;
+  std::uint32_t         getFrameAsicHeader(const std::uint32_t&) const;
+  std::uint32_t         getFrameBCID(const std::uint32_t&) const;
+  std::uint32_t         getFrameTimeToTrigger(const std::uint32_t&) const;
+  bool                  getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
   // Addition by GG
-  std::uint32_t                getDIFid() const;
-  std::uint32_t                getASICid(const std::uint32_t&) const;
-  std::uint32_t                getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
+  std::uint32_t         getDIFid() const;
+  std::uint32_t         getASICid(const std::uint32_t&) const;
+  std::uint32_t         getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
 
 private:
-  std::uint32_t               getAnalogPtr(const std::uint32_t& idx = 0);
-  std::uint32_t               getFrameAsicHeaderInternal(const unsigned char* framePtr) const;
-  std::uint32_t               getFramePtr();
-  std::uint32_t               theSize_{0};
-  std::uint32_t               theGetFramePtrReturn_{0};
-  unsigned char*              theDIF_{nullptr};
-  std::vector<unsigned char*> theFrames_;
-  std::vector<unsigned char*> theLines_;
+  std::uint32_t        getAnalogPtr(const std::uint32_t& idx = 0);
+  std::uint32_t        getFrameAsicHeaderInternal(const unsigned char* framePtr) const;
+  std::uint32_t        getFramePtr();
+  std::uint32_t        theSize_{0};
+  std::uint32_t        theGetFramePtrReturn_{0};
+  bit8_t*              theDIF_{nullptr};
+  std::vector<bit8_t*> theFrames_;
+  std::vector<bit8_t*> theLines_;
 };
 
-inline std::uint32_t DIFPtr::getFrameAsicHeaderInternal(const unsigned char* framePtr) const { return (framePtr[DU::FRAME_ASIC_HEADER_SHIFT]); }
+inline std::uint32_t DIFPtr::getFrameAsicHeaderInternal(const bit8_t* framePtr) const { return (framePtr[DU::FRAME_ASIC_HEADER_SHIFT]); }
 
-inline void DIFPtr::setBuffer(unsigned char* p, const std::uint32_t& max_size)
+inline void DIFPtr::setBuffer(bit8_t* p, const std::uint32_t& max_size)
 {
   theFrames_.clear();
   theLines_.clear();
@@ -77,13 +78,13 @@ inline void DIFPtr::setBuffer(unsigned char* p, const std::uint32_t& max_size)
   }
 }
 
-inline unsigned char* DIFPtr::getPtr() const { return theDIF_; }
+inline bit8_t* DIFPtr::getPtr() const { return theDIF_; }
 
 inline std::uint32_t DIFPtr::getGetFramePtrReturn() const { return theGetFramePtrReturn_; }
 
-inline std::vector<unsigned char*>& DIFPtr::getFramesVector() { return theFrames_; }
+inline std::vector<bit8_t*>& DIFPtr::getFramesVector() { return theFrames_; }
 
-inline std::vector<unsigned char*>& DIFPtr::getLinesVector() { return theLines_; }
+inline std::vector<bit8_t*>& DIFPtr::getLinesVector() { return theLines_; }
 
 inline std::uint32_t DIFPtr::getID() const { return theDIF_[DU::ID_SHIFT]; }
 
@@ -93,9 +94,8 @@ inline std::uint32_t DIFPtr::getGTC() const { return (theDIF_[DU::GTC_SHIFT] << 
 
 inline std::uint64_t DIFPtr::getAbsoluteBCID() const
 {
-  std::uint64_t Shift{16777216ULL};  // to shift the value from the 24 first bits
-  std::uint64_t pos{DU::ABCID_SHIFT};
-  std::uint64_t LBC = ((theDIF_[pos] << 16) | (theDIF_[pos + 1] << 8) | (theDIF_[pos + 2])) * Shift + ((theDIF_[pos + 3] << 16) | (theDIF_[pos + 4] << 8) | (theDIF_[pos + 5]));
+  std::uint64_t LBC = ((theDIF_[DU::ABCID_SHIFT] << 16) | (theDIF_[DU::ABCID_SHIFT + 1] << 8) | (theDIF_[DU::ABCID_SHIFT + 2])) * 16777216ULL /* to shift the value from the 24 first bits*/
+                    + ((theDIF_[DU::ABCID_SHIFT + 3] << 16) | (theDIF_[DU::ABCID_SHIFT + 4] << 8) | (theDIF_[DU::ABCID_SHIFT + 5]));
   return LBC;
 }
 
@@ -123,7 +123,7 @@ inline bool DIFPtr::hasAnalogReadout() const { return getLines() != 0; }
 
 inline std::uint32_t DIFPtr::getNumberOfFrames() const { return theFrames_.size(); }
 
-inline unsigned char* DIFPtr::getFramePtr(const std::uint32_t& i) const { return theFrames_[i]; }
+inline bit8_t* DIFPtr::getFramePtr(const std::uint32_t& i) const { return theFrames_[i]; }
 
 inline std::uint32_t DIFPtr::getFrameAsicHeader(const std::uint32_t& i) const { return getFrameAsicHeaderInternal(theFrames_[i]); }
 

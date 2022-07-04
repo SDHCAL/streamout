@@ -4,9 +4,6 @@
 
 #include "DIFSlowControl.h"
 
-#include <cstdint>
-#include <iostream>
-
 DIFSlowControl::DIFSlowControl(const std::uint8_t& version, const std::uint8_t& DIfId, unsigned char* cbuf) : m_Version(version), m_DIFId(DIfId), m_AsicType(2)
 {
   if(cbuf[0] != 0xb1) return;
@@ -41,15 +38,6 @@ inline std::map<int, std::map<std::string, int>> DIFSlowControl::getChipsMap() {
 inline std::map<std::string, int> DIFSlowControl::getChipSlowControl(const int& asicid) { return m_MapSC[asicid]; }
 
 inline int DIFSlowControl::getChipSlowControl(const std::int8_t& asicid, const std::string& param) { return getChipSlowControl(asicid)[param]; }
-
-void DIFSlowControl::Dump()
-{
-  for(std::map<int, std::map<std::string, int>>::iterator it = m_MapSC.begin(); it != m_MapSC.end(); it++)
-  {
-    std::cout << "ASIC " << it->first << std::endl;
-    for(std::map<std::string, int>::iterator jt = (it->second).begin(); jt != (it->second).end(); jt++) std::cout << jt->first << " : " << jt->second << std::endl;
-  }
-}
 
 void DIFSlowControl::FillHR1(const int& header_shift, unsigned char* cbuf)
 {
@@ -263,4 +251,15 @@ void DIFSlowControl::FillAsicHR2(const std::bitset<109 * 8>& bs)
   mAsic["EnOCDout2b"]       = static_cast<int>(bs[8 * 108 + 6]);
   mAsic["EnOCDout1b"]       = static_cast<int>(bs[8 * 108 + 7]);
   m_MapSC[asicid]           = mAsic;
+}
+
+std::string to_string(const DIFSlowControl& c)
+{
+  std::string ret;
+  for(std::map<int, std::map<std::string, int>>::const_iterator it = c.cbegin(); it != c.cend(); it++)
+  {
+    ret += "ASIC " + std::to_string(it->first) + " :\n";
+    for(std::map<std::string, int>::const_iterator jt = (it->second).begin(); jt != (it->second).end(); jt++) ret += jt->first + " : " + std::to_string(jt->second) + "\n";
+  }
+  return ret;
 }
