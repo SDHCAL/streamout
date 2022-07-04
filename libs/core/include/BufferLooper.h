@@ -48,15 +48,25 @@ public:
   {
     // clang-format off
     fmt::print(fg(fmt::color::medium_orchid) | fmt::emphasis::bold,
-                "\n"
-                "░██████╗████████╗██████╗░███████╗░█████╗░███╗░░░███╗░█████╗░██╗░░░██╗████████╗\n"
-                "██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗░████║██╔══██╗██║░░░██║╚══██╔══╝\n"
-                "╚█████╗░░░░██║░░░██████╔╝█████╗░░███████║██╔████╔██║██║░░██║██║░░░██║░░░██║░░░\n"
-                "░╚═══██╗░░░██║░░░██╔══██╗██╔══╝░░██╔══██║██║╚██╔╝██║██║░░██║██║░░░██║░░░██║░░░\n"
-                "██████╔╝░░░██║░░░██║░░██║███████╗██║░░██║██║░╚═╝░██║╚█████╔╝╚██████╔╝░░░██║░░░\n"
-                "╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░╚════╝░░╚═════╝░░░░╚═╝░░░v{}\n"
-                "\n",
-                streamout_version.to_string());
+            "\n"
+" SSSSSSSSSSSSSSS      tttt                                                                                                                                   tttt\n"
+"SS:::::::::::::::S  ttt:::t                                                                                                                                ttt:::t\n"
+"S:::::SSSSSS::::::S  t:::::t                                                                                                                                t:::::t\n"
+"S:::::S     SSSSSSS  t:::::t                                                                                                                                t:::::t\n"
+"S:::::S        ttttttt:::::ttttttt   rrrrr   rrrrrrrrr       eeeeeeeeeeee    aaaaaaaaaaaaa      mmmmmmm    mmmmmmm      ooooooooooo   uuuuuu    uuuuuuttttttt:::::ttttttt\n"
+"S:::::S        t:::::::::::::::::t   r::::rrr:::::::::r    ee::::::::::::ee  a::::::::::::a   mm:::::::m  m:::::::mm  oo:::::::::::oo u::::u    u::::ut:::::::::::::::::t\n"
+" S::::SSSS     t:::::::::::::::::t   r:::::::::::::::::r  e::::::eeeee:::::eeaaaaaaaaa:::::a m::::::::::mm::::::::::mo:::::::::::::::ou::::u    u::::ut:::::::::::::::::t\n"
+"  SS::::::SSSSStttttt:::::::tttttt   rr::::::rrrrr::::::re::::::e     e:::::e         a::::a m::::::::::::::::::::::mo:::::ooooo:::::ou::::u    u::::utttttt:::::::tttttt\n"
+"    SSS::::::::SS    t:::::t          r:::::r     r:::::re:::::::eeeee::::::e  aaaaaaa:::::a m:::::mmm::::::mmm:::::mo::::o     o::::ou::::u    u::::u      t:::::t\n"
+"       SSSSSS::::S   t:::::t          r:::::r     rrrrrrre:::::::::::::::::e aa::::::::::::a m::::m   m::::m   m::::mo::::o     o::::ou::::u    u::::u      t:::::t\n"
+"            S:::::S  t:::::t          r:::::r            e::::::eeeeeeeeeee a::::aaaa::::::a m::::m   m::::m   m::::mo::::o     o::::ou::::u    u::::u      t:::::t\n"
+"            S:::::S  t:::::t    ttttttr:::::r            e:::::::e         a::::a    a:::::a m::::m   m::::m   m::::mo::::o     o::::ou:::::uuuu:::::u      t:::::t    tttttt\n"
+"SSSSSSS     S:::::S  t::::::tttt:::::tr:::::r            e::::::::e        a::::a    a:::::a m::::m   m::::m   m::::mo:::::ooooo:::::ou:::::::::::::::uu    t::::::tttt:::::t\n"
+"S::::::SSSSSS:::::S  tt::::::::::::::tr:::::r             e::::::::eeeeeeeea:::::aaaa::::::a m::::m   m::::m   m::::mo:::::::::::::::o u:::::::::::::::u    tt::::::::::::::t\n"
+"S:::::::::::::::SS     tt:::::::::::ttr:::::r              ee:::::::::::::e a::::::::::aa:::am::::m   m::::m   m::::m oo:::::::::::oo   uu::::::::uu:::u      tt:::::::::::tt\n"
+" SSSSSSSSSSSSSSS         ttttttttttt  rrrrrrr                eeeeeeeeeeeeee  aaaaaaaaaa  aaaammmmmm   mmmmmm   mmmmmm   ooooooooooo       uuuuuuuu  uuuu        ttttttttttt {}\n"
+"\n",
+fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.to_string()));
     // clang-format on
     log()->info("*******************************************************************");
     log()->info("Streamout Version : {}", streamout_version.to_string());
