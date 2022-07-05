@@ -16,6 +16,23 @@
 #include <string>
 #include <vector>
 
+/** \class DIFPtr
+
+M3 MICROROC and HARDROC2 dataformat
+
+Data from the DAQ (once at the beginning of the file) :
+    \image html FileHeader.png
+    \image latex FileHeader.png "Data from the DAQ (once at the beginning of the file)"
+
+Data from the DIF analog or/and digital (loop) :
+    \image html DIF.png
+    \image latex DIF.png "Data from the DIF analog or/and digital"
+
+Data from the DAQ (slowcontrol) :
+    \image html Slowcontrol.png
+    \image latex Slowcontrol.png "Data from the DAQ (slowcontrol)"
+*/
+
 class DIFPtr
 {
 public:
