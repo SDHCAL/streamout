@@ -5,6 +5,10 @@ add_executable(Filesystem.test Filesystem.test.cc)
 target_link_libraries(Filesystem.test PRIVATE Streamout::Core doctest_with_main)
 install(TARGETS Filesystem.test RUNTIME DESTINATION bin/tests)
 
+add_executable(Exception.test Exception.test.cc)
+target_link_libraries(Exception.test PRIVATE Streamout::Core doctest_with_main)
+install(TARGETS Exception.test RUNTIME DESTINATION bin/tests)
+
 if(BUILD_RAWDATA_INTERFACE)
   # cmake-lint: disable=C0103
   set(ExternalData_URL_TEMPLATES

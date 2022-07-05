@@ -5,6 +5,8 @@
 #pragma once
 
 #include "Bits.h"
+#include "Buffer.h"
+#include "Exception.h"
 #include "Formatters.h"
 #include "Utilities.h"
 #include "Words.h"
@@ -18,6 +20,28 @@
 class DIFPtr
 {
 public:
+  DIFPtr() = default;
+
+  void setBuffer(const Buffer& buffer)
+  {
+    setBuffer(buffer.begin(), buffer.size());
+    m_BadSCdata = false;
+  }
+
+  bit8_t* begin() const { return theDIF_; }
+  bit8_t* end() const { return theDIF_ + theSize_; }
+
+  std::uint32_t getSizeAfterDIFPtr() { return theSize_ - getGetFramePtrReturn(); }
+  bool          hasSlowControlData() { return theDIF_[getEndOfDIFData()] == 0xb1; }
+
+  std::uint32_t getEndOfDIFData() { return getGetFramePtrReturn() + 3; }
+
+  bool badSCData()
+  {
+    setSCBuffer();
+    return m_BadSCdata;
+  }
+
   void                  setBuffer(unsigned char*, const std::uint32_t&);
   bit8_t*               getPtr() const;
   std::uint32_t         getGetFramePtrReturn() const;
@@ -48,6 +72,57 @@ public:
   std::uint32_t         getDIFid() const;
   std::uint32_t         getASICid(const std::uint32_t&) const;
   std::uint32_t         getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
+  Buffer                getSCBuffer()
+  {
+    setSCBuffer();
+    return m_SCbuffer;
+  }
+  Buffer getEndOfAllData()
+  {
+    setSCBuffer();
+    if(hasSlowControlData() && !m_BadSCdata) { return Buffer(&(m_SCbuffer.begin()[m_SCbuffer.size()]), getSizeAfterDIFPtr() - 3 - m_SCbuffer.size()); }
+    else
+      return Buffer(&(theDIF_[getEndOfDIFData()]), getSizeAfterDIFPtr() - 3);  // remove the 2 bytes for CRC and the DIF trailer
+  }
+  std::uint32_t getDIF_CRC()
+  {
+    uint32_t i{getEndOfDIFData()};
+    uint32_t ret{0};
+    ret |= ((theDIF_[i - 2]) << 8);
+    ret |= theDIF_[i - 1];
+    return ret;
+  }
+  void setSCBuffer()
+  {
+    if(!hasSlowControlData()) return;
+    if(m_SCbuffer.size() != 0) return;  // deja fait
+    if(m_BadSCdata) return;
+    m_SCbuffer.set(&(theDIF_[getEndOfDIFData()]));
+    // compute Slow Control size
+    std::size_t maxsize{theSize_ - getEndOfDIFData() + 1};  // should I +1 here ?
+    uint32_t    k{1};                                       // SC Header
+    uint32_t    dif_ID{m_SCbuffer[1]};
+    uint32_t    chipSize{m_SCbuffer[3]};
+    while((dif_ID != 0xa1 && m_SCbuffer[k] != 0xa1 && k < maxsize) || (dif_ID == 0xa1 && m_SCbuffer[k + 2] == chipSize && k < maxsize))
+    {
+      k += 2;  // DIF ID + ASIC Header
+      uint32_t scsize = m_SCbuffer[k];
+      if(scsize != 74 && scsize != 109)
+      {
+        k           = 0;
+        m_BadSCdata = true;
+        throw Exception(fmt::format("PROBLEM WITH SC SIZE {}", scsize));
+      }
+      k++;          // skip size bit
+      k += scsize;  // skip the data
+    }
+    if(m_SCbuffer[k] == 0xa1 && !m_BadSCdata) m_SCbuffer.setSize(k + 1);  // add the trailer
+    else
+    {
+      m_BadSCdata = true;
+      throw Exception(fmt::format("PROBLEM SC TRAILER NOT FOUND "));
+    }
+  }
 
 private:
   std::uint32_t        getAnalogPtr(const std::uint32_t& idx = 0);
@@ -58,6 +133,8 @@ private:
   bit8_t*              theDIF_{nullptr};
   std::vector<bit8_t*> theFrames_;
   std::vector<bit8_t*> theLines_;
+  bool                 m_BadSCdata{false};
+  Buffer               m_SCbuffer;
 };
 
 inline std::uint32_t DIFPtr::getFrameAsicHeaderInternal(const bit8_t* framePtr) const { return (framePtr[DU::FRAME_ASIC_HEADER_SHIFT]); }
@@ -66,16 +143,9 @@ inline void DIFPtr::setBuffer(bit8_t* p, const std::uint32_t& max_size)
 {
   theFrames_.clear();
   theLines_.clear();
-  theSize_ = max_size;
-  theDIF_  = p;
-  try
-  {
-    theGetFramePtrReturn_ = getFramePtr();
-  }
-  catch(const std::string& e)
-  {
-    spdlog::get("streamout")->error(" DIF {} T ? {} {}", getID(), hasTemperature(), e);
-  }
+  theSize_              = max_size;
+  theDIF_               = p;
+  theGetFramePtrReturn_ = getFramePtr();
 }
 
 inline bit8_t* DIFPtr::getPtr() const { return theDIF_; }
@@ -153,11 +223,7 @@ inline std::uint32_t DIFPtr::getFramePtr()
   }
   else
     fshift = DU::BCID_SHIFT + 3;
-  if(theDIF_[fshift] != DU::START_OF_FRAME)
-  {
-    std::cout << "This is not a start of frame " << to_hex(theDIF_[fshift]) << " \n";
-    return fshift;
-  }
+  if(theDIF_[fshift] != DU::START_OF_FRAME) { throw Exception(fmt::format("This is not a start of frame {}", to_hex(theDIF_[fshift]))); }
   do {
     if(theDIF_[fshift] == DU::END_OF_DIF) return fshift;
     if(theDIF_[fshift] == DU::START_OF_FRAME) fshift++;
@@ -168,14 +234,10 @@ inline std::uint32_t DIFPtr::getFramePtr()
     }
     std::uint32_t header = getFrameAsicHeaderInternal(&theDIF_[fshift]);
     if(header == DU::END_OF_FRAME) return (fshift + 2);
-    if(header < 1 || header > 48) { throw header + " Header problem " + fshift; }
+    if(header < 1 || header > 48) { throw Exception(fmt::format("{} Header problem {}", header, fshift)); }
     theFrames_.push_back(&theDIF_[fshift]);
     fshift += DU::FRAME_SIZE;
-    if(fshift > theSize_)
-    {
-      std::cout << "fshift " << fshift << " exceed " << theSize_ << "\n";
-      return fshift;
-    }
+    if(fshift > theSize_) { throw Exception(fmt::format("fshift {} exceed {}", fshift, theSize_)); }
     if(theDIF_[fshift] == DU::END_OF_FRAME) fshift++;
   } while(true);
 }

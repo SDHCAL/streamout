@@ -7,6 +7,7 @@
 #include "AppVersion.h"
 #include "Buffer.h"
 #include "BufferLooperCounter.h"
+#include "DIFPtr.h"
 #include "DetectorId.h"
 #include "Formatters.h"
 #include "RawBufferNavigator.h"
@@ -87,7 +88,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
       log()->info("Detector ID(s) other than {} will be ignored", ids);
     }
     log()->info("*******************************************************************");
-    RawBufferNavigator bufferNavigator(m_Logger);
+    RawBufferNavigator bufferNavigator;
     Timer              timer;
     timer.start();
     m_Source.start();
@@ -103,6 +104,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
       while(m_Source.nextDIFbuffer())
       {
         const Buffer& buffer = m_Source.getBuffer();
+
         bufferNavigator.setBuffer(buffer);
         if(std::find(m_DetectorIDs.begin(), m_DetectorIDs.end(), static_cast<DetectorID>(bufferNavigator.getDetectorID())) == m_DetectorIDs.end())
         {
@@ -110,15 +112,10 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           continue;
         }
 
-        bit8_t* debug_variable_1 = buffer.end();
-        bit8_t* debug_variable_2 = bufferNavigator.getDIFBuffer().end();
-        if(debug_variable_1 != debug_variable_2) m_Logger->info("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
-        if(m_Debug) assert(debug_variable_1 == debug_variable_2);
-
         std::int32_t idstart = bufferNavigator.getStartOfPayload();
         if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
-        if(!bufferNavigator.validBuffer())
+        if(!bufferNavigator.validPayload())
         {
           m_Logger->error("!bufferNavigator.validBuffer()");
           continue;
@@ -128,11 +125,25 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         m_Source.startDIF();
         m_Destination.startDIF();
         ///////////////////
+        DIFPtr d;
+        // This is really a big error so skip DIF entirely if exception occurs
+        try
+        {
+          d.setBuffer(bufferNavigator.getPayload());
+        }
+        catch(const Exception& e)
+        {
+          m_Logger->error("{}", e.what());
+          continue;
+        }
+        bit8_t* debug_variable_1 = buffer.end();
+        bit8_t* debug_variable_2 = d.end();
+        if(debug_variable_1 != debug_variable_2) m_Logger->error("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
+        if(m_Debug) assert(debug_variable_1 == debug_variable_2);
 
-        DIFPtr& d = bufferNavigator.getDIFPtr();
-        c.DIFPtrValueAtReturnedPos[bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()]]++;
-        if(m_Debug) assert(bufferNavigator.getDIFBufferStart()[d.getGetFramePtrReturn()] == 0xa0);
-        c.SizeAfterDIFPtr[bufferNavigator.getSizeAfterDIFPtr()]++;
+        c.DIFPtrValueAtReturnedPos[d.begin()[d.getGetFramePtrReturn()]]++;
+        if(m_Debug) assert(d.begin()[d.getGetFramePtrReturn()] == 0xa0);
+        c.SizeAfterDIFPtr[d.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
         for(std::size_t i = 0; i < d.getNumberOfFrames(); ++i)
         {
@@ -157,21 +168,29 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           m_Destination.endFrame();
           ///////////////////
         }
-
+        // If I want SlowControl I need to check for it first, If there is an error then it's not a big deal just continue and say is bad SlowControl
+        try
+        {
+          d.setSCBuffer();
+        }
+        catch(const Exception& e)
+        {
+          m_Logger->error("{}", e.what());
+        }
         bool processSC = false;
-        if(bufferNavigator.hasSlowControlData())
+        if(d.hasSlowControlData())
         {
           c.hasSlowControl++;
           processSC = true;
         }
-        if(bufferNavigator.badSCData())
+        if(d.badSCData())
         {
           c.hasBadSlowControl++;
           processSC = false;
         }
-        if(processSC) { m_Destination.processSlowControl(bufferNavigator.getSCBuffer()); }
+        if(processSC) { m_Destination.processSlowControl(d.getSCBuffer()); }
 
-        Buffer eod = bufferNavigator.getEndOfAllData();
+        Buffer eod = d.getEndOfAllData();
         c.SizeAfterAllData[eod.size()]++;
         bit8_t* debug_variable_3 = eod.end();
         if(debug_variable_1 != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));

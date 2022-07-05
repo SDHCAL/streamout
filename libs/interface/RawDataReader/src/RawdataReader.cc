@@ -3,6 +3,8 @@
 */
 #include "RawdataReader.h"
 
+#include "Exception.h"
+
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
@@ -33,7 +35,10 @@ void RawdataReader::uncompress()
   switch(rc)
   {
     case Z_OK: break;
-    default: throw "decompress error"; break;
+    case Z_MEM_ERROR: throw Exception(Z_MEM_ERROR, "Not enough memory"); break;
+    case Z_BUF_ERROR: throw Exception(Z_BUF_ERROR, "Not enough room in the output buffer"); break;
+    case Z_DATA_ERROR: throw Exception(Z_DATA_ERROR, "The input data was corrupted or incomplete"); break;
+    default: throw Exception("The input data was corrupted or incomplete"); break;
   }
   memcpy(&m_Buffer[shift], obuf, size_buffer_end);
   m_Buffer.setSize(size_buffer_end + shift);

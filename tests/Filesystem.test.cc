@@ -4,7 +4,6 @@
 #include "Filesystem.h"
 
 #include <doctest/doctest.h>
-#include <iostream>
 #include <string>
 
 TEST_CASE("Files")
