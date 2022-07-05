@@ -7,7 +7,6 @@
 #include "Buffer.h"
 #include "Version.h"
 
-#include <iostream>
 #include <map>
 #include <memory>
 #include <semver.hpp>

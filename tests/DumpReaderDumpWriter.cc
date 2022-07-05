@@ -43,8 +43,6 @@ int main(int argc, char** argv)
   BufferLooper<DIFdataExample, textDump> toto(source, destination, debug);
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   toto.loop(eventNbr);
-  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  toto.log()->warn("****************");
   return 0;
 }

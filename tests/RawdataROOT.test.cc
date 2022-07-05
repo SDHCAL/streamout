@@ -59,7 +59,5 @@ int main(int argc, char** argv)
   toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
   // toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
   toto.loop(eventNbr);
-  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  toto.log()->warn("****************");
 }

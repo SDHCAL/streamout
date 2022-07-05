@@ -216,7 +216,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
     m_Destination.end();
     m_Source.end();
     timer.stop();
-    fmt::print("=== elapsed time {}ms ({}ms/event) ===\n", timer.getElapsedTime() / 1000, timer.getElapsedTime() / (1000 * m_NbrEvents));
+    fmt::print(fg(fmt::color::green) | fmt::emphasis::bold, "=== elapsed time {}ms ({}ms/event) ===\n", timer.getElapsedTime() / 1000, timer.getElapsedTime() / (1000 * m_NbrEvents));
   }
   void                            printAllCounters() { c.printAllCounters(); }
   std::shared_ptr<spdlog::logger> log() { return m_Logger; }

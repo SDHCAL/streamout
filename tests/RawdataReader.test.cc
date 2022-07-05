@@ -50,13 +50,11 @@ int main(int argc, char** argv)
   RawBufferNavigator::StartAt(bitsToSkip);
   RawdataReader source(filename.c_str());
   textDump      destination;
-  destination.setLevel(spdlog::level::trace);
+  destination.setLevel(spdlog::level::info);
   BufferLooper<RawdataReader, textDump> toto(source, destination, debug);
   toto.setDetectorIDs(detectorIDs);
-  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-  toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
+  toto.addSink(std::make_shared<spdlog::sinks::stdout_color_sink_mt>(), spdlog::level::info);
+  // toto.addSink(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename + ".txt", true), spdlog::level::trace);
   toto.loop(eventNbr);
-  toto.log()->warn("*** Counters ***");
   toto.printAllCounters();
-  toto.log()->warn("****************");
 }
