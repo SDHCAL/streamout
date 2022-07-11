@@ -6,9 +6,9 @@
 #pragma once
 
 #include "Buffer.h"
-#include "DIFPtr.h"
 #include "Event.h"
 #include "Interface.h"
+#include "PayloadParser.h"
 
 #include <TFile.h>
 #include <TTree.h>
@@ -23,9 +23,9 @@ public:
   void setFilename(const std::string&);
 
   void start();
-  void processDIF(const DIFPtr&);
-  void processFrame(const DIFPtr&, const std::uint32_t& frameIndex);
-  void processPadInFrame(const DIFPtr&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);
+  void processDIF(const PayloadParser&);
+  void processFrame(const PayloadParser&, const std::uint32_t& frameIndex);
+  void processPadInFrame(const PayloadParser&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);
   void processSlowControl(const Buffer&) { ; }
   void end();
 

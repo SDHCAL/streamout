@@ -27,7 +27,7 @@ void ROOTWriter::end()
   if(m_File) delete m_File;
 }
 
-void ROOTWriter::processDIF(const DIFPtr& d)
+void ROOTWriter::processDIF(const PayloadParser& d)
 {
   m_DIF->setID(d.getDIFid());
   m_DIF->setDTC(d.getDTC());
@@ -36,7 +36,7 @@ void ROOTWriter::processDIF(const DIFPtr& d)
   m_DIF->setAbsoluteBCID(d.getAbsoluteBCID());
 }
 
-void ROOTWriter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
+void ROOTWriter::processFrame(const PayloadParser& d, const std::uint32_t& frameIndex)
 {
   m_Hit->setDIF(d.getDIFid());
   m_Hit->setASIC(d.getASICid(frameIndex));
@@ -48,7 +48,7 @@ void ROOTWriter::processFrame(const DIFPtr& d, const std::uint32_t& frameIndex)
   m_Hit->setTimestamp(d.getFrameTimeToTrigger(frameIndex));
 }
 
-void ROOTWriter::processPadInFrame(const DIFPtr& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
+void ROOTWriter::processPadInFrame(const PayloadParser& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
   m_Hit->setChannel(channelIndex);
   m_Hit->setThreshold(static_cast<std::uint8_t>(d.getThresholdStatus(frameIndex, channelIndex)));

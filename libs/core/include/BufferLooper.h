@@ -7,9 +7,9 @@
 #include "AppVersion.h"
 #include "Buffer.h"
 #include "BufferLooperCounter.h"
-#include "DIFPtr.h"
 #include "DetectorId.h"
 #include "Formatters.h"
+#include "PayloadParser.h"
 #include "RawBufferNavigator.h"
 #include "Timer.h"
 #include "Words.h"
@@ -125,7 +125,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         m_Source.startDIF();
         m_Destination.startDIF();
         ///////////////////
-        DIFPtr d;
+        PayloadParser d;
         // This is really a big error so skip DIF entirely if exception occurs
         try
         {
