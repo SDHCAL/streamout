@@ -141,6 +141,7 @@ public:
   }
 
 private:
+  std::uint16_t        m_Version{13};
   std::uint32_t        getAnalogPtr(const std::uint32_t& idx = 0);
   std::uint32_t        getFrameAsicHeaderInternal(const unsigned char* framePtr) const;
   std::uint32_t        getFramePtr();
@@ -231,7 +232,7 @@ inline uint32_t DIFPtr::getThresholdStatus(const std::uint32_t& i, const std::ui
 inline std::uint32_t DIFPtr::getFramePtr()
 {
   std::uint32_t fshift{0};
-  if(DATA_FORMAT_VERSION >= 13)
+  if(m_Version >= 13)
   {
     fshift = DU::LINES_SHIFT + 1;
     if(hasTemperature()) fshift = DU::TDIF_SHIFT + 1;      // jenlev 1
