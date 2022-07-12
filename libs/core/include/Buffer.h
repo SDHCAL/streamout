@@ -24,6 +24,7 @@ public:
   std::size_t size() const { return m_Size; }
   std::size_t capacity() const { return m_Capacity; }
 
+  bool empty() { return m_Size == 0; }
   void set(unsigned char* b) { m_Buffer = b; }
   void set(const Buffer& buffer)
   {

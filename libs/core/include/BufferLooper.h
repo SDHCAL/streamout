@@ -152,7 +152,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           m_Destination.startFrame();
           ///////////////////
           m_Destination.processFrame(d, i);
-          for(std::size_t j = 0; j < DU::NUMBER_PAD; ++j)
+          for(std::size_t j = 0; j < static_cast<std::size_t>(Hardware::NUMBER_PAD); ++j)
           {
             if(d.getThresholdStatus(i, j) != 0)
             {
@@ -177,8 +177,9 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         {
           m_Logger->error("{}", e.what());
         }
+
         bool processSC = false;
-        if(d.hasSlowControlData())
+        if(d.hasSlowControl())
         {
           c.hasSlowControl++;
           processSC = true;
