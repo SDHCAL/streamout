@@ -54,18 +54,12 @@ public:
 
   Buffer getSlowControl() const;
 
-  std::vector<bit8_t*>& getFramesVector();
+  std::vector<bit8_t*> getFramesVector() const;
 
-  std::vector<bit8_t*>& getLinesVector();
+  std::vector<bit8_t*> getLinesVector() const;
 
-  std::uint32_t getSizeAfterDIFPtr() { return size() - getGetFramePtrReturn(); }
-  std::uint32_t getEndOfDIFData() const { return getGetFramePtrReturn() + 3; }
-  bool          badSCData()
-  {
-    setSCBuffer();
-    return m_BadSlowControl;
-  }
-  std::uint32_t getGetFramePtrReturn() const;
+  std::uint32_t getSizeAfterDIFPtr() const;
+  std::uint32_t getEndOfDIFData() const;
   std::uint32_t getDTC() const;
   std::uint32_t getGTC() const;
   std::uint64_t getAbsoluteBCID() const;
@@ -76,62 +70,10 @@ public:
   std::uint32_t getFrameBCID(const std::uint32_t&) const;
   std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const;
   bool          getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
-  // Addition by GG
   std::uint32_t getDIFid() const;
   std::uint32_t getASICid(const std::uint32_t&) const;
   std::uint32_t getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
-  Buffer        getSCBuffer()
-  {
-    setSCBuffer();
-    return m_SCbuffer;
-  }
-  Buffer getEndOfAllData()
-  {
-    setSCBuffer();
-    if(hasSlowControl() && !m_BadSlowControl) { return Buffer(&(m_SCbuffer.begin()[m_SCbuffer.size()]), getSizeAfterDIFPtr() - 3 - m_SCbuffer.size()); }
-    else
-      return Buffer(&(begin()[getEndOfDIFData()]), getSizeAfterDIFPtr() - 3);  // remove the 2 bytes for CRC and the DIF trailer
-  }
-  std::uint32_t getDIF_CRC()
-  {
-    uint32_t i{getEndOfDIFData()};
-    uint32_t ret{0};
-    ret |= ((begin()[i - 2]) << 8);
-    ret |= begin()[i - 1];
-    return ret;
-  }
-  void setSCBuffer()
-  {
-    if(!hasSlowControl()) return;
-    if(m_SCbuffer.size() != 0) return;  // deja fait
-    if(m_BadSlowControl) return;
-    m_SCbuffer.set(&(begin()[getEndOfDIFData()]));
-    // compute Slow Control size
-    std::size_t maxsize{size() - getEndOfDIFData() + 1};  // should I +1 here ?
-    uint32_t    k{1};                                     // SC Header
-    uint32_t    dif_ID{m_SCbuffer[1]};
-    uint32_t    chipSize{m_SCbuffer[3]};
-    while((dif_ID != 0xa1 && m_SCbuffer[k] != 0xa1 && k < maxsize) || (dif_ID == 0xa1 && m_SCbuffer[k + 2] == chipSize && k < maxsize))
-    {
-      k += 2;  // DIF ID + ASIC Header
-      uint32_t scsize = m_SCbuffer[k];
-      if(scsize != 74 && scsize != 109)
-      {
-        k                = 0;
-        m_BadSlowControl = true;
-        throw Exception(fmt::format("PROBLEM WITH SC SIZE {}", scsize));
-      }
-      k++;          // skip size bit
-      k += scsize;  // skip the data
-    }
-    if(m_SCbuffer[k] == 0xa1 && !m_BadSlowControl) m_SCbuffer.setSize(k + 1);  // add the trailer
-    else
-    {
-      m_BadSlowControl = true;
-      throw Exception(fmt::format("PROBLEM SC TRAILER NOT FOUND "));
-    }
-  }
-
+  std::uint32_t getDIF_CRC() const;
 private:
   std::uint16_t m_Version{13};
   std::uint32_t parsePayload();
@@ -143,11 +85,7 @@ private:
 
   std::vector<bit8_t*> m_Lines;
   std::vector<bit8_t*> m_Frames;
-  bool                 m_BadSlowControl{false};
-
   std::uint32_t theGetFramePtrReturn_{0};
-
-  Buffer m_SCbuffer;
 };
 
 inline void PayloadParser::setBuffer(const Buffer& buffer)
@@ -156,8 +94,6 @@ inline void PayloadParser::setBuffer(const Buffer& buffer)
   m_Frames.clear();
   m_Lines.clear();
   theGetFramePtrReturn_ = parsePayload();
-  if(theGetFramePtrReturn_ != size()) { fmt::print("****************************\n"); }
-  m_BadSlowControl = false;
 }
 
 inline std::uint32_t PayloadParser::parsePayload()
@@ -277,11 +213,15 @@ inline Buffer PayloadParser::getSlowControl() const
     return Buffer();
 }
 
-inline std::vector<bit8_t*>& PayloadParser::getFramesVector() { return m_Frames; }
+inline std::vector<bit8_t*> PayloadParser::getFramesVector() const
+{
+  return m_Frames;
+}
 
-inline std::vector<bit8_t*>& PayloadParser::getLinesVector() { return m_Lines; }
-
-inline std::uint32_t PayloadParser::getGetFramePtrReturn() const { return theGetFramePtrReturn_ - 3; }
+inline std::vector<bit8_t*> PayloadParser::getLinesVector() const
+{
+  return m_Lines;
+}
 
 inline std::uint32_t PayloadParser::getDTC() const
 {
@@ -333,12 +273,22 @@ inline bool PayloadParser::getFrameLevel(const std::uint32_t& i, const std::uint
   return ((m_Frames[i][shift + ((3 - ipad / 16) * 4 + (ipad % 16) / 4)] >> (7 - (((ipad % 16) % 4) * 2 + ilevel))) & 0x1);
 }
 
-inline uint32_t PayloadParser::getDIFid() const
+inline std::uint32_t PayloadParser::getDIFid() const
 {
   std::uint32_t shift{+Size::GLOBAL_HEADER};
   return begin()[shift] & 0xFF;
 }
 
-inline uint32_t PayloadParser::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
+inline std::uint32_t PayloadParser::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
 
-inline uint32_t PayloadParser::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
+inline std::uint32_t PayloadParser::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
+
+inline std::uint32_t PayloadParser::getDIF_CRC() const
+{
+  std::uint32_t shift{getEndOfDIFData()-(Size::CRC_MSB+Size::CRC_LSB)};
+  return (begin()[shift]<<8) + begin()[shift+1];
+}
+
+inline std::uint32_t PayloadParser::getSizeAfterDIFPtr() const { return size() - theGetFramePtrReturn_; }
+
+inline std::uint32_t PayloadParser::getEndOfDIFData() const { return theGetFramePtrReturn_; }

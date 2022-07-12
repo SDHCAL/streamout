@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include<ios>
 
 struct BufferLooperCounter
 {
@@ -19,6 +20,6 @@ public:
   std::map<int, int> SizeAfterAllData;
   std::map<int, int> NonZeroValusAtEndOfData;
 
-  void printCounter(const std::string& description, const std::map<int, int>& m);
+  void printCounter(const std::string& description, const std::map<int, int>& m,const std::ios_base::fmtflags& base= std::ios_base::dec);
   void printAllCounters();
 };

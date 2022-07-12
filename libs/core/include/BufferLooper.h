@@ -95,10 +95,11 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
     m_Destination.start();
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
-      /// START EVENT ///
+      /*******************/
+      /*** START EVENT ***/
       m_Source.startEvent();
       m_Destination.startEvent();
-      ///////////////////
+      /*******************/
 
       m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
@@ -121,10 +122,11 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           continue;
         }
 
-        /// START DIF ///
+        /******************/
+        /*** START DIF ***/
         m_Source.startDIF();
         m_Destination.startDIF();
-        ///////////////////
+        /******************/
         PayloadParser d;
         // This is really a big error so skip DIF entirely if exception occurs
         try
@@ -136,21 +138,24 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           m_Logger->error("{}", e.what());
           continue;
         }
-        bit8_t* debug_variable_1 = buffer.end();
-        bit8_t* debug_variable_2 = d.end();
-        if(debug_variable_1 != debug_variable_2) m_Logger->error("DIF BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_2));
-        if(m_Debug) assert(debug_variable_1 == debug_variable_2);
 
-        c.DIFPtrValueAtReturnedPos[d.begin()[d.getGetFramePtrReturn()]]++;
-        if(m_Debug) assert(d.begin()[d.getGetFramePtrReturn()] == 0xa0);
+        if(buffer.end() != d.end()) m_Logger->error("DIF BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(d.end()));
+        assert(buffer.end() == d.end());
+
+        m_Logger->error("CRC : {}", d.getDIF_CRC());
+        c.DIFPtrValueAtReturnedPos[d.begin()[d.getEndOfDIFData()-3]]++;
+        assert(d.begin()[d.getEndOfDIFData()-3] == 0xa0);
+
+
         c.SizeAfterDIFPtr[d.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
         for(std::size_t i = 0; i < d.getNumberOfFrames(); ++i)
         {
-          /// START FRAME ///
+          /*******************/
+          /*** START FRAME ***/
           m_Source.startFrame();
           m_Destination.startFrame();
-          ///////////////////
+          /*******************/
           m_Destination.processFrame(d, i);
           for(std::size_t j = 0; j < static_cast<std::size_t>(Hardware::NUMBER_PAD); ++j)
           {
@@ -163,13 +168,14 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
               m_Destination.endPad();
             }
           }
-          /// START FRAME ///
+          /*****************/
+          /*** END FRAME ***/
           m_Source.endFrame();
           m_Destination.endFrame();
-          ///////////////////
+          /*****************/
         }
         // If I want SlowControl I need to check for it first, If there is an error then it's not a big deal just continue and say is bad SlowControl
-        try
+        /*try
         {
           d.setSCBuffer();
         }
@@ -189,30 +195,33 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           c.hasBadSlowControl++;
           processSC = false;
         }
-        if(processSC) { m_Destination.processSlowControl(d.getSCBuffer()); }
+        if(processSC) { m_Destination.processSlowControl(d.getSCBuffer()); }*/
 
-        Buffer eod = d.getEndOfAllData();
-        c.SizeAfterAllData[eod.size()]++;
-        bit8_t* debug_variable_3 = eod.end();
-        if(debug_variable_1 != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(debug_variable_1), fmt::ptr(debug_variable_3));
-        if(m_Debug) assert(debug_variable_1 == debug_variable_3);
-        if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));
+        //Buffer eod = d.getEndOfAllData();
+        //c.SizeAfterAllData[eod.size()]++;
+       // bit8_t* debug_variable_3 = eod.end();
+       // if(buffer.end() != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(debug_variable_3));
+       // assert(buffer.end() == debug_variable_3);
+        //if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));*/
 
-        int nonzeroCount = 0;
+        /*int nonzeroCount = 0;
         for(bit8_t* it = eod.begin(); it != eod.end(); it++)
           if(static_cast<int>(*it) != 0) nonzeroCount++;
-        c.NonZeroValusAtEndOfData[nonzeroCount]++;
-        /// START DIF ///
+        c.NonZeroValusAtEndOfData[nonzeroCount]++;*/
+
+        /***************/
+        /*** END DIF ***/
         m_Source.endDIF();
         m_Destination.endDIF();
-        ///////////////////
+        /***************/
       }  // end of DIF while loop
       m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       m_NbrEvents++;
-      /// START EVENT ///
+      /*****************/
+      /*** END EVENT ***/
       m_Source.endEvent();
       m_Destination.endEvent();
-      ///////////////////
+      /*****************/
     }  // end of event while loop
     m_Destination.end();
     m_Source.end();
