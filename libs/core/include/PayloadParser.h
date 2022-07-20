@@ -74,6 +74,7 @@ public:
   std::uint32_t getASICid(const std::uint32_t&) const;
   std::uint32_t getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
   std::uint32_t getDIF_CRC() const;
+
 private:
   std::uint16_t m_Version{13};
   std::uint32_t parsePayload();
@@ -85,7 +86,7 @@ private:
 
   std::vector<bit8_t*> m_Lines;
   std::vector<bit8_t*> m_Frames;
-  std::uint32_t theGetFramePtrReturn_{0};
+  std::uint32_t        theGetFramePtrReturn_{0};
 };
 
 inline void PayloadParser::setBuffer(const Buffer& buffer)
@@ -213,15 +214,9 @@ inline Buffer PayloadParser::getSlowControl() const
     return Buffer();
 }
 
-inline std::vector<bit8_t*> PayloadParser::getFramesVector() const
-{
-  return m_Frames;
-}
+inline std::vector<bit8_t*> PayloadParser::getFramesVector() const { return m_Frames; }
 
-inline std::vector<bit8_t*> PayloadParser::getLinesVector() const
-{
-  return m_Lines;
-}
+inline std::vector<bit8_t*> PayloadParser::getLinesVector() const { return m_Lines; }
 
 inline std::uint32_t PayloadParser::getDTC() const
 {
@@ -285,8 +280,8 @@ inline std::uint32_t PayloadParser::getThresholdStatus(const std::uint32_t& i, c
 
 inline std::uint32_t PayloadParser::getDIF_CRC() const
 {
-  std::uint32_t shift{getEndOfDIFData()-(Size::CRC_MSB+Size::CRC_LSB)};
-  return (begin()[shift]<<8) + begin()[shift+1];
+  std::uint32_t shift{getEndOfDIFData() - (Size::CRC_MSB + Size::CRC_LSB)};
+  return (begin()[shift] << 8) + begin()[shift + 1];
 }
 
 inline std::uint32_t PayloadParser::getSizeAfterDIFPtr() const { return size() - theGetFramePtrReturn_; }

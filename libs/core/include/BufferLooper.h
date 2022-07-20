@@ -143,9 +143,8 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         assert(buffer.end() == d.end());
 
         m_Logger->error("CRC : {}", d.getDIF_CRC());
-        c.DIFPtrValueAtReturnedPos[d.begin()[d.getEndOfDIFData()-3]]++;
-        assert(d.begin()[d.getEndOfDIFData()-3] == 0xa0);
-
+        c.DIFPtrValueAtReturnedPos[d.begin()[d.getEndOfDIFData() - 3]]++;
+        assert(d.begin()[d.getEndOfDIFData() - 3] == 0xa0);
 
         c.SizeAfterDIFPtr[d.getSizeAfterDIFPtr()]++;
         m_Destination.processDIF(d);
@@ -199,9 +198,9 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
 
         //Buffer eod = d.getEndOfAllData();
         //c.SizeAfterAllData[eod.size()]++;
-       // bit8_t* debug_variable_3 = eod.end();
-       // if(buffer.end() != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(debug_variable_3));
-       // assert(buffer.end() == debug_variable_3);
+        // bit8_t* debug_variable_3 = eod.end();
+        // if(buffer.end() != debug_variable_3) m_Logger->info("END DATA BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(debug_variable_3));
+        // assert(buffer.end() == debug_variable_3);
         //if(eod.size() != 0) m_Logger->info("End of Data remaining stuff : {}", to_hex(eod));*/
 
         /*int nonzeroCount = 0;
