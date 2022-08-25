@@ -37,3 +37,31 @@ Standalone SDHCAL raw data processor
 
   </a>
 </h1>
+
+## How to compile ##
+
+### CMake options ###
+
+**BUILD_ROOT_INTERFACE** : Allow to write **ROOT** files.</br>
+**BUILD_LCIO_INTERFACE** : Allow to write **LCIO** files (not implemented).</br>
+**BUILD_RAWDATA_INTERFACE** : Allow to read RAWDATA from **.dat** files.</br>
+**BUILD_TESTS** : Build the tests.</br>
+**BUILD_APPS** : Build the apps.</br>
+**BUILD_DOCS** : Build the documentation.</br>
+
+### Use cmake (tested with version 3.15.3 ... 3.24) ###
+
+1) `git clone https://github.com/SDHCAL/streamout.git`
+2) `cmake -DBUILD_ROOT_INTERFACE=ON -DBUILD_LCIO_INTERFACE=ON -DBUILD_RAWDATA_INTERFACE=ON -B ./build -S ./streamout -DCMAKE_INSTALL_PREFIX=./install`
+3) `cmake --build ./build --parallel 10`
+4) `cmake --install build`
+5) `ctest -VV`
+
+## How to use the software ##
+
+⚠️ It still under testing so they are in `tests` folder
+
+1) You can ``export STREAMOUT_OUTPUT_PATH=mypath`` to select where the apps will write the output file.
+2) Run `./install/bin/tests/RawdataROOT.test --help` to list the parameters.
+3) For example `./install/bin/tests/RawdataROOT.test -f ./SMM_210616_040234_732873.dat -s 20 -e 10`.  Will read the **10** first event skipping the first **20** bits of the header and write **ROOT** file `SMM_210616_040234_732873.root`.
+4) You can cross-check the output using `../install/bin/tests/ROOTchecker.test -f SMM_210616_040234_732873.root`.

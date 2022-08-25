@@ -3,4 +3,4 @@ builtin = clear,rare,informal,usage,code,names
 ignore-words = .codespellignore
 check-filenames =
 check-hidden =
-skip = .gitattributes,.gitignore
+skip = .gitattributes,.gitignore,.codespellignore
