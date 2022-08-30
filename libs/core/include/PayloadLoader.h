@@ -6,6 +6,7 @@
 
 #include "Payload.h"
 #include "Payload100.h"
+#include "Payload150.h"
 
 #include <cstdint>
 
@@ -17,7 +18,8 @@ public:
   {
     switch(detector_id)
     {
-      case 100: payload = new Payload100();
+      case 100: payload = new Payload100(); break;
+      case 150: payload = new Payload150(); break;
     }
     return payload;
   }

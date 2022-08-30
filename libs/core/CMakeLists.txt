@@ -18,6 +18,7 @@ add_library(Core
             src/RawBufferNavigator.cc
             src/Filesystem.cc
             src/Payload100.cc
+            src/Payload150.cc
 )
 
 target_include_directories(Core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/streamout>)

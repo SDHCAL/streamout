@@ -6,8 +6,6 @@
 
 #include "Utilities.h"
 
-#include <cstdint>
-
 enum class Size : std::uint8_t
 {
   // Header

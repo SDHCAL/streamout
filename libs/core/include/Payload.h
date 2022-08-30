@@ -26,6 +26,8 @@ public:
   virtual std::uint32_t getFrameBCID(const std::uint32_t&) const                             = 0;
   virtual std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const                    = 0;
 
+  virtual ~Payload() {}
+
 protected:
   virtual void  parsePayload() = 0;
   std::int32_t  m_DetectorID{-1};
