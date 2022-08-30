@@ -32,7 +32,7 @@ int main(int argc, char** argv)
   bool debug{false};
   app.add_flag("-d,--debug", debug, "Set debug");
 
-  std::vector<DetectorID> detectorIDs{DetectorID::HARDROC, DetectorID::RUNHEADER};
+  std::vector<DetectorID> detectorIDs{DetectorID::HARDROC, DetectorID::RUNHEADER, DetectorID::HARDROC_NEW};
   app.add_option("--detectorID", detectorIDs, "Detector IDs")
     ->transform(CLI::CheckedTransformer(std::map<std::string, DetectorID>({{"HARDROC", DetectorID::HARDROC}, {"HARDROC_NEW", DetectorID::HARDROC_NEW}, {"RUNHEADER", DetectorID::RUNHEADER}}), CLI::ignore_case));
 
