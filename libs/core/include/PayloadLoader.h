@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Payload.h"
 #include "Payload100.h"
 
 #include <cstdint>
@@ -12,7 +13,7 @@ class PayloadLoader
 {
 public:
   PayloadLoader() = default;
-  Payload100* getPayload(const std::int32_t& detector_id)
+  Payload* getPayload(const std::int32_t& detector_id)
   {
     switch(detector_id)
     {
@@ -22,5 +23,5 @@ public:
   }
 
 private:
-  Payload100* payload{nullptr};
+  Payload* payload{nullptr};
 };

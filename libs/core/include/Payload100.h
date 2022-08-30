@@ -8,6 +8,7 @@
 #include "Buffer.h"
 #include "Exception.h"
 #include "Formatters.h"
+#include "Payload.h"
 #include "Utilities.h"
 #include "Words.h"
 
@@ -33,15 +34,24 @@ Data from the DAQ (slowcontrol) :
     \image latex Slowcontrol.png "Data from the DAQ (slowcontrol)"
 */
 
-class Payload100 : public Buffer
+class Payload100 : public Payload
 {
 public:
-  Payload100() = default;
+  Payload100() : Payload(100){};
+  bool                  hasTemperature() const;
+  bool                  hasAnalogReadout() const;
+  virtual std::uint32_t getNumberOfFrames() const final;
+  virtual std::uint32_t getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const final;
+  virtual std::uint32_t getDIFid() const final;
+  virtual std::uint32_t getDTC() const final;
+  virtual std::uint32_t getGTC() const final;
+  virtual std::uint32_t getBCID() const final;
+  virtual std::uint64_t getAbsoluteBCID() const final;
+  virtual std::uint32_t getASICid(const std::uint32_t&) const final;
+  virtual std::uint32_t getFrameBCID(const std::uint32_t&) const final;
+  virtual std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const final;
 
-  void setBuffer(const Buffer& buffer);
-
-  bool hasTemperature() const;
-
+  /*
   bool hasAnalogReadout() const;
 
   bool hasSlowControl() const;
@@ -58,47 +68,33 @@ public:
 
   std::vector<bit8_t*> getLinesVector() const;
 
-  std::uint32_t getSizeAfterDIFPtr() const;
-  std::uint32_t getEndOfDIFData() const;
-  std::uint32_t getDTC() const;
-  std::uint32_t getGTC() const;
-  std::uint64_t getAbsoluteBCID() const;
-  std::uint32_t getBCID() const;
   bool          hasLine(const std::uint32_t&) const;
-  std::uint32_t getNumberOfFrames() const;
+
   bit8_t*       getFramePtr(const std::uint32_t&) const;
-  std::uint32_t getFrameBCID(const std::uint32_t&) const;
-  std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const;
-  bool          getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
-  std::uint32_t getDIFid() const;
-  std::uint32_t getASICid(const std::uint32_t&) const;
-  std::uint32_t getThresholdStatus(const std::uint32_t&, const std::uint32_t&) const;
+
   std::uint32_t getDIF_CRC() const;
 
 private:
-  std::uint16_t m_Version{13};
-  std::uint32_t parsePayload();
-  std::uint32_t getNumberLines() const;
-  std::uint32_t parseAnalogLine(const std::uint32_t& idx);
+
   std::uint32_t getTASU1() const;
   std::uint32_t getTASU2() const;
   std::uint32_t getTDIF() const;
+*/
 
+private:
+  bool                 getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;
+  std::uint16_t        m_Version{13};
   std::vector<bit8_t*> m_Lines;
   std::vector<bit8_t*> m_Frames;
-  std::uint32_t        theGetFramePtrReturn_{0};
+  virtual void         parsePayload() final;
+  std::uint32_t        parseAnalogLine(const std::uint32_t& idx);
+  std::uint32_t        getNumberLines() const;
 };
 
-inline void Payload100::setBuffer(const Buffer& buffer)
+inline void Payload100::parsePayload()
 {
-  set(buffer);
   m_Frames.clear();
   m_Lines.clear();
-  theGetFramePtrReturn_ = parsePayload();
-}
-
-inline std::uint32_t Payload100::parsePayload()
-{
   std::uint32_t fshift{static_cast<std::uint32_t>(Size::GLOBAL_HEADER)};  // Pass Global Header
   if(m_Version >= 13)
   {
@@ -136,7 +132,7 @@ inline std::uint32_t Payload100::parsePayload()
   fshift += +Size::GLOBAL_TRAILER;
   // Pass CRC MSB, CRC LSB
   fshift += Size::CRC_MSB + Size::CRC_LSB;
-  return fshift;
+  theGetFramePtrReturn_ = fshift;
 }
 
 inline bool Payload100::hasTemperature() const { return (static_cast<std::uint8_t>(begin()[0]) == static_cast<std::uint8_t>(Value::GLOBAL_HEADER_TEMP)); }
@@ -169,6 +165,58 @@ inline std::uint32_t Payload100::parseAnalogLine(const std::uint32_t& idx)
   return fshift;
 }
 
+inline std::uint32_t Payload100::getNumberOfFrames() const { return m_Frames.size(); }
+
+inline std::uint32_t Payload100::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
+
+inline bool Payload100::getFrameLevel(const std::uint32_t& i, const std::uint32_t& ipad, const std::uint32_t& ilevel) const
+{
+  std::uint32_t shift{Size::MICROROC_HEADER + Size::BCID};
+  return ((m_Frames[i][shift + ((3 - ipad / 16) * 4 + (ipad % 16) / 4)] >> (7 - (((ipad % 16) % 4) * 2 + ilevel))) & 0x1);
+}
+
+inline std::uint32_t Payload100::getDIFid() const
+{
+  std::uint32_t shift{+Size::GLOBAL_HEADER};
+  return begin()[shift] & 0xFF;
+}
+
+inline std::uint32_t Payload100::getDTC() const
+{
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF};
+  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
+}
+
+inline std::uint32_t Payload100::getGTC() const
+{
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER};
+  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
+}
+
+inline std::uint32_t Payload100::getBCID() const
+{
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER + Size::GLOBAL_TRIGGER_COUNTER + Size::ABSOLUTE_BCID};
+  return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
+}
+
+inline std::uint64_t Payload100::getAbsoluteBCID() const
+{
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER + Size::GLOBAL_TRIGGER_COUNTER};
+  std::uint64_t LBC = ((begin()[shift] << 16) | (begin()[shift + 1] << 8) | (begin()[shift + 2])) * 16777216ULL + ((begin()[shift + 3] << 16) | (begin()[shift + 4] << 8) | (begin()[shift + 5]));
+  return LBC;
+}
+
+inline std::uint32_t Payload100::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
+
+inline std::uint32_t Payload100::getFrameBCID(const std::uint32_t& i) const
+{
+  std::uint32_t shift{+Size::MICROROC_HEADER};
+  return GrayToBin((m_Frames[i][shift] << 16) + (m_Frames[i][shift + 1] << 8) + m_Frames[i][shift + 2]);
+}
+
+inline std::uint32_t Payload100::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
+
+/*
 inline bool Payload100::hasSlowControl() const { return theGetFramePtrReturn_ != size(); }
 
 inline std::uint32_t Payload100::getTASU1() const
@@ -218,65 +266,13 @@ inline std::vector<bit8_t*> Payload100::getFramesVector() const { return m_Frame
 
 inline std::vector<bit8_t*> Payload100::getLinesVector() const { return m_Lines; }
 
-inline std::uint32_t Payload100::getDTC() const
-{
-  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF};
-  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
-}
-
-inline std::uint32_t Payload100::getGTC() const
-{
-  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER};
-  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
-}
-
-inline std::uint64_t Payload100::getAbsoluteBCID() const
-{
-  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER + Size::GLOBAL_TRIGGER_COUNTER};
-  std::uint64_t LBC = ((begin()[shift] << 16) | (begin()[shift + 1] << 8) | (begin()[shift + 2])) * 16777216ULL /* to shift the value from the 24 first bits*/
-                    + ((begin()[shift + 3] << 16) | (begin()[shift + 4] << 8) | (begin()[shift + 5]));
-  return LBC;
-}
-
-inline std::uint32_t Payload100::getBCID() const
-{
-  std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER + Size::GLOBAL_TRIGGER_COUNTER + Size::ABSOLUTE_BCID};
-  return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
-}
-
 inline bool Payload100::hasLine(const std::uint32_t& line) const
 {
   std::uint32_t shift{Size::GLOBAL_HEADER + Size::DIF_IF + Size::DIF_TRIGGER_COUNTER + Size::INFORMATION_COUNTER + Size::GLOBAL_TRIGGER_COUNTER + Size::ABSOLUTE_BCID + Size::BCID_DIF};
   return ((begin()[shift] >> line) & 0x1);
 }
 
-inline std::uint32_t Payload100::getNumberOfFrames() const { return m_Frames.size(); }
-
 inline bit8_t* Payload100::getFramePtr(const std::uint32_t& i) const { return m_Frames[i]; }
-
-inline std::uint32_t Payload100::getFrameBCID(const std::uint32_t& i) const
-{
-  std::uint32_t shift{+Size::MICROROC_HEADER};
-  return GrayToBin((m_Frames[i][shift] << 16) + (m_Frames[i][shift + 1] << 8) + m_Frames[i][shift + 2]);
-}
-
-inline std::uint32_t Payload100::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
-
-inline bool Payload100::getFrameLevel(const std::uint32_t& i, const std::uint32_t& ipad, const std::uint32_t& ilevel) const
-{
-  std::uint32_t shift{Size::MICROROC_HEADER + Size::BCID};
-  return ((m_Frames[i][shift + ((3 - ipad / 16) * 4 + (ipad % 16) / 4)] >> (7 - (((ipad % 16) % 4) * 2 + ilevel))) & 0x1);
-}
-
-inline std::uint32_t Payload100::getDIFid() const
-{
-  std::uint32_t shift{+Size::GLOBAL_HEADER};
-  return begin()[shift] & 0xFF;
-}
-
-inline std::uint32_t Payload100::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
-
-inline std::uint32_t Payload100::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
 
 inline std::uint32_t Payload100::getDIF_CRC() const
 {
@@ -284,6 +280,4 @@ inline std::uint32_t Payload100::getDIF_CRC() const
   return (begin()[shift] << 8) + begin()[shift + 1];
 }
 
-inline std::uint32_t Payload100::getSizeAfterDIFPtr() const { return size() - theGetFramePtrReturn_; }
-
-inline std::uint32_t Payload100::getEndOfDIFData() const { return theGetFramePtrReturn_; }
+ */

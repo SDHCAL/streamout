@@ -130,7 +130,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
 
         PayloadLoader payloadLoader;
 
-        Payload100* d = payloadLoader.getPayload(bufferNavigator.getDetectorID());
+        Payload* d = payloadLoader.getPayload(bufferNavigator.getDetectorID());
         if(d == nullptr)
         {
           m_Logger->error("streamout don't know how to parse the payload for detector_id {} ! SKIPPING !", bufferNavigator.getDetectorID());
@@ -158,11 +158,10 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         m_Destination.processDIF(*d);
         for(std::size_t i = 0; i < d->getNumberOfFrames(); ++i)
         {
-          /*******************/
-          /*** START FRAME ***/
+          //
           m_Source.startFrame();
           m_Destination.startFrame();
-          /*******************/
+          //
           m_Destination.processFrame(*d, i);
           for(std::size_t j = 0; j < static_cast<std::size_t>(Hardware::NUMBER_PAD); ++j)
           {
@@ -175,11 +174,10 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
               m_Destination.endPad();
             }
           }
-          /*****************/
-          /*** END FRAME ***/
+          //
           m_Source.endFrame();
           m_Destination.endFrame();
-          /*****************/
+          //
         }
         // If I want SlowControl I need to check for it first, If there is an error then it's not a big deal just continue and say is bad SlowControl
         /*try
@@ -216,11 +214,11 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           if(static_cast<int>(*it) != 0) nonzeroCount++;
         c.NonZeroValusAtEndOfData[nonzeroCount]++;*/
 
-        /***************/
-        /*** END DIF ***/
+        //
+        //
         m_Source.endDIF();
         m_Destination.endDIF();
-        /***************/
+        //
       }  // end of DIF while loop
       m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       m_NbrEvents++;

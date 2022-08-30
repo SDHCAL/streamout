@@ -5,7 +5,6 @@
 
 #include "Exception.h"
 
-#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 #include <zlib.h>

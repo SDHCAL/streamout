@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Interface.h"
-#include "Payload100.h"
+#include "Payload.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <memory>
@@ -16,9 +16,9 @@ class textDump : public InterfaceWriter
 public:
   textDump();
   void                             start();
-  void                             processDIF(const Payload100&);
-  void                             processFrame(const Payload100&, uint32_t frameIndex);
-  void                             processPadInFrame(const Payload100&, uint32_t frameIndex, uint32_t channelIndex);
+  void                             processDIF(const Payload&);
+  void                             processFrame(const Payload&, uint32_t frameIndex);
+  void                             processPadInFrame(const Payload&, uint32_t frameIndex, uint32_t channelIndex);
   void                             processSlowControl(Buffer);
   void                             end();
   std::shared_ptr<spdlog::logger>& print() { return m_InternalLogger; }
