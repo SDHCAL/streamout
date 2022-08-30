@@ -1,3 +1,4 @@
+include(ZLIB)
 add_executable(GGStreamout SdhcalPmrAccess.cc streamout.cpp)
 target_include_directories(GGStreamout PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(GGStreamout PRIVATE ZLIB::ZLIB)
