@@ -1,10 +1,11 @@
+// copyright 2022 G.Grenier
 #ifndef _SDHCALPMRACCESS_HH
 #define _SDHCALPMRACCESS_HH
 #include <bitset>
+#include <cstdint>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <string>
 #include <vector>

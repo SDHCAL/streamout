@@ -37,7 +37,7 @@ Data from the DAQ (slowcontrol) :
 class Payload100 : public Payload
 {
 public:
-  Payload100() : Payload(100){};
+  Payload100() : Payload(100) {}
   bool                  hasTemperature() const;
   bool                  hasAnalogReadout() const;
   virtual std::uint32_t getNumberOfFrames() const final;

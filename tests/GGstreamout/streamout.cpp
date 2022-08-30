@@ -1,3 +1,5 @@
+// copyright 2022 G.Grenier
+
 #include "SdhcalPmrAccess.hh"
 #include "pmBuffer.hh"
 
@@ -8,8 +10,8 @@
 #include <map>
 #include <set>
 
-//#include "TFile.h"
-//#include "TTree.h"
+// #include "TFile.h"
+// #include "TTree.h"
 
 void usage(const char* prog)
 {
@@ -46,7 +48,7 @@ int main(int argc, char** argv)
   std::set<uint32_t>           idstartSet, nbASICSet, difFormatSet;
   std::map<uint32_t, uint32_t> DIFstat, ASICstat, ChannelStat, ThresholdStat;
 
-  //open data file
+  // open data file
   const char*   inputFile = argv[1];
   std::ifstream inputStream(inputFile, std::ios::binary);
   if(!inputStream.good())
@@ -58,7 +60,7 @@ int main(int argc, char** argv)
   pm::buffer theDataBuffer(0x100000);
 
   unsigned int readouts       = 0;
-  uint32_t     run            = 0;  //NB run n'est pas fonctionnel pour le moment
+  uint32_t     run            = 0;  // NB run n'est pas fonctionnel pour le moment
   uint32_t     readoutNumber  = 0;
   uint32_t     theNumberOfDIF = 0;
   uint64_t     bunchCrossingIdFirst(0);
@@ -69,7 +71,7 @@ int main(int argc, char** argv)
   {
     moreToRead = false;
 
-    //read event number
+    // read event number
     inputStream.read((char*)&readoutNumber, sizeof(uint32_t));
     if(!inputStream.good())
     {
@@ -78,7 +80,7 @@ int main(int argc, char** argv)
     }
     if(readoutNumber % 100 == 0) std::cout << "Readout number read " << readoutNumber << std::endl;
 
-    //read number of DIF
+    // read number of DIF
     inputStream.read((char*)&theNumberOfDIF, sizeof(uint32_t));
     if(!inputStream.good())
     {
@@ -87,7 +89,7 @@ int main(int argc, char** argv)
     }
     if(readoutNumber % 100 == 0) std::cout << "Readout read " << readoutNumber << " with " << theNumberOfDIF << " DIF." << std::endl;
 
-    //loop to read DIF data
+    // loop to read DIF data
     bool DIFreadingIsOK = true;
     for(uint32_t idif = 0; idif < theNumberOfDIF; ++idif)
     {
@@ -136,7 +138,7 @@ int main(int argc, char** argv)
         uint32_t LastTriggerBCID = sdhcal::PMRUnpacker::getLastTriggerBCID(theBufferAsChar, idstart);
 
         // Cet octet 19 est toujours a zero
-        //if (theBufferAsChar[idstart+PMR_HEADER_SHIFT-1] != DU_START_OF_FRAME) std::cout << " Issue with start of frame : " << (int) *(theBufferAsChar+(idstart+19)) << std::endl;
+        // if (theBufferAsChar[idstart+PMR_HEADER_SHIFT-1] != DU_START_OF_FRAME) std::cout << " Issue with start of frame : " << (int) *(theBufferAsChar+(idstart+19)) << std::endl;
 
         std::vector<unsigned char*> theFrames, theLines;
         uint32_t                    endOfDifBuffer = sdhcal::PMRUnpacker::getFramePtr(theFrames, theLines, theDataBuffer.payloadSize() - idstart, theBufferAsChar, idstart);

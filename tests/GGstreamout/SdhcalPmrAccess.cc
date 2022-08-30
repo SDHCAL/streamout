@@ -1,24 +1,25 @@
+// copyright 2022 G.Grenier
 #include "SdhcalPmrAccess.hh"
 
 #include <bitset>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
-#include <stdio.h>
 #include <string.h>
 
 using namespace sdhcal;
 using namespace std;
 unsigned long long PMRUnpacker::GrayToBin(unsigned long long n)
 {
-  unsigned long long ish, ans, idiv, ishmax;
+  unsigned long long ish, anss, idiv, ishmax;
   ishmax = sizeof(unsigned long long) * 8;
   ish    = 1;
-  ans    = n;
+  anss   = n;
   while(true)
   {
-    idiv = ans >> ish;
-    ans ^= idiv;
-    if(idiv <= 1 || ish == ishmax) return ans;
+    idiv = anss >> ish;
+    anss ^= idiv;
+    if(idiv <= 1 || ish == ishmax) return anss;
     ish <<= 1;
   }
 }
@@ -27,16 +28,16 @@ uint32_t PMRUnpacker::getStartOfPMR(unsigned char* cbuf, uint32_t size_buf, uint
 {
   uint32_t id0 = 0;
 
-  //for (int i=0;i<128;i++) {printf("%02x ",cbuf[i]); if ((i+1)%32==0) 	printf("\n");};	  printf("\n");
+  // for (int i=0;i<128;i++) {printf("%02x ",cbuf[i]); if ((i+1)%32==0)   printf("\n");};    printf("\n");
 
   for(uint32_t i = start; i < size_buf; i++)
   {
     if(cbuf[i] != DU_START_OF_DIF) continue;
     id0 = i;
-    //if (cbuf[id0+DU_ID_SHIFT]>0xFF) continue;
+    // if (cbuf[id0+DU_ID_SHIFT]>0xFF) continue;
     break;
   }
-  //printf("DIF %d Found at %d \n",cbuf[id0+1],id0);
+  // printf("DIF %d Found at %d \n",cbuf[id0+1],id0);
   return id0;
 }
 
@@ -46,7 +47,7 @@ uint32_t PMRUnpacker::getGTC(unsigned char* cb, uint32_t idx) { return (cb[idx +
 
 unsigned long long PMRUnpacker::getAbsoluteBCID(unsigned char* cb, uint32_t idx)
 {
-  unsigned long long Shift = 16777216ULL;  //to shift the value from the 24 first bits
+  unsigned long long Shift = 16777216ULL;  // to shift the value from the 24 first bits
   unsigned long long LBC   = ((cb[idx + DU_ABCID_SHIFT] << 8) | (cb[idx + DU_ABCID_SHIFT + 1])) * Shift + ((cb[idx + DU_ABCID_SHIFT + 2] << 24) | (cb[idx + DU_ABCID_SHIFT + 3] << 16) | (cb[idx + DU_ABCID_SHIFT + 4] << 8) | (cb[idx + DU_ABCID_SHIFT + 5]));
   return LBC;
 }
@@ -102,11 +103,11 @@ bool PMRUnpacker::getFrameLevel(unsigned char* framePtr, uint32_t ip, uint32_t l
 {
   return ((framePtr[DU_FRAME_DATA_SHIFT + ((3 - ip / 16) * 4 + (ip % 16) / 4)] >> (7 - (((ip % 16) % 4) * 2 + level))) & 0x1);
 
-  //uint32_t ibyte=((3-ip/16)*4+(ip%16)/4);
-  //uint32_t ibshift=(7-(((ip%16)%4)*2+level));
-  //printf("channel %d level %d byte %d bit %d \n",ip,level,ibyte,ibshift);
-  //return ((framePtr[DU_FRAME_DATA_SHIFT+ibyte]>>ibshift) & 0x1);
-  //return PMRUnpacker::getFramePAD(framePtr,2*ip+level);
+  // uint32_t ibyte=((3-ip/16)*4+(ip%16)/4);
+  // uint32_t ibshift=(7-(((ip%16)%4)*2+level));
+  // printf("channel %d level %d byte %d bit %d \n",ip,level,ibyte,ibshift);
+  // return ((framePtr[DU_FRAME_DATA_SHIFT+ibyte]>>ibshift) & 0x1);
+  // return PMRUnpacker::getFramePAD(framePtr,2*ip+level);
 }
 
 uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vector<unsigned char*>& vLines, uint32_t max_size, unsigned char* cb, uint32_t idx)
@@ -126,10 +127,10 @@ uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vect
     /**
       uint8_t headerb=0;
       for (int i=0;i<8;i++)
-	{
-	  if (header & (1<<i))
-	    headerb|=(1<<(7-i));
-	}
+  {
+    if (header & (1<<i))
+      headerb|=(1<<(7-i));
+  }
       // fprintf(stderr,"Header found %x %x Shift %d \n",header,headerb,fshift);
       setFrameAsicHeader(&cb[fshift],headerb);
 
@@ -139,7 +140,7 @@ uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vect
     if(cb[fshift] == DU_END_OF_DIF) return fshift;
     if(header != lasth)
     {
-      //std::cout<<header<<std::endl;
+      // std::cout<<header<<std::endl;
       nf    = 0;
       lasth = header;
     }
@@ -151,9 +152,9 @@ uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vect
     {
       std::stringstream s("");
       s << header << " Header problem " << fshift << std::endl;
-      //throw  pmrException(s.str());
+      // throw  pmrException(s.str());
       std::cout << s.str() << std::endl;
-      //return fshift;
+      // return fshift;
       for(int j = 0; j < 20; j++) printf("%.2x ", cb[fshift + j]);
       printf("\n %d\n", nf);
 
@@ -167,9 +168,8 @@ uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vect
       printf("fshift %d exceed %d \n", fshift, max_size);
       return fshift;
     }
-    //printf("%x \n",cb[fshift]);
+    // printf("%x \n",cb[fshift]);
     /// Pas de A3 if (cb[fshift]==DU_END_OF_FRAME) fshift++;
-
   } while(1);
 }
 unsigned long PMRUnpacker::swap_bytes(unsigned int n, unsigned char* buf)
@@ -189,7 +189,7 @@ void PMRUnpacker::dumpFrameOld(unsigned char* buf)
   bool           l1[64];
   unsigned short un = 1;
 
-  for(int ip = 0; ip < 128; ip++) { PAD[ip] = 0; }  //init PADs
+  for(int ip = 0; ip < 128; ip++) { PAD[ip] = 0; }  // init PADs
   uint32_t idx1 = 4;
   for(int ik = 0; ik < 4; ik++)
   {
@@ -198,15 +198,15 @@ void PMRUnpacker::dumpFrameOld(unsigned char* buf)
 
     for(int e = 0; e < 32; e++)
     {
-      PAD[((3 - ik) * 32) + (31 - e)] = PadEtat & un;  //binary operation
-      PadEtat                         = PadEtat >> 1;  //décalage des bit de 1
+      PAD[((3 - ik) * 32) + (31 - e)] = PadEtat & un;  // binary operation
+      PadEtat                         = PadEtat >> 1;  // décalage des bit de 1
     }
   }
   // fill bool arrays
   for(int p = 0; p < 64; p++)
   {
-    l0[p] = (bool)PAD[(2 * p)];      //_Lev0 (PAD paire)
-    l1[p] = (bool)PAD[(2 * p) + 1];  //_Lev1 (PAD impaires)
+    l0[p] = (bool)PAD[(2 * p)];      // _Lev0 (PAD paire)
+    l1[p] = (bool)PAD[(2 * p) + 1];  // _Lev1 (PAD impaires)
   }
   std::bitset<64> bs0(0);
   std::bitset<64> bs1(0);

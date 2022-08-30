@@ -8,7 +8,7 @@
 class Payload : public Buffer
 {
 public:
-  Payload(const std::int32_t& detector_id) {}
+  explicit Payload(const std::int32_t& detector_id) {}
   void                  setBuffer(const Buffer& buffer);
   std::uint32_t         getEndOfDIFData() const;
   std::uint32_t         getSizeAfterDIFPtr() const;
