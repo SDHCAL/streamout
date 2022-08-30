@@ -57,3 +57,5 @@ if(BUILD_ROOT_INTERFACE AND BUILD_RAWDATA_INTERFACE)
   target_link_libraries(ROOTchecker.test PUBLIC CLI11 doctest_with_main Streamout::Interface::ROOT::Event Streamout::Core)
   install(TARGETS ROOTchecker.test  RUNTIME DESTINATION bin/tests)
 endif()
+
+add_subdirectory(GGstreamout)
