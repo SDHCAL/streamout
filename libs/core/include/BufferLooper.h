@@ -9,7 +9,7 @@
 #include "BufferLooperCounter.h"
 #include "DetectorId.h"
 #include "Formatters.h"
-#include "Payload100.h"
+#include "PayloadLoader.h"
 #include "RawBufferNavigator.h"
 #include "Timer.h"
 #include "Words.h"
@@ -127,11 +127,20 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         m_Source.startDIF();
         m_Destination.startDIF();
         /******************/
-        Payload100 d;
+
+        PayloadLoader payloadLoader;
+
+        Payload100* d = payloadLoader.getPayload(bufferNavigator.getDetectorID());
+        if(d == nullptr)
+        {
+          m_Logger->error("streamout don't know how to parse the payload for detector_id {} ! SKIPPING !", bufferNavigator.getDetectorID());
+          continue;
+        }
+
         // This is really a big error so skip DIF entirely if exception occurs
         try
         {
-          d.setBuffer(bufferNavigator.getPayload());
+          d->setBuffer(bufferNavigator.getPayload());
         }
         catch(const Exception& e)
         {
@@ -139,29 +148,29 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
           continue;
         }
 
-        if(buffer.end() != d.end()) m_Logger->error("DIF BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(d.end()));
-        assert(buffer.end() == d.end());
+        if(buffer.end() != d->end()) m_Logger->error("DIF BUFFER END {} {}", fmt::ptr(buffer.end()), fmt::ptr(d->end()));
+        assert(buffer.end() == d->end());
 
-        c.DIFPtrValueAtReturnedPos[d.begin()[d.getEndOfDIFData() - 3]]++;
-        assert(d.begin()[d.getEndOfDIFData() - 3] == 0xa0);
+        c.DIFPtrValueAtReturnedPos[d->begin()[d->getEndOfDIFData() - 3]]++;
+        assert(d->begin()[d->getEndOfDIFData() - 3] == 0xa0);
 
-        c.SizeAfterDIFPtr[d.getSizeAfterDIFPtr()]++;
-        m_Destination.processDIF(d);
-        for(std::size_t i = 0; i < d.getNumberOfFrames(); ++i)
+        c.SizeAfterDIFPtr[d->getSizeAfterDIFPtr()]++;
+        m_Destination.processDIF(*d);
+        for(std::size_t i = 0; i < d->getNumberOfFrames(); ++i)
         {
           /*******************/
           /*** START FRAME ***/
           m_Source.startFrame();
           m_Destination.startFrame();
           /*******************/
-          m_Destination.processFrame(d, i);
+          m_Destination.processFrame(*d, i);
           for(std::size_t j = 0; j < static_cast<std::size_t>(Hardware::NUMBER_PAD); ++j)
           {
-            if(d.getThresholdStatus(i, j) != 0)
+            if(d->getThresholdStatus(i, j) != 0)
             {
               m_Source.startPad();
               m_Destination.startPad();
-              m_Destination.processPadInFrame(d, i, j);
+              m_Destination.processPadInFrame(*d, i, j);
               m_Source.endPad();
               m_Destination.endPad();
             }
