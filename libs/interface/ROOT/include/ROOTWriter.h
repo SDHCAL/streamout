@@ -8,7 +8,7 @@
 #include "Buffer.h"
 #include "Event.h"
 #include "Interface.h"
-#include "PayloadParser.h"
+#include "Payload100.h"
 
 #include <TFile.h>
 #include <TTree.h>
@@ -23,9 +23,9 @@ public:
   void setFilename(const std::string&);
 
   void start();
-  void processDIF(const PayloadParser&);
-  void processFrame(const PayloadParser&, const std::uint32_t& frameIndex);
-  void processPadInFrame(const PayloadParser&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);
+  void processDIF(const Payload100&);
+  void processFrame(const Payload100&, const std::uint32_t& frameIndex);
+  void processPadInFrame(const Payload100&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);
   void processSlowControl(const Buffer&) { ; }
   void end();
 

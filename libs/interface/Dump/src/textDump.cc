@@ -4,7 +4,7 @@
 
 #include "textDump.h"
 
-#include "PayloadParser.h"
+#include "Payload100.h"
 
 textDump::textDump() : InterfaceWriter("textDump", "1.0.0")
 {
@@ -16,14 +16,14 @@ textDump::textDump() : InterfaceWriter("textDump", "1.0.0")
 
 void textDump::start() { print()->info("Will dump bunch of DIF data"); }
 
-void textDump::processDIF(const PayloadParser& d) { print()->info("DIF_ID : {}, DTC : {}, GTC : {}, DIF BCID {}, Absolute BCID : {}, Nbr frames {}", d.getDIFid(), d.getDTC(), d.getGTC(), d.getBCID(), d.getAbsoluteBCID(), d.getNumberOfFrames()); }
+void textDump::processDIF(const Payload100& d) { print()->info("DIF_ID : {}, DTC : {}, GTC : {}, DIF BCID {}, Absolute BCID : {}, Nbr frames {}", d.getDIFid(), d.getDTC(), d.getGTC(), d.getBCID(), d.getAbsoluteBCID(), d.getNumberOfFrames()); }
 
-void textDump::processFrame(const PayloadParser& d, uint32_t frameIndex)
+void textDump::processFrame(const Payload100& d, uint32_t frameIndex)
 {
   print()->info("\tDisplaying frame number {} : ASIC ID {}, Frame BCID {}, Frame Time To Trigger (a.k.a timestamp) is {}", frameIndex, d.getASICid(frameIndex), d.getFrameBCID(frameIndex), d.getFrameTimeToTrigger(frameIndex));
 }
 
-void textDump::processPadInFrame(const PayloadParser& d, uint32_t frameIndex, uint32_t channelIndex)
+void textDump::processPadInFrame(const Payload100& d, uint32_t frameIndex, uint32_t channelIndex)
 {
   if(d.getThresholdStatus(frameIndex, channelIndex) > 0) { print()->info("\t\tChannel {}, Threshold {}", channelIndex, d.getThresholdStatus(frameIndex, channelIndex)); }
 }

@@ -9,7 +9,7 @@
 #include "BufferLooperCounter.h"
 #include "DetectorId.h"
 #include "Formatters.h"
-#include "PayloadParser.h"
+#include "Payload100.h"
 #include "RawBufferNavigator.h"
 #include "Timer.h"
 #include "Words.h"
@@ -127,7 +127,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         m_Source.startDIF();
         m_Destination.startDIF();
         /******************/
-        PayloadParser d;
+        Payload100 d;
         // This is really a big error so skip DIF entirely if exception occurs
         try
         {
