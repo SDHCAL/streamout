@@ -37,7 +37,7 @@ bool RawBufferNavigator::findStartOfPayload()
     m_StartPayloadDone = true;
     for(std::size_t i = m_Start; i < m_Buffer.size(); i++)
     {
-      if(static_cast<std::uint8_t>(m_Buffer[i]) == static_cast<std::uint8_t>(Value::GLOBAL_HEADER) || static_cast<std::uint8_t>(m_Buffer[i]) == static_cast<std::uint8_t>(Value::GLOBAL_HEADER_TEMP))
+      if(static_cast<std::uint8_t>(m_Buffer[i]) == static_cast<std::uint8_t>(Valueksks::GLOBAL_HEADER) || static_cast<std::uint8_t>(m_Buffer[i]) == static_cast<std::uint8_t>(Valueksks::GLOBAL_HEADER_TEMP))
       {
         m_StartPayload = i;
         return true;

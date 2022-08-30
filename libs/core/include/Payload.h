@@ -4,6 +4,9 @@
 #pragma once
 
 #include "Buffer.h"
+#include "Exception.h"
+
+#include <fmt/format.h>
 
 class Payload : public Buffer
 {

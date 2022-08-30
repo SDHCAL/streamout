@@ -5,7 +5,6 @@
 #pragma once
 
 #include "AppVersion.h"
-#include "Buffer.h"
 #include "BufferLooperCounter.h"
 #include "DetectorId.h"
 #include "Formatters.h"
