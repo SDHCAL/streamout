@@ -21,7 +21,7 @@ public:
   virtual std::uint32_t getASICid(const std::uint32_t&) const final;
   virtual std::uint32_t getFrameBCID(const std::uint32_t&) const final;
   virtual std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const final;
-  virtual ~Payload150() {}
+  virtual ~Payload150();
 
 private:
   bool                 getFrameLevel(const std::uint32_t&, const std::uint32_t&, const std::uint32_t&) const;

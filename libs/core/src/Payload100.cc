@@ -190,6 +190,7 @@ inline std::uint32_t Payload100::getFrameBCID(const std::uint32_t& i) const
 
 inline std::uint32_t Payload100::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
 
+Payload100::~Payload100() {}
 /*
 inline bool Payload100::hasSlowControl() const { return theGetFramePtrReturn_ != size(); }
 

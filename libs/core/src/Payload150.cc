@@ -131,3 +131,5 @@ inline std::uint32_t Payload150::getFrameBCID(const std::uint32_t& i) const
 }
 
 inline std::uint32_t Payload150::getFrameTimeToTrigger(const std::uint32_t& i) const { return getBCID() - getFrameBCID(i); }
+
+Payload150::~Payload150() {}
