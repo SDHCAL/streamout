@@ -97,16 +97,24 @@ inline std::uint32_t Payload150::getDIFid() const
   return begin()[shift] & 0xFF;
 }
 
-inline std::uint32_t Payload150::getDTC() const
-{
-  std::uint32_t shift{};
-  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
-}
-
 inline std::uint32_t Payload150::getGTC() const
 {
   std::uint32_t shift{Size::GLOBAL_HEADER + Size::PMR_ID_SHIFT + Size::PMR_NBASIC_SHIFT + Size::PMR_FORMAT_SHIFT};
   return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
+}
+
+inline std::uint64_t Payload150::getAbsoluteBCID() const
+{
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::PMR_ID_SHIFT + Size::PMR_NBASIC_SHIFT + Size::PMR_FORMAT_SHIFT + Size::PMR_GTC_SHIFT};
+  std::uint64_t LBC = ((begin()[shift] << 8) | (begin()[shift + 1])) * 16777216ULL + ((begin()[shift + 2] << 24) | (begin()[shift + 3] << 16) | (begin()[shift + 4] << 8) | begin()[shift + 5]);
+  return LBC;
+}
+
+inline std::uint32_t Payload150::getDTC() const
+{
+  // MAYBE NOR USEFUL
+  std::uint32_t shift{};
+  return (begin()[shift] << 24) + (begin()[shift + 1] << 16) + (begin()[shift + 2] << 8) + begin()[shift + 3];
 }
 
 inline std::uint32_t Payload150::getBCID() const
@@ -115,12 +123,7 @@ inline std::uint32_t Payload150::getBCID() const
   return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
 }
 
-inline std::uint64_t Payload150::getAbsoluteBCID() const
-{
-  std::uint32_t shift{0};
-  std::uint64_t LBC = ((begin()[shift] << 8) | (begin()[shift + 1])) * 16777216ULL + ((begin()[shift + 2] << 24) | (begin()[shift + 3] << 16) | (begin()[shift + 4] << 8) | begin()[shift + 5]);
-  return LBC;
-}
+
 
 inline std::uint32_t Payload150::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
 

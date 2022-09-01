@@ -140,6 +140,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         try
         {
           d->setBuffer(bufferNavigator.getPayload());
+          m_Logger->info("Parsing payload DIF_ID {} (detector_id {})",d->getDIFid(), bufferNavigator.getDetectorID());
         }
         catch(const Exception& e)
         {

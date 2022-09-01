@@ -17,7 +17,7 @@ public:
   RawBufferNavigator();
   ~RawBufferNavigator() = default;
   void         setBuffer(const Buffer&);
-  std::uint8_t getDetectorID();
+  std::uint32_t getDetectorID();
   bool         findStartOfPayload();
   std::int32_t getStartOfPayload();
   bool         validPayload();

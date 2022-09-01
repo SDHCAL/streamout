@@ -22,7 +22,7 @@ void RawBufferNavigator::setBuffer(const Buffer& b)
   m_StartPayloadDone = false;
 }
 
-std::uint8_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
+std::uint32_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
 
 bool RawBufferNavigator::findStartOfPayload()
 {
