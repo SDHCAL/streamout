@@ -8,6 +8,17 @@
 
 /** class to navigate in the raw data buffer
  * parse the header and send the payload as Buffer
+ * \class RawBufferNavigator
+ * \brief the RawBufferNavigator navigate in the raw data buffer and parse the header and send the payload as Buffer.
+ * \details The buffer structure consists of :
+ * - the detector id (std::int32_t)
+ * - the datasource id (std::int32_t)
+ * - the event id (std::int32_t)
+ * - the bunch crossing id (std::int64_t)
+ * - the payload char array of (buffer size - 20)
+ * \author    Laurent Mirabito
+ * \version   1.0
+ * \date      May 2016
 */
 
 class RawBufferNavigator
