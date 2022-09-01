@@ -4,13 +4,12 @@
 
 #pragma once
 
-#include<memory>
-
 #include "Payload.h"
 #include "Payload100.h"
 #include "Payload150.h"
 
 #include <cstdint>
+#include <memory>
 
 class PayloadLoader
 {

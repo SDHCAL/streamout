@@ -13,7 +13,6 @@
 #include "Timer.h"
 #include "Words.h"
 
-#include <memory>
 #include <algorithm>
 #include <cassert>
 #include <fmt/color.h>
