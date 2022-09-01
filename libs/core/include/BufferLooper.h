@@ -13,6 +13,7 @@
 #include "Timer.h"
 #include "Words.h"
 
+#include <memory>
 #include <algorithm>
 #include <cassert>
 #include <fmt/color.h>
@@ -129,7 +130,7 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
 
         PayloadLoader payloadLoader;
 
-        Payload* d = payloadLoader.getPayload(bufferNavigator.getDetectorID());
+        std::unique_ptr<Payload>& d = payloadLoader.getPayload(bufferNavigator.getDetectorID());
         if(d == nullptr)
         {
           m_Logger->error("streamout don't know how to parse the payload for detector_id {} ! SKIPPING !", bufferNavigator.getDetectorID());

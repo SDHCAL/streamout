@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include<memory>
+
 #include "Payload.h"
 #include "Payload100.h"
 #include "Payload150.h"
@@ -14,16 +16,16 @@ class PayloadLoader
 {
 public:
   PayloadLoader() = default;
-  Payload* getPayload(const std::int32_t& detector_id)
+  std::unique_ptr<Payload>& getPayload(const std::int32_t& detector_id)
   {
     switch(detector_id)
     {
-      case 100: payload = new Payload100(); break;
-      case 150: payload = new Payload150(); break;
+      case 100: payload = std::make_unique<Payload100>(); break;
+      case 150: payload = std::make_unique<Payload150>(); break;
     }
     return payload;
   }
 
 private:
-  Payload* payload{nullptr};
+  std::unique_ptr<Payload> payload{nullptr};
 };
