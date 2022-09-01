@@ -123,8 +123,6 @@ inline std::uint32_t Payload150::getBCID() const
   return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
 }
 
-
-
 inline std::uint32_t Payload150::getASICid(const std::uint32_t& i) const { return m_Frames[i][0] & 0xFF; }
 
 inline std::uint32_t Payload150::getFrameBCID(const std::uint32_t& i) const

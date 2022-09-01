@@ -16,7 +16,7 @@
  * - the event id (std::int32_t)
  * - the bunch crossing id (std::int64_t)
  * - the payload char array of (buffer size - 20)
- * \author    Laurent Mirabito
+ * Based on \author Laurent Mirabito
  * \version   1.0
  * \date      May 2016
 */
@@ -27,12 +27,12 @@ public:
   static void StartAt(const int& start);
   RawBufferNavigator();
   ~RawBufferNavigator() = default;
-  void         setBuffer(const Buffer&);
+  void          setBuffer(const Buffer&);
   std::uint32_t getDetectorID();
-  bool         findStartOfPayload();
-  std::int32_t getStartOfPayload();
-  bool         validPayload();
-  Buffer       getPayload();
+  bool          findStartOfPayload();
+  std::int32_t  getStartOfPayload();
+  bool          validPayload();
+  Buffer        getPayload();
 
 private:
   static int   m_Start;
