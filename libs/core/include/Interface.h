@@ -54,8 +54,11 @@ public:
   Version                          getVersion() { return m_Version; }
   std::uint32_t                    getEventNumber(){return m_EventNumber;}
   void                             setEventNumber(const std::uint32_t& nbr){m_EventNumber=nbr;}
+  std::uint32_t                    getRunNumber(){return m_RunNumber;}
+  void                             setRunNumber(const std::uint32_t& nbr){m_RunNumber=nbr;}
 protected:
   std::uint32_t       m_EventNumber{0};
+  std::uint32_t       m_RunNumber{0};
 private:
   std::shared_ptr<spdlog::logger> m_Logger{nullptr};
   std::string                     m_Name;

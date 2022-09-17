@@ -13,6 +13,7 @@
 #include "IMPL/LCRunHeaderImpl.h"
 #include "IOIMPL/LCFactory.h"
 #include "LCIOSTLTypes.h"
+#include "Filesystem.h"
 
 void LCIOWriter::setFilename(const std::string& filename) { m_Filename = filename; }
 
@@ -22,7 +23,11 @@ void LCIOWriter::start()
 {
   m_LCWriter->open(m_Filename, EVENT::LCIO::WRITE_NEW);
   std::unique_ptr<IMPL::LCRunHeaderImpl> runHdr(new IMPL::LCRunHeaderImpl);
-  runHdr->setRunNumber(50);  // FIXME : provide run number
+  std::string filename_ = filename(m_Filename);
+  std::size_t beginn = filename_.find_last_of('_');
+  filename_=filename_.substr(beginn+1);
+  setRunNumber(stoi(filename_));
+  runHdr->setRunNumber(getRunNumber());
   runHdr->setDetectorName(m_DetectorName);
   std::string description("data collected with SDHCAL prototype");
   runHdr->setDescription(description);
@@ -50,7 +55,8 @@ void LCIOWriter::processFrame(const Payload& d, const std::uint32_t& frameIndex)
 
 void LCIOWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
-  m_LCEvent->setTimeStamp(d.getAbsoluteBCID()*10e9);
+  m_LCEvent->setTimeStamp(d.getAbsoluteBCID()*200);
+  m_LCEvent->setRunNumber(getRunNumber());
   IMPL::RawCalorimeterHitImpl* hit = new IMPL::RawCalorimeterHitImpl;
   int                          ID0 = channelIndex;
   ID0                              = ID0 << 8;
