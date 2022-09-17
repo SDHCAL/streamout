@@ -12,15 +12,15 @@ project(streamout VERSION "0.1.0" DESCRIPTION "Standalone SDHCAL raw data proces
 set(SEMVER_PRERELEASE "beta")
 set(SEMVER_PRERELEASE_NUMBER "1")
 
-#set(CMAKE_MACOSX_RPATH TRUE)
+include(DefaultInstallPrefix)
+default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
+
+set(CMAKE_MACOSX_RPATH TRUE)
 #set(CMAKE_SKIP_BUILD_RPATH FALSE)
 #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #link_directories("${CMAKE_INSTALL_PREFIX}/lib")
-
-include(DefaultInstallPrefix)
-default_install_prefix("${CMAKE_SOURCE_DIR}/binaries")
 
 include(Standards)
 cxx_17()
