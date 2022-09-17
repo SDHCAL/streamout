@@ -36,7 +36,6 @@ private:
   static std::size_t  m_BufferSize;
   std::size_t         m_FileSize{0};
   std::uint32_t       m_NumberOfDIF{0};
-  std::uint32_t       m_EventNumber{0};
   std::vector<bit8_t> m_buf;
   std::string         m_Filename;
 };

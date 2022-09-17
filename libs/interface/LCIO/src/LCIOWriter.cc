@@ -65,7 +65,7 @@ void LCIOWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameI
 void LCIOWriter::startEvent()
 {
   m_LCEvent = std::make_unique<IMPL::LCEventImpl>();
-  m_LCEvent->setEventNumber(0);
+  m_LCEvent->setEventNumber(getEventNumber());
   m_LCEvent->setDetectorName(m_DetectorName);
   m_LCEvent->setTimeStamp(0);
   m_LCEvent->setWeight(1);

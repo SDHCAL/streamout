@@ -52,7 +52,10 @@ public:
   void                             setLogger(const std::shared_ptr<spdlog::logger>& logger) { m_Logger = logger; }
   std::string                      getName() { return m_Name; }
   Version                          getVersion() { return m_Version; }
-
+  std::uint32_t                    getEventNumber(){return m_EventNumber;}
+  void                             setEventNumber(const std::uint32_t& nbr){m_EventNumber=nbr;}
+protected:
+  std::uint32_t       m_EventNumber{0};
 private:
   std::shared_ptr<spdlog::logger> m_Logger{nullptr};
   std::string                     m_Name;
@@ -92,7 +95,6 @@ public:
     else
       return false;
   }
-
   virtual ~InterfaceWriter() = default;
 
 private:

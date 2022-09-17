@@ -94,11 +94,13 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
     m_Destination.start();
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
+      m_Destination.setEventNumber(m_Source.getEventNumber());
       /*******************/
       /*** START EVENT ***/
       m_Source.startEvent();
       m_Destination.startEvent();
       /*******************/
+
 
       m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
