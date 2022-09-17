@@ -24,7 +24,8 @@ void LCIOWriter::start()
   m_LCWriter->open(m_Filename, EVENT::LCIO::WRITE_NEW);
   std::unique_ptr<IMPL::LCRunHeaderImpl> runHdr(new IMPL::LCRunHeaderImpl);
   std::string filename_ = filename(m_Filename);
-  std::size_t beginn = filename_.find_last_of('_');
+  std::size_t beginn = filename_.find_last_of("_R");
+  if(beginn==std::string::npos) beginn = filename_.find_last_of('_');
   filename_=filename_.substr(beginn+1);
   setRunNumber(stoi(filename_));
   runHdr->setRunNumber(getRunNumber());
