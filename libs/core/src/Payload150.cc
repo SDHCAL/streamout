@@ -119,7 +119,7 @@ inline std::uint32_t Payload150::getDTC() const
 
 inline std::uint32_t Payload150::getBCID() const
 {
-  std::uint32_t shift{Size::GLOBAL_HEADER + Size::PMR_ID_SHIFT + Size::PMR_NBASIC_SHIFT + Size::PMR_FORMAT_SHIFT + Size::PMR_GTC_SHIFT+Size::PMR_ABCID_SHIFT};
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::PMR_ID_SHIFT + Size::PMR_NBASIC_SHIFT + Size::PMR_FORMAT_SHIFT + Size::PMR_GTC_SHIFT + Size::PMR_ABCID_SHIFT};
   return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
 }
 
