@@ -250,6 +250,8 @@ std::map<int, std::pair<int, int>> geometry{
   {48, {37, 2}},
   //
   // Bifs
+  {99, {-1, 0}},
+  {128, {-2, 0}},
 };
 
 int main(int argc, char** argv)

@@ -141,7 +141,7 @@ inline std::uint32_t Payload100::parseAnalogLine(const std::uint32_t& idx)
 
 inline std::uint32_t Payload100::getNumberOfFrames() const { return m_Frames.size(); }
 
-inline std::uint32_t Payload100::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1)) << 1) | ((std::uint32_t)getFrameLevel(i, ipad, 0)); }
+inline std::uint32_t Payload100::getThresholdStatus(const std::uint32_t& i, const std::uint32_t& ipad) const { return (((std::uint32_t)getFrameLevel(i, ipad, 1))) | ((std::uint32_t)getFrameLevel(i, ipad, 0) << 1); }
 
 inline bool Payload100::getFrameLevel(const std::uint32_t& i, const std::uint32_t& ipad, const std::uint32_t& ilevel) const
 {
