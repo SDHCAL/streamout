@@ -5,6 +5,16 @@
 
 #include "Event.h"
 
+std::uint32_t Event::getEventNumber()
+{
+  return m_EventNumber;
+}
+
+void Event::setEventNumber(const std::uint32_t& evtNbr)
+{
+  m_EventNumber=evtNbr;
+}
+
 void Event::clear() { DIFs.clear(); }
 
 void Event::addDIF(const DIF& dif) { DIFs[dif.getID()] = dif; }

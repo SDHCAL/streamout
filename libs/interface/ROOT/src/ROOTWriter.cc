@@ -57,6 +57,7 @@ void ROOTWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameI
 void ROOTWriter::startEvent()
 {
   m_Event = new Event();
+  m_Event->setEventNumber(getEventNumber());
   // m_Event->clear();
 }
 

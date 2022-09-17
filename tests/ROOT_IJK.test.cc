@@ -53,6 +53,7 @@ public:
 class Flatter
 {
 public:
+  Int_t event;
   Int_t dif;
   Int_t asic;
   Int_t channel;
@@ -273,7 +274,7 @@ int main(int argc, char** argv)
   TFile*  m_File = TFile::Open((filename(file) + "IJK.root").c_str(), "RECREATE", (filename(file) + "IJK.root").c_str(), ROOT::CompressionSettings(ROOT::kZLIB, 5));
   TTree*  m_Tree = new TTree("IJK", "Raw SDHCAL data tree with IJK");
   Flatter flatter;
-  m_Tree->Branch("Events", &flatter, "dif/I:asic/I:channel/I:I/I:J/I:K/I:threshold/I:timestamp/I");
+  m_Tree->Branch("Events", &flatter, "event/I:dif/I:asic/I:channel/I:I/I:J/I:K/I:threshold/I:timestamp/I");
   TTree* Run = static_cast<TTree*>(f.Get("RawData"));
   if(Run == nullptr || Run->IsZombie())
   {
@@ -299,6 +300,7 @@ int main(int argc, char** argv)
       {
         if(geometry.find(hit->getDIFid()) != geometry.end())
         {
+          flatter.event     = event->getEventNumber();
           flatter.dif       = hit->getDIFid();
           flatter.asic      = hit->getASICid();
           flatter.channel   = hit->getChannel();
@@ -318,6 +320,5 @@ int main(int argc, char** argv)
   }
   m_File->Write();
   m_File->Close();
-  delete m_Tree;
   delete m_File;
 }
