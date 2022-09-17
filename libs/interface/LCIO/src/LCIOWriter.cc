@@ -50,6 +50,7 @@ void LCIOWriter::processFrame(const Payload& d, const std::uint32_t& frameIndex)
 
 void LCIOWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
+  m_LCEvent->setTimeStamp(d.getAbsoluteBCID()*10e9);
   IMPL::RawCalorimeterHitImpl* hit = new IMPL::RawCalorimeterHitImpl;
   int                          ID0 = channelIndex;
   ID0                              = ID0 << 8;
@@ -67,7 +68,6 @@ void LCIOWriter::startEvent()
   m_LCEvent = std::make_unique<IMPL::LCEventImpl>();
   m_LCEvent->setEventNumber(getEventNumber());
   m_LCEvent->setDetectorName(m_DetectorName);
-  m_LCEvent->setTimeStamp(0);
   m_LCEvent->setWeight(1);
   m_CollectionVec = new IMPL::LCCollectionVec(EVENT::LCIO::RAWCALORIMETERHIT);
   IMPL::LCFlagImpl flag(0);
