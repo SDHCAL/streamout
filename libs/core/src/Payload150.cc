@@ -20,10 +20,10 @@ enum class Size : std::uint8_t
   PMR_ID_SHIFT           = 1,
   PMR_NBASIC_SHIFT       = 1,
   PMR_FORMAT_SHIFT       = 1,
-  PMR_GTC_SHIFT          = 4,
+  PMR_GTC_SHIFT          = 3,
   PMR_ABCID_SHIFT        = 6,
   PMR_BCID_SHIFT         = 3,
-  PMR_LTRG_SHIFT         = 3,
+  PMR_LTRG_SHIFT         = 4,
   //
   HEADER_LINE            = 1,
   NUMBER_CHIPS           = 1,
@@ -119,7 +119,7 @@ inline std::uint32_t Payload150::getDTC() const
 
 inline std::uint32_t Payload150::getBCID() const
 {
-  std::uint32_t shift{0};
+  std::uint32_t shift{Size::GLOBAL_HEADER + Size::PMR_ID_SHIFT + Size::PMR_NBASIC_SHIFT + Size::PMR_FORMAT_SHIFT + Size::PMR_GTC_SHIFT+Size::PMR_ABCID_SHIFT};
   return (begin()[shift] << 16) + (begin()[shift + 1] << 8) + begin()[shift + 2];
 }
 
