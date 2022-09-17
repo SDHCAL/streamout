@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   app.add_option("-f,--filename", file, "Path of the file")->required();
   std::uint32_t eventNbr{std::numeric_limits<std::uint32_t>::max()};
   app.add_option("-e,--events", eventNbr, "Event number to process")->expected(1)->check(CLI::PositiveNumber);
-  std::uint32_t bitsToSkip{92};
+  std::uint32_t bitsToSkip{20};
   app.add_option("-s,--skip", bitsToSkip, "Number of bits to skip from the DIF buffer")->expected(1);
   spdlog::level::level_enum verbosity{spdlog::level::trace};
   app.add_option("-v,--verbosity", verbosity, "Verbosity level.")
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 
   spdlog::set_level(verbosity);
 
-  RawBufferNavigator::StartAt(bitsToSkip);
+  RawBufferNavigator::startAt(bitsToSkip);
   RawdataReader source(file.c_str());
   ROOTWriter    destination;
   destination.setFilename((output_path + "/" + filename(file) + ".root").c_str());

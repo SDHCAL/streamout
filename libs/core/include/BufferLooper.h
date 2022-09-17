@@ -117,11 +117,6 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
         std::int32_t idstart = bufferNavigator.getStartOfPayload();
         if(m_Debug && idstart == -1) m_Logger->info(to_hex(buffer));
         c.DIFStarter[idstart]++;
-        if(!bufferNavigator.validPayload())
-        {
-          m_Logger->error("!bufferNavigator.validBuffer()");
-          continue;
-        }
 
         /******************/
         /*** START DIF ***/

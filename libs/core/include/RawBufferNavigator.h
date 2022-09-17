@@ -24,7 +24,7 @@
 class RawBufferNavigator
 {
 public:
-  static void StartAt(const int& start);
+  static void startAt(const int& start);
   RawBufferNavigator();
   ~RawBufferNavigator() = default;
   void          setBuffer(const Buffer&);
@@ -35,8 +35,6 @@ public:
   Buffer        getPayload();
 
 private:
-  static int   m_Start;
-  Buffer       m_Buffer;
-  bool         m_StartPayloadDone{false};
-  std::int32_t m_StartPayload{-1};  // -1 Means not found !
+  Buffer              m_Buffer;
+  static std::int32_t m_StartPayload;
 };
