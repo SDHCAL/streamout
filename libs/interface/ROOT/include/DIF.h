@@ -22,6 +22,8 @@ public:
   std::uint8_t                     getID() const;
   void                             setDTC(const std::uint32_t&);
   std::uint32_t                    getDTC() const;
+  void                             setDetectorID(const std::uint32_t&);
+  std::uint8_t                     getDetectorID() const;
   void                             setGTC(const std::uint32_t&);
   std::uint32_t                    getGTC() const;
   void                             setDIFBCID(const std::uint32_t&);
@@ -32,6 +34,7 @@ public:
   std::vector<Hit>::const_iterator cend() const;
 
 private:
+  std::uint8_t     m_DetectorID{0};
   std::uint8_t     m_ID{0};
   std::uint32_t    m_DTC{0};
   std::uint32_t    m_GTC{0};

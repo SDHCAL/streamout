@@ -11,7 +11,7 @@
 class Payload : public Buffer
 {
 public:
-  explicit Payload(const std::int32_t& detector_id) {}
+  explicit Payload(const std::int32_t& detector_id) : m_DetectorID(detector_id) {}
   void                  setBuffer(const Buffer& buffer);
   std::uint32_t         getEndOfDIFData() const;
   std::uint32_t         getSizeAfterDIFPtr() const;
@@ -25,6 +25,8 @@ public:
   virtual std::uint32_t getASICid(const std::uint32_t&) const                                = 0;
   virtual std::uint32_t getFrameBCID(const std::uint32_t&) const                             = 0;
   virtual std::uint32_t getFrameTimeToTrigger(const std::uint32_t&) const                    = 0;
+
+  std::uint32_t getDetectorID() const { return m_DetectorID; }
 
   virtual ~Payload() {}
 

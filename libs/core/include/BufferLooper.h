@@ -101,7 +101,6 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
       m_Destination.startEvent();
       /*******************/
 
-
       m_Logger->warn("===*** Event {} ***===", m_NbrEvents);
       while(m_Source.nextDIFbuffer())
       {

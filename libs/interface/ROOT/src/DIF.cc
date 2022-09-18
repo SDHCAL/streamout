@@ -34,3 +34,7 @@ std::vector<Hit>::const_iterator DIF::cbegin() const { return m_Hits.cbegin(); }
 std::vector<Hit>::const_iterator DIF::cend() const { return m_Hits.cend(); }
 
 void DIF::clear() { m_Hits.clear(); }
+
+void DIF::setDetectorID(const std::uint32_t& detector_id) { m_DetectorID = detector_id; }
+
+std::uint8_t DIF::getDetectorID() const { return m_DetectorID; }

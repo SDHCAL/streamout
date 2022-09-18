@@ -8,12 +8,12 @@
 
 #include "LCIOWriter.h"
 
+#include "Filesystem.h"
 #include "IMPL/LCFlagImpl.h"
 #include "IMPL/LCParametersImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
 #include "IOIMPL/LCFactory.h"
 #include "LCIOSTLTypes.h"
-#include "Filesystem.h"
 
 void LCIOWriter::setFilename(const std::string& filename) { m_Filename = filename; }
 
@@ -23,10 +23,10 @@ void LCIOWriter::start()
 {
   m_LCWriter->open(m_Filename, EVENT::LCIO::WRITE_NEW);
   std::unique_ptr<IMPL::LCRunHeaderImpl> runHdr(new IMPL::LCRunHeaderImpl);
-  std::string filename_ = filename(m_Filename);
-  std::size_t beginn = filename_.find_last_of("_R");
-  if(beginn==std::string::npos) beginn = filename_.find_last_of('_');
-  filename_=filename_.substr(beginn+1);
+  std::string                            filename_ = filename(m_Filename);
+  std::size_t                            begin_    = filename_.find_last_of("_R");
+  if(begin_ == std::string::npos) begin_ = filename_.find_last_of('_');
+  filename_ = filename_.substr(begin_ + 1);
   setRunNumber(stoi(filename_));
   runHdr->setRunNumber(getRunNumber());
   runHdr->setDetectorName(m_DetectorName);
@@ -50,13 +50,15 @@ void LCIOWriter::processDIF(const Payload& d)
   parameters.push_back(0);
   parameters.push_back(0);
   m_CollectionVec->parameters().setValues("DIF" + std::to_string(d.getDIFid()) + "_Triggers", parameters);
+  parameter_name = "DIF_DetectorID_" + std::to_string(d.getDIFid());
+  m_CollectionVec->parameters().setValue(parameter_name, static_cast<int>(d.getDetectorID()));
 }
 
 void LCIOWriter::processFrame(const Payload& d, const std::uint32_t& frameIndex) {}
 
 void LCIOWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex)
 {
-  m_LCEvent->setTimeStamp(d.getAbsoluteBCID()*200);
+  m_LCEvent->setTimeStamp(d.getAbsoluteBCID() * 200);
   m_LCEvent->setRunNumber(getRunNumber());
   IMPL::RawCalorimeterHitImpl* hit = new IMPL::RawCalorimeterHitImpl;
   int                          ID0 = channelIndex;

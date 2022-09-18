@@ -23,7 +23,7 @@ public:
   std::map<std::uint8_t, DIF>::const_iterator cend() const;
 
 private:
-  std::uint32_t m_EventNumber{0};
+  std::uint32_t               m_EventNumber{0};
   std::map<std::uint8_t, DIF> DIFs;
   ClassDef(Event, 1);
 };

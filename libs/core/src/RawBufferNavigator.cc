@@ -13,16 +13,10 @@ void RawBufferNavigator::startAt(const int& start)
 
 RawBufferNavigator::RawBufferNavigator() {}
 
-void RawBufferNavigator::setBuffer(const Buffer& b)
-{
-  m_Buffer           = b;
-}
+void RawBufferNavigator::setBuffer(const Buffer& b) { m_Buffer = b; }
 
 std::uint32_t RawBufferNavigator::getDetectorID() { return m_Buffer[0]; }
 
-std::int32_t RawBufferNavigator::getStartOfPayload()
-{
-  return m_StartPayload;
-}
+std::int32_t RawBufferNavigator::getStartOfPayload() { return m_StartPayload; }
 
 Buffer RawBufferNavigator::getPayload() { return Buffer(&(m_Buffer.begin()[m_StartPayload]), m_Buffer.size() - m_StartPayload); }

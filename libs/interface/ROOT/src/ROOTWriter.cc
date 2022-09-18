@@ -29,6 +29,7 @@ void ROOTWriter::end()
 
 void ROOTWriter::processDIF(const Payload& d)
 {
+  m_DIF->setDetectorID(d.getDetectorID());
   m_DIF->setID(d.getDIFid());
   m_DIF->setDTC(d.getDTC());
   m_DIF->setGTC(d.getGTC());
