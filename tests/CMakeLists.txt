@@ -43,7 +43,7 @@ target_link_libraries(DumpReaderDumpWriter PRIVATE Streamout::Interface::Dump CL
 install(TARGETS DumpReaderDumpWriter RUNTIME DESTINATION bin/tests LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 add_test(NAME DumpReaderDumpWriter COMMAND DumpReaderDumpWriter)
 
-if(BUILD_LCIO_INTERFACE AND NOT MSVC)
+if(BUILD_LCIO_INTERFACE AND NOT MSVC AND BUILD_RAWDATA_INTERFACE)
   add_executable(RawdataLCIO.test RawdataLCIO.test.cc)
   target_link_libraries(RawdataLCIO.test PRIVATE LCIO::LCIO CLI11 Streamout::Interface::LCIOWriter Streamout::Interface::RawdataReader)
   install(TARGETS RawdataLCIO.test RUNTIME DESTINATION bin/tests LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
