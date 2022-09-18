@@ -67,6 +67,7 @@ void LCIOWriter::processPadInFrame(const Payload& d, const std::uint32_t& frameI
   ID0 = ID0 << 8;
   ID0 += d.getDIFid();
   hit->setCellID0(ID0);
+  hit->setCellID1(d.getFrameBCID(frameIndex));
   hit->setAmplitude(d.getThresholdStatus(frameIndex, channelIndex));
   hit->setTimeStamp(d.getFrameTimeToTrigger(frameIndex));
   m_CollectionVec->addElement(hit);
@@ -80,7 +81,7 @@ void LCIOWriter::startEvent()
   m_LCEvent->setWeight(1);
   m_CollectionVec = new IMPL::LCCollectionVec(EVENT::LCIO::RAWCALORIMETERHIT);
   IMPL::LCFlagImpl flag(0);
-  // flag.setBit(EVENT::LCIO::RCHBIT_ID1);
+  flag.setBit(EVENT::LCIO::RCHBIT_ID1);
   flag.setBit(EVENT::LCIO::RCHBIT_TIME);
   m_CollectionVec->setFlag(flag.getFlag());
   m_CollectionVec->parameters().setValue(EVENT::LCIO::CellIDEncoding, "dif:8,asic:8,channel:6");
