@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   CLI::App app{"ROOTfile checker"};
   app.set_version_flag("--version", streamout_version.to_string());
   std::string file{""};
-  app.add_option("-f,--filename", file, "Path of the file")->required();
+  app.add_option("-f,--filename", file, "Path of the file")->check(CLI::ExistingFile)->required();
   try
   {
     app.parse(argc, argv);
