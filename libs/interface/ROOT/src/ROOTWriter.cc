@@ -9,7 +9,7 @@ void ROOTWriter::setFilename(const std::string& filename) { m_Filename = filenam
 
 ROOTWriter::ROOTWriter() : InterfaceWriter("ROOTWriter", "1.0.0") { addCompatibility("RawdataReader", ">=1.0.0"); }
 
-void ROOTWriter::start()
+void ROOTWriter::start(const VersionInfos& ver)
 {
   m_File = TFile::Open(m_Filename.c_str(), "RECREATE", m_Filename.c_str(), ROOT::CompressionSettings(ROOT::kZLIB, 5));
   m_Tree = new TTree("RawData", "Raw SDHCAL data tree");

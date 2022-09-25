@@ -23,7 +23,7 @@ public:
 
   void setFilename(const std::string&);
 
-  void start();
+  void start(const VersionInfos& ver) final;
   void processDIF(const Payload&);
   void processFrame(const Payload&, const std::uint32_t& frameIndex);
   void processPadInFrame(const Payload&, const std::uint32_t& frameIndex, const std::uint32_t& channelIndex);

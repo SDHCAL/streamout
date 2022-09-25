@@ -18,7 +18,7 @@ class RawdataReader : public InterfaceReader
 {
 public:
   explicit RawdataReader(const char* fileName);
-  void          start();
+  void          start(const VersionInfos& ver) final;
   void          end();
   float         getFileSize();
   void          openFile(const std::string& fileName);

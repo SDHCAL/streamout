@@ -15,7 +15,7 @@ class textDump : public InterfaceWriter
 {
 public:
   textDump();
-  void                             start();
+  void                             start(const VersionInfos& ver) final;
   void                             processDIF(const Payload&);
   void                             processFrame(const Payload&, uint32_t frameIndex);
   void                             processPadInFrame(const Payload&, uint32_t frameIndex, uint32_t channelIndex);

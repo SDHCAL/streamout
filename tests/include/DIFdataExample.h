@@ -11,7 +11,7 @@ class DIFdataExample : public InterfaceReader
 {
 public:
   DIFdataExample();
-  void   start() {}
+  void   start(const VersionInfos& ver) final {}
   void   end() {}
   bool   nextEvent();
   bool   nextDIFbuffer();

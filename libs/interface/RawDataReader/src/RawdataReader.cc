@@ -20,7 +20,7 @@ RawdataReader::RawdataReader(const char* fileName) : InterfaceReader("RawdataRea
   m_Filename = fileName;
 }
 
-void RawdataReader::start() { openFile(m_Filename); }
+void RawdataReader::start(const VersionInfos& ver) { openFile(m_Filename); }
 
 void RawdataReader::end() { closeFile(); }
 

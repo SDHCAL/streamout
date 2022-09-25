@@ -12,6 +12,7 @@
 #include "RawBufferNavigator.h"
 #include "Timer.h"
 #include "Words.h"
+#include "VersionInfos.h"
 
 #include <algorithm>
 #include <cassert>
@@ -73,6 +74,12 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
     log()->info("Using InterfaceReader {} version {}", m_Source.getName(), m_Source.getVersion().to_string());
     log()->info("Using InterfaceWriter {} version {}", m_Destination.getName(), m_Destination.getVersion().to_string());
 
+    VersionInfos version;
+    version.setLibraryInfos("streamout",streamout_version);
+    version.setReaderInfos(m_Source.getName(),m_Source.getVersion());
+    version.setWriterInfos(m_Destination.getName(),m_Destination.getVersion());
+
+
     if(!m_Destination.checkCompatibility(m_Source.getName(), m_Source.getVersion().to_string()))
     {
       log()->critical("{} version {} is not compatible with {} version {} ! ", m_Source.getName(), m_Source.getVersion().to_string(), m_Destination.getName(), m_Destination.getVersion().to_string());
@@ -90,8 +97,8 @@ fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "v{}", streamout_version.
     RawBufferNavigator bufferNavigator;
     Timer              timer;
     timer.start();
-    m_Source.start();
-    m_Destination.start();
+    m_Source.start(version);
+    m_Destination.start(version);
     while(m_Source.nextEvent() && m_NbrEventsToProcess >= m_NbrEvents)
     {
       m_Destination.setEventNumber(m_Source.getEventNumber());

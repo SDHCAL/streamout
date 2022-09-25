@@ -12,7 +12,7 @@ textDump::textDump() : InterfaceWriter("textDump", "1.0.0")
   addCompatibility("DIFdataExample", ">=1.0.0");
 }
 
-void textDump::start() { print()->info("Will dump bunch of DIF data"); }
+void textDump::start(const VersionInfos& ver) { print()->info("Will dump bunch of DIF data"); }
 
 void textDump::processDIF(const Payload& d) { print()->info("DIF_ID : {}, DTC : {}, GTC : {}, DIF BCID {}, Absolute BCID : {}, Nbr frames {}", d.getDIFid(), d.getDTC(), d.getGTC(), d.getBCID(), d.getAbsoluteBCID(), d.getNumberOfFrames()); }
 

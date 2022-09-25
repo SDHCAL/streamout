@@ -19,7 +19,7 @@ void LCIOWriter::setFilename(const std::string& filename) { m_Filename = filenam
 
 LCIOWriter::LCIOWriter() : InterfaceWriter("LCIOWriter", "1.0.0"), m_LCWriter(IOIMPL::LCFactory::getInstance()->createLCWriter()) { addCompatibility("RawdataReader", ">=1.0.0"); }
 
-void LCIOWriter::start()
+void LCIOWriter::start(const VersionInfos& ver)
 {
   m_LCWriter->open(m_Filename, EVENT::LCIO::WRITE_NEW);
   std::unique_ptr<IMPL::LCRunHeaderImpl> runHdr(new IMPL::LCRunHeaderImpl);
@@ -32,6 +32,12 @@ void LCIOWriter::start()
   runHdr->setDetectorName(m_DetectorName);
   std::string description("data collected with SDHCAL prototype");
   runHdr->setDescription(description);
+  runHdr->parameters().setValue("Library_Name", ver.getLibraryInfos().first);
+  runHdr->parameters().setValue("Library_Version", ver.getLibraryInfos().second.to_string());
+  runHdr->parameters().setValue("Reader_Name", ver.getReaderInfos().first);
+  runHdr->parameters().setValue("Reader_Version", ver.getReaderInfos().second.to_string());
+  runHdr->parameters().setValue("Writer_Name", ver.getWriterInfos().first);
+  runHdr->parameters().setValue("Writer_Version", ver.getWriterInfos().second.to_string());
   m_LCWriter->writeRunHeader(runHdr.get());
 }
 
