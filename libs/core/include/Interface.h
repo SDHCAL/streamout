@@ -41,8 +41,8 @@ class Interface
 public:
   Interface(const std::string& name, const std::string& version, const InterfaceType& type) : m_Name(name), m_Version(version) {}
   virtual ~Interface() = default;
-  virtual void                     start(const VersionInfos& ver){};
-  virtual void                     end(){};
+  virtual void                     start(const VersionInfos& ver) {}
+  virtual void                     end() {}
   virtual void                     startEvent() {}
   virtual void                     endEvent() {}
   virtual void                     startDIF() {}
@@ -96,10 +96,7 @@ public:
     {
       auto            ran = semver::range::detail::range(m_Compatible[name]);
       semver::version ver = semver::version(version);
-      if(ran.satisfies(ver, false))
-      {
-        return true;
-      }
+      if(ran.satisfies(ver, false)) { return true; }
       else
         return false;
     }
@@ -107,6 +104,7 @@ public:
       return false;
   }
   virtual ~InterfaceWriter() = default;
+
 private:
   std::map<std::string, std::string> m_Compatible;
 };
