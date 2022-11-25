@@ -30,15 +30,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         persist-credentials: false
-
-    - name: 🟨 Install packages
-      run: sudo apt-get install dia mscgen inkscape libboost-locale-dev
-
-    - name: 🐍 Install Conda environment
-      uses: mamba-org/provision-with-micromamba@v14
-      with:
-        environment-file: .github/workflows/micromamba/docs.yml
-
     - name: 🟨 Install miktex
       run: |
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D6BC243565B2087BC3F897C9277A7293F59E4889
@@ -47,6 +38,14 @@ jobs:
         sudo apt-get install miktex
         sudo miktexsetup --shared=yes finish
         sudo initexmf --admin --set-config-value [MPM]AutoInstall=1
+    - name: 🟨 Install packages
+      run: sudo apt-get install dia mscgen inkscape libboost-locale-dev
+
+    - name: 🐍 Install Conda environment
+      uses: mamba-org/provision-with-micromamba@v14
+      with:
+        environment-file: .github/workflows/micromamba/docs.yml
+
     - name: 🟨 Setup CMake
       uses: jwlawson/actions-setup-cmake@v1.13
       with:
