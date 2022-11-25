@@ -32,7 +32,7 @@ jobs:
         persist-credentials: false
 
     - name: 🟨 Install packages
-      run: sudo apt-get install dia mscgen inkscape texlive-base
+      run: sudo apt-get install dia mscgen inkscape texlive-latex-recommended
 
     - name: 🐍 Install Conda environment
       uses: mamba-org/provision-with-micromamba@v14
