@@ -63,7 +63,7 @@ repos:
     args: [--mapping, '2', --sequence, '2', --offset, '0', --width, '250']
 
 - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-  rev: 2.6.1
+  rev: 2.6.2
   hooks:
   - id: editorconfig-checker
     name: check .editorconfig rules
