@@ -115,7 +115,8 @@ uint32_t PMRUnpacker::getFramePtr(std::vector<unsigned char*>& vFrame, std::vect
   uint32_t fshift = idx + PMR_HEADER_SHIFT;
 
   uint32_t lasth = 0, nf = 0;
-  do {
+  do
+  {
     // printf("fshift %d and %d \n",fshift,max_size);
 
     /// Pas de b4 if (cb[fshift]==DU_START_OF_FRAME) fshift++;
